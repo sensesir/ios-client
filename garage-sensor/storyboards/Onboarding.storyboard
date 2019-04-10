@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="YS9-HQ-vQd">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeueLights.ttc">
+            <string>HelveticaNeue-Light</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Sign UpVC-->
+        <scene sceneID="drg-cx-JMG">
+            <objects>
+                <viewController id="YS9-HQ-vQd" customClass="SignUpVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="I8h-7G-9nf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="U6E-Cc-oga">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LogoCellID" rowHeight="200" id="w4o-WH-s63" userLabel="Logo cell">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="200"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="w4o-WH-s63" id="90U-uL-qHh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ss-wifi" translatesAutoresizingMaskIntoConstraints="NO" id="gre-Bh-4zF">
+                                                    <rect key="frame" x="108.5" y="21" width="158" height="158"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="gre-Bh-4zF" secondAttribute="height" multiplier="1:1" id="4Ff-1m-KRc"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="gre-Bh-4zF" firstAttribute="top" secondItem="90U-uL-qHh" secondAttribute="topMargin" constant="10" id="5aE-2I-lWk"/>
+                                                <constraint firstItem="gre-Bh-4zF" firstAttribute="centerX" secondItem="90U-uL-qHh" secondAttribute="centerX" id="c6y-XG-QKC"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="gre-Bh-4zF" secondAttribute="bottom" constant="10" id="ufM-1X-CdR"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextEntryCellID" rowHeight="55" id="rwz-0X-DZy" userLabel="Text entry cell" customClass="TextEntryCell" customModule="garage_sensor" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="228" width="375" height="55"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rwz-0X-DZy" id="SUU-CQ-QIs">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name etc" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bEO-ei-HDD" userLabel="Name entry">
+                                                    <rect key="frame" x="35" y="16" width="305" height="23"/>
+                                                    <color key="textColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.30980392156862746" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" textContentType="name"/>
+                                                </textField>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oeE-IM-2a4" userLabel="Underline 1">
+                                                    <rect key="frame" x="20" y="44" width="335" height="1"/>
+                                                    <color key="backgroundColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="1" id="3h2-7r-uui"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="bEO-ei-HDD" secondAttribute="trailing" constant="20" id="EsJ-Tj-Xv3"/>
+                                                <constraint firstItem="bEO-ei-HDD" firstAttribute="top" secondItem="SUU-CQ-QIs" secondAttribute="topMargin" constant="5" id="S2c-Wh-cng"/>
+                                                <constraint firstItem="bEO-ei-HDD" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leadingMargin" constant="20" id="U4g-eU-bh9"/>
+                                                <constraint firstItem="oeE-IM-2a4" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leading" constant="20" id="f1B-7b-gWE"/>
+                                                <constraint firstItem="oeE-IM-2a4" firstAttribute="top" secondItem="bEO-ei-HDD" secondAttribute="bottom" constant="5" id="gAI-Hl-425"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="bEO-ei-HDD" secondAttribute="bottom" constant="5" id="kf1-yj-h02"/>
+                                                <constraint firstAttribute="trailing" secondItem="oeE-IM-2a4" secondAttribute="trailing" constant="20" id="sqG-aw-Su5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="userEntry" destination="bEO-ei-HDD" id="giX-DU-DJg"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextInfoCellID" rowHeight="80" id="tGO-zn-2uI" userLabel="Info cell" customClass="InfoTextCell" customModule="garage_sensor" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="283" width="375" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tGO-zn-2uI" id="bcd-hO-syv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User info text" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1H9-GB-uxS">
+                                                    <rect key="frame" x="35" y="21" width="305" height="38"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0FR-tI-cEP">
+                                                    <rect key="frame" x="35" y="21" width="325" height="38"/>
+                                                    <color key="backgroundColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <state key="normal" title="Submit">
+                                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="0FR-tI-cEP" secondAttribute="trailing" id="AgC-cO-Hss"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1H9-GB-uxS" secondAttribute="trailing" constant="20" id="EuW-2g-vMI"/>
+                                                <constraint firstItem="0FR-tI-cEP" firstAttribute="leading" secondItem="1H9-GB-uxS" secondAttribute="leading" id="XRP-dK-aew"/>
+                                                <constraint firstItem="0FR-tI-cEP" firstAttribute="top" secondItem="1H9-GB-uxS" secondAttribute="top" id="Ze3-AH-yPc"/>
+                                                <constraint firstItem="0FR-tI-cEP" firstAttribute="bottom" secondItem="1H9-GB-uxS" secondAttribute="bottom" id="iBh-p5-fEK"/>
+                                                <constraint firstItem="1H9-GB-uxS" firstAttribute="top" secondItem="bcd-hO-syv" secondAttribute="topMargin" constant="10" id="jiK-7n-vmb"/>
+                                                <constraint firstItem="1H9-GB-uxS" firstAttribute="leading" secondItem="bcd-hO-syv" secondAttribute="leadingMargin" constant="20" id="lKt-lN-gQB"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1H9-GB-uxS" secondAttribute="bottom" constant="10" id="vxE-Jz-8QX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="submitButton" destination="0FR-tI-cEP" id="eWS-kB-70s"/>
+                                            <outlet property="userInfo" destination="1H9-GB-uxS" id="IU4-xP-ygc"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="vL7-dG-xaa" firstAttribute="trailing" secondItem="U6E-Cc-oga" secondAttribute="trailing" id="2Ih-SX-0Cq"/>
+                            <constraint firstItem="U6E-Cc-oga" firstAttribute="top" secondItem="vL7-dG-xaa" secondAttribute="top" id="5DT-V1-LDN"/>
+                            <constraint firstItem="U6E-Cc-oga" firstAttribute="leading" secondItem="vL7-dG-xaa" secondAttribute="leading" id="Rea-gQ-5cB"/>
+                            <constraint firstItem="vL7-dG-xaa" firstAttribute="bottom" secondItem="U6E-Cc-oga" secondAttribute="bottom" id="fVP-SJ-Lhq"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="vL7-dG-xaa"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="JJb-q4-cNm" appends="YES" id="cah-DJ-5tW"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="signupForm" destination="U6E-Cc-oga" id="qgQ-TM-zP5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GhV-HA-CVH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="JJb-q4-cNm">
+                    <connections>
+                        <action selector="dissmissKeyboard" destination="YS9-HQ-vQd" id="FAD-eG-cBt"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="29.600000000000001" y="-231.63418290854574"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ss-wifi" width="200" height="199"/>
+    </resources>
+</document>
