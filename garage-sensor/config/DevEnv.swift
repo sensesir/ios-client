@@ -13,6 +13,7 @@ struct DevEnv {
     let CLIENT_API_KEY = ""
     let CLIENT_API_ROOT_URL = ""
     let CREATE_USER_ENDPOINT = "/createNewUser"
+    let LOG_USER_IN_ENDPOINT = "/login"
     let UPDATE_LAST_SEEN = "/updateLastSeen"
     
     let UID_LENGTH = 36

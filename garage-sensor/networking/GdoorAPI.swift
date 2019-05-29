@@ -12,6 +12,13 @@ class GDoorAPI: NSObject {
     
     // MARK: - Create -
     
+    /**
+     *  userData (# table): Required =>
+     *      1. userName
+     *      2. userEmail
+     *      3. userPassword
+     */
+    
     func createNewUser(userData: [String:String]!,
                        completion: @escaping (_ newUserUID: String?,_ error: Error?) -> Void) {
         
@@ -30,12 +37,33 @@ class GDoorAPI: NSObject {
         }
         
         // Start the task
-        print("API: Sending req to create new user")
+        print("CLIENT API: Sending req to create new user")
+        postTask.resume()
+    }
+    
+    func logUserIn(userCreds: [String:String]!,
+                   completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
+        
+        let endpoint = env.CLIENT_API_ROOT_URL + env.LOG_USER_IN_ENDPOINT;
+        let payload = try! JSONSerialization.data(withJSONObject: userCreds, options: [])
+        let request = jsonPostReq(endpoint: endpoint, payload: payload)
+        
+        let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if (error != nil) { completion(false, error!) }
+            else {
+                let res = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+                print("CLIENT API: Login response = \(res)")
+                completion(true, nil)
+            }
+        }
+        
+        // Start the task
+        print("CLIENT API: Sending req to log user in")
         postTask.resume()
     }
     
     func updateLastSeen(userUID: String!,
-                        completion: (([String: Any]?,Error?))? = nil) {
+                        completion: ((_ response: [String:Any]?, _ error: Error?) -> Void)? ) {
         
         let endpoint = env.CLIENT_API_ROOT_URL + env.UPDATE_LAST_SEEN
         let payload = try! JSONSerialization.data(withJSONObject: ["userUID": userUID], options: [])
@@ -44,11 +72,11 @@ class GDoorAPI: NSObject {
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if (error != nil) {
                 print("API: Failed to update last seen => \(String(describing: error))")
-                if (completion != nil) { completion(nil, error!) }
+                if (completion != nil) { completion!(nil, error!) }
             } else {
                 print("API: Updated last seen")
                 let res = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                if (completion != nil) { completion(res, nil) }
+                if (completion != nil) { completion!(res, nil) }
             }
         }
         

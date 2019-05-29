@@ -9,25 +9,37 @@
 import Foundation
 import UIKit
 
+enum FormType: Int {
+    case SignUp = 0
+    case Login = 1
+}
+
 class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     // Controls
-    let authInterface: FirebaseAuthInterface! = FirebaseAuthInterface.init()
+    let clientApi = GDoorAPI()
+    let profileKeys = dbProfileKeys();
     var validUserName: Bool! = false
     var validUserEmail: Bool! = false
     var validUserPassword: Bool! = false
+    var validPasswordConfirm: Bool! = false
     var nameAttempt: Bool! = false
     var emailAttepmt: Bool! = false
     var passwordAttempt: Bool! = false
+    var passwordConfirmAttempt: Bool! = false
+    var formType = FormType.SignUp
     
     // User info
     var userName: String?
     var userEmail: String?
     var userPassword: String?
+    var userPasswordConfirm: String?
     
     // Constants
     let logoCellID: String! = "LogoCellID"
     let textEntryCellID: String! = "TextEntryCellID"
     let infoTextCellID: String! = "TextInfoCellID"
+    let signupCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 4: 60.0, 5: 80.0]
+    let loginCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 4: 80.0]
     
     // Visual props
     @IBOutlet var signupForm: UITableView!
@@ -48,26 +60,16 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Statically state for now
-        return 5
+        if (formType == FormType.SignUp) { return 6 }
+        return 4
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         // Switch case
         let row = indexPath.row
-        
-        if (row == 1 || row == 2 || row == 3) {
-            // Name, email & password
-            return 60
-        } else if (row == 4){
-            // Info cell
-            return 80
-        }
-        
-        else if (row == 0){
-            // Logo cell - make 1/3 of screen
-            return UIScreen.main.bounds.height*0.3
-        }
-        
+        if (row == 0) { return UIScreen.main.bounds.height*0.3 } // Logo cell - make 1/3 of screen
+        else if (formType == FormType.SignUp) { return CGFloat(signupCellHeights[row]!) }
+        else if (formType == FormType.Login)  { return CGFloat(loginCellHeights[row]!) }
         else{
             // error
             return 0;
@@ -78,17 +80,14 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Generate the correct cells for each type
         let row = indexPath.row
         var cell: UITableViewCell?
+        if (row == 0) { cell = generateLogoCell(tableView: tableView) }
         
-        if (row == 1 || row == 2 || row == 3) {
-            // Name, email & password
+        else if (formType == FormType.SignUp && (1 ... 4).contains(row)) {
+            cell = generateTextInputCell(tableView: tableView, row: row)
+        } else if (formType == FormType.Login && (1 ... 2).contains(row)) {
             cell = generateTextInputCell(tableView: tableView, row: row)
         }
-        else if (row == 0){
-            // Logo cell - make 1/3 of screen
-            cell = generateLogoCell(tableView: tableView)
-        }
-        else if (row == 4){
-            // Info cell
+        else if ((formType == FormType.SignUp && row == 5) || (formType == FormType.Login && row == 4)){
             cell = generateInfoTextCell(tableView: tableView)
         }
         else{
@@ -118,18 +117,33 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             cell = TextEntryCell.init(style: .default, reuseIdentifier: textEntryCellID)
         }
         
-        switch row {
-            case 1:
-                cell?.userEntry.text = "First & Last Name"
-                cell?.userEntry.tag = 0
-                cell?.userEntry.autocapitalizationType = .words
-            case 2:
-                cell?.userEntry.text = "Email"
-                cell?.userEntry.tag = 1
-            case 3:
-                cell?.userEntry.text = "Password"
-                cell?.userEntry.tag = 2
-            default: cell?.userEntry.text = "Error"
+        if (formType == FormType.SignUp) {
+            switch row {
+                case 1:
+                    cell?.userEntry.text = "First & Last Name"
+                    cell?.userEntry.tag = 0
+                    cell?.userEntry.autocapitalizationType = .words
+                case 2:
+                    cell?.userEntry.text = "Email"
+                    cell?.userEntry.tag = 1
+                case 3:
+                    cell?.userEntry.text = "Password"
+                    cell?.userEntry.tag = 2
+                case 4:
+                    cell?.userEntry.text = "Confirm Password"
+                    cell?.userEntry.tag = 3
+                default: cell?.userEntry.text = "Error"
+            }
+        } else {
+            switch row {
+                case 1:
+                    cell?.userEntry.text = "Email"
+                    cell?.userEntry.tag = 1
+                case 2:
+                    cell?.userEntry.text = "Password"
+                    cell?.userEntry.tag = 2
+                default: cell?.userEntry.text = "Error"
+            }
         }
         
         cell?.userEntry.delegate = self
@@ -155,22 +169,21 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // Check which text field it
         switch textField.tag {
-        case 0:
-            if (userName == nil) {
-                textField.text = ""
-            }
-        case 1:
-            if (userEmail == nil) {
-                textField.text = ""
-            }
-        case 2:
-            if (userPassword == nil) {
-                textField.text = ""
-                textField.isSecureTextEntry = true
-            }
-        default:
-            print("SIGNUP VC: Error - invalid textfield tag")
+            case 0: if (userName == nil) { textField.text = "" }
+            case 1: if (userEmail == nil) { textField.text = "" }
+            case 2:
+                if (userPassword == nil) {
+                    textField.text = ""
+                    textField.isSecureTextEntry = true
+                }
+            case 3:
+                if (userPasswordConfirm == nil) {
+                    textField.text = ""
+                    textField.isSecureTextEntry = true
+                }
+            default: print("SIGNUP VC: Error - invalid textfield tag")
         }
+        
         
         // Hide the error label
         let indexPath = IndexPath.init(row: 4, section: 0)
@@ -182,21 +195,27 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Check validity of entry
         var recentEntryValid: Bool! = false
         
-        switch textField.tag {
-        case 0:
-            userName = textField.text
-            recentEntryValid = assessUserNameValidity(name: textField.text!)
-            nameAttempt = true
-        case 1:
-            userEmail = textField.text
-            recentEntryValid = assessEmailValidity(email: textField.text!)
-            emailAttepmt = true
-        case 2:
-            userPassword = textField.text
-            recentEntryValid = assessPasswordVailidity(password: textField.text!)
-            passwordAttempt = true
-        default:
-            print("SIGN UP VC: Invalid text field")
+        if (formType == FormType.SignUp) {
+            switch textField.tag {
+            case 0:
+                userName = textField.text
+                recentEntryValid = assessUserNameValidity(name: textField.text!)
+                nameAttempt = true
+            case 1:
+                userEmail = textField.text
+                recentEntryValid = assessEmailValidity(email: textField.text!)
+                emailAttepmt = true
+            case 2:
+                userPassword = textField.text
+                recentEntryValid = assessPasswordVailidity(password: textField.text!)
+                passwordAttempt = true
+            case 3:
+                userPasswordConfirm = textField.text
+                recentEntryValid = assessPassworkConfirmValidity(confirmPassword: textField.text!)
+                passwordConfirmAttempt = true
+            default:
+                print("SIGN UP VC: Invalid text field")
+            }
         }
         
         if recentEntryValid {
@@ -210,30 +229,38 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let indexPath = IndexPath.init(row: 4, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
         
-        if (!validUserName && nameAttempt) {
-            // Expose submit button
-            cell?.userInfo.isHidden = false
-            cell?.userInfo.text = "User name should be longer than 4 characters"
-            cell?.submitButton.isHidden = true
+        if (formType == FormType.SignUp) {
+            if (!validUserName && nameAttempt) {
+                cell?.userInfo.isHidden = false
+                cell?.userInfo.text = "User name should be longer than 4 characters"
+                cell?.submitButton.isHidden = true
+            }
+                
+            else if (!validUserEmail && emailAttepmt){
+                cell?.userInfo.isHidden = false
+                cell?.userInfo.text = "Hmmm the email address doesn't seem quite right. Please try again."
+                cell?.submitButton.isHidden = true
+            }
+                
+            else if(!validUserName && passwordAttempt){
+                cell?.userInfo.isHidden = false
+                cell?.userInfo.text = "Password should be longer than 6 characters"
+                cell?.submitButton.isHidden = true
+            }
+                
+            else if(!validPasswordConfirm && passwordConfirmAttempt) {
+                cell?.userInfo.isHidden = false
+                cell?.userInfo.text = "Passwords don't match"
+                cell?.submitButton.isHidden = true
+            }
+                
+            else if (validUserName && validUserEmail && validUserPassword && validPasswordConfirm){
+                cell?.userInfo.isHidden = true
+                cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
+                cell?.submitButton.isHidden = false
+            }
         }
-            
-        else if (!validUserEmail && emailAttepmt){
-            cell?.userInfo.isHidden = false
-            cell?.userInfo.text = "Hmmm the email address doesn't seem quite right. Please try again."
-            cell?.submitButton.isHidden = true
-        }
-            
-        else if(!validUserName && passwordAttempt){
-            cell?.userInfo.isHidden = false
-            cell?.userInfo.text = "Password should be longer than 6 characters"
-            cell?.submitButton.isHidden = true
-        }
-            
-        else if (validUserName && validUserEmail && validUserPassword){
-            cell?.userInfo.isHidden = true
-            cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
-            cell?.submitButton.isHidden = false
-        }
+        
     }
     
     func assessUserNameValidity(name: String) -> Bool {
@@ -280,6 +307,16 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
     }
     
+    func assessPassworkConfirmValidity(confirmPassword: String) -> Bool {
+        if (confirmPassword == userPassword) { return true }
+        else {
+            print("SIGN UP VC: User's confirmed password does not match")
+            setErrorLabel(error: "Confirmed password does not match password entry")
+            validPasswordConfirm = false
+            return false
+        }
+    }
+    
     func setErrorLabel(error: String!) {
         // Get reference to cell
         let indexPath = IndexPath.init(row: 4, section: 0)
@@ -297,30 +334,67 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         loadView = UIEffects.fullScreenLoadOverlay()
         self.view.addSubview(loadView!)
         
-        // Send to firebase
-        authInterface.authUserWithEmail(userName: userName,
-                                        email: userEmail,
-                                        password: userPassword)
-        { (success, userUID, error) in
-            // Completion handler
-            self.loadView?.removeFromSuperview()
-            
-            if (success) {
-                self.successfulSignUp(userUID: userUID!)
-            } else {
-                // Cancel load UI & show error
-                self.signupError()
+        if (formType == FormType.SignUp) {
+            signUserUp(completion: { (userUID, error) in
+                if (error != nil) {
+                    print("ENTRY VC: Failed to created new user => \(String(describing: error))")
+                    // TODO: explain error
+                    self.signupError()
+                } else {
+                    print("ENTRY VC: Successfully created new user");
+                    self.successfulSignUp(userUID: userUID)
+                }
+            })
+        }
+        
+        else {
+            logUserIn { (success, error) in
+                if (error != nil) {
+                    print("ENTRY VC: Failed to created new user => \(String(describing: error))")
+                    // TODO: explain error
+                } else {
+                    
+                }
             }
+        }
+    }
+    
+    func signUserUp(completion: @escaping (_ userUID: String?,_ error: Error?) -> Void) {
+        let userData = [profileKeys.UserNameKey:     userName!,
+                        profileKeys.UserPasswordKey: userPassword!,
+                        profileKeys.UserEmailKey:    userEmail!]
+        
+        clientApi.createNewUser(userData: userData) { (userUID, error) in
+            if (error != nil) { completion(nil, error) }
+            else { completion(userUID, nil) }
+        }
+    }
+    
+    func logUserIn(completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
+        let userCreds = [profileKeys.UserEmailKey:    userEmail!,
+                         profileKeys.UserPasswordKey: userPassword!]
+        
+        clientApi.logUserIn(userCreds: userCreds) { (success, error) in
+            if (error != nil) { completion(false, error) }
+            else { completion(true, nil) }
         }
     }
     
     func successfulSignUp(userUID: String!) {
         // Send user details to user object model & transition to WiFi setup (main for now)
-        print("SIGN UP VC: Successfully signed user up with email")
-        GDoorUser.sharedInstance.createNewUser(name: userName,
-                                               email: userEmail,
-                                               password: userPassword,
-                                               userUID: userUID)
+        print("SIGN UP VC: Successfully user initialization")
+        GDoorUser.sharedInstance.setUserProfile(name: userName,
+                                                email: userEmail,
+                                                password: userPassword,
+                                                newUserUID: userUID)
+        transitionToMainStory()
+    }
+    
+    func succesfulLogin(userData: [String:String]!) {
+        GDoorUser.sharedInstance.setUserProfile(name: userData[profileKeys.UserNameKey],
+                                                email: userData[profileKeys.UserEmailKey],
+                                                password: userData[profileKeys.UserPasswordKey],
+                                                newUserUID: userData[profileKeys.UIDKey])
         transitionToMainStory()
     }
     
@@ -328,7 +402,6 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Transition to WiFi set up (but home screeb for now)
         let mainStory = UIStoryboard(name: "Main", bundle: nil)
         let rootVC = mainStory.instantiateInitialViewController()
-        
         present(rootVC!, animated: true, completion: nil)
     }
     
@@ -336,11 +409,22 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         view.endEditing(true)
     }
     
+    // MARK: - Failures -
+    
+    func loginFailure(reason: String!) {
+        print("ENTRY VC: Failed to log user in, reason => \(String(describing: reason))")
+        
+        let indexPath = IndexPath.init(row: 3, section: 0)
+        let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
+        cell?.userInfo.text = reason
+        cell?.userInfo.isHidden = false
+    }
+    
     // MARK: - Error Handling -
     
     func signupError() {
         // Show error label
-        print("SIGN UP VC: Failed to sign user up with email.")
+        print("ENTRY VC: Failed to sign user up with email.")
         
         let indexPath = IndexPath.init(row: 4, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
@@ -348,6 +432,15 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         cell?.userInfo.isHidden = false
     }
     
+    func loginError() {
+        // Show error label
+        print("ENTRY VC: Failed to sign user up with email.")
+        
+        let indexPath = IndexPath.init(row: 4, section: 0)
+        let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
+        cell?.userInfo.text = "Login error - please try again."
+        cell?.userInfo.isHidden = false
+    }
     
     
 }
