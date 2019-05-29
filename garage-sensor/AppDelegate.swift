@@ -19,12 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("APP DELEGATE: Here we go, firing up!");
         
         // Initialize firebase & user data
-        let userHasToken = GDoorUser.sharedInstance.userHasToken()
+        let userHasToken = GDoorUser.sharedInstance.userSignedIn()
         assessUILaunchTransition(accessToken: userHasToken)
         
         if userHasToken {
-            // Hit the DB to initialize the door state
-            _ = GDoorModel.main
         }
         
         return true

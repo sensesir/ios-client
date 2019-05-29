@@ -36,10 +36,11 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     // Constants
     let logoCellID: String! = "LogoCellID"
+    let formSelectorCellID: String! = "FormSelectorCellID"
     let textEntryCellID: String! = "TextEntryCellID"
     let infoTextCellID: String! = "TextInfoCellID"
-    let signupCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 4: 60.0, 5: 80.0]
-    let loginCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 4: 80.0]
+    let signupCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 4: 60.0, 5: 60.0, 6: 80.0]
+    let loginCellHeights = [1: 60.0, 2: 60.0, 3: 60.0, 5: 60.0, 4: 80.0]
     
     // Visual props
     @IBOutlet var signupForm: UITableView!
@@ -81,13 +82,14 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         let row = indexPath.row
         var cell: UITableViewCell?
         if (row == 0) { cell = generateLogoCell(tableView: tableView) }
-        
-        else if (formType == FormType.SignUp && (1 ... 4).contains(row)) {
+        if (row == 0) { cell = generateFormSelectorCell(tableView: tableView) }
+            
+        else if (formType == FormType.SignUp && (2 ... 5).contains(row)) {
             cell = generateTextInputCell(tableView: tableView, row: row)
-        } else if (formType == FormType.Login && (1 ... 2).contains(row)) {
+        } else if (formType == FormType.Login && (2 ... 3).contains(row)) {
             cell = generateTextInputCell(tableView: tableView, row: row)
         }
-        else if ((formType == FormType.SignUp && row == 5) || (formType == FormType.Login && row == 4)){
+        else if ((formType == FormType.SignUp && row == 6) || (formType == FormType.Login && row == 4)){
             cell = generateInfoTextCell(tableView: tableView)
         }
         else{
@@ -102,11 +104,16 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func generateLogoCell(tableView: UITableView!) -> UITableViewCell {
         // Create with cell ID and return
         var cell = tableView.dequeueReusableCell(withIdentifier: logoCellID)
-        if (cell == nil) {
-            // Instantiate the cell
-            cell = UITableViewCell.init(style: .default, reuseIdentifier: logoCellID)
-        }
+        if (cell == nil) { cell = UITableViewCell.init(style: .default, reuseIdentifier: logoCellID) }
+        return cell!
+    }
+    
+    func generateFormSelectorCell(tableView: UITableView!) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: formSelectorCellID) as? FormTypeSelectorCell
+        if (cell == nil) { cell = FormTypeSelectorCell.init(style: .default, reuseIdentifier: formSelectorCellID) }
         
+        cell?.signUpButton.addTarget(self, action: #selector(userSelectedSignUp), for: .touchUpInside)
+        cell?.loginButton.addTarget(self, action: #selector(userSelectedLogin), for: .touchUpInside)
         return cell!
     }
     
@@ -119,27 +126,27 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (formType == FormType.SignUp) {
             switch row {
-                case 1:
+                case 2:
                     cell?.userEntry.text = "First & Last Name"
                     cell?.userEntry.tag = 0
                     cell?.userEntry.autocapitalizationType = .words
-                case 2:
+                case 3:
                     cell?.userEntry.text = "Email"
                     cell?.userEntry.tag = 1
-                case 3:
+                case 4:
                     cell?.userEntry.text = "Password"
                     cell?.userEntry.tag = 2
-                case 4:
+                case 5:
                     cell?.userEntry.text = "Confirm Password"
                     cell?.userEntry.tag = 3
                 default: cell?.userEntry.text = "Error"
             }
         } else {
             switch row {
-                case 1:
+                case 2:
                     cell?.userEntry.text = "Email"
                     cell?.userEntry.tag = 1
-                case 2:
+                case 3:
                     cell?.userEntry.text = "Password"
                     cell?.userEntry.tag = 2
                 default: cell?.userEntry.text = "Error"
@@ -165,6 +172,15 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     
     // MARK: - User Entry handling -
+    
+    @objc func userSelectedSignUp () {
+        // Reset page & vars
+        formType = FormType.SignUp
+    }
+    
+    @objc func userSelectedLogin () {
+        formType = FormType.Login
+    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // Check which text field it

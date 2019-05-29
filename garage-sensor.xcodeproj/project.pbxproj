@@ -32,6 +32,7 @@
 		EBC6AAB8207BC9AF000F41D6 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAB7207BC9AF000F41D6 /* SignUpVC.swift */; };
 		EBC6AABB207BCF46000F41D6 /* TextEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AABA207BCF46000F41D6 /* TextEntryCell.swift */; };
 		EBC6AABD207BCF5A000F41D6 /* InfoTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AABC207BCF5A000F41D6 /* InfoTextCell.swift */; };
+		EBD9CD0B229EF3CA002B6E90 /* FormTypeSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD9CD0A229EF3CA002B6E90 /* FormTypeSelectorCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		EBC6AAB7207BC9AF000F41D6 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		EBC6AABA207BCF46000F41D6 /* TextEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEntryCell.swift; sourceTree = "<group>"; };
 		EBC6AABC207BCF5A000F41D6 /* InfoTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTextCell.swift; sourceTree = "<group>"; };
+		EBD9CD0A229EF3CA002B6E90 /* FormTypeSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTypeSelectorCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +255,7 @@
 			children = (
 				EBC6AABA207BCF46000F41D6 /* TextEntryCell.swift */,
 				EBC6AABC207BCF5A000F41D6 /* InfoTextCell.swift */,
+				EBD9CD0A229EF3CA002B6E90 /* FormTypeSelectorCell.swift */,
 			);
 			path = "signup-cells";
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 				EB730C4120846B370076B9B6 /* StandardModalVC.swift in Sources */,
 				EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */,
 				EBBDBBD6229E2B4E00A28E5E /* DevEnv.swift in Sources */,
+				EBD9CD0B229EF3CA002B6E90 /* FormTypeSelectorCell.swift in Sources */,
 				EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */,
 				EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */,
 				EB76B04C207CEFF800EA8B9C /* HTTPInterface.swift in Sources */,

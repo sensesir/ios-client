@@ -43,8 +43,94 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FormSelectorCellID" rowHeight="60" id="pbP-6C-ykJ" userLabel="Signup login selector" customClass="FormTypeSelectorCell" customModule="garage_sensor" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="228" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pbP-6C-ykJ" id="fMc-vS-ZIA">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zBp-H3-6DN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Inr-md-3pw">
+                                                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="60"/>
+                                                            <subviews>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lDO-t3-QiE">
+                                                                    <rect key="frame" x="63.5" y="5" width="61" height="33"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <state key="normal" title="Sign Up">
+                                                                        <color key="titleColor" red="0.14901960780000001" green="0.2274509804" blue="0.32156862749999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    </state>
+                                                                </button>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5J-mt-hHy" userLabel="Underline">
+                                                                    <rect key="frame" x="20" y="40" width="147.5" height="2"/>
+                                                                    <color key="backgroundColor" red="0.14901960780000001" green="0.2274509804" blue="0.32156862749999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="2" id="kic-hJ-7Kl"/>
+                                                                    </constraints>
+                                                                </view>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstItem="f5J-mt-hHy" firstAttribute="leading" secondItem="Inr-md-3pw" secondAttribute="leading" constant="20" id="0CG-GH-tkz"/>
+                                                                <constraint firstAttribute="trailing" secondItem="f5J-mt-hHy" secondAttribute="trailing" constant="20" id="T6q-F4-uQq"/>
+                                                                <constraint firstItem="f5J-mt-hHy" firstAttribute="top" secondItem="lDO-t3-QiE" secondAttribute="bottom" constant="2" id="YKa-By-nNU"/>
+                                                                <constraint firstItem="lDO-t3-QiE" firstAttribute="top" secondItem="Inr-md-3pw" secondAttribute="top" constant="5" id="YRt-iE-0mi"/>
+                                                                <constraint firstItem="lDO-t3-QiE" firstAttribute="centerX" secondItem="Inr-md-3pw" secondAttribute="centerX" id="lIq-e3-oX3"/>
+                                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="f5J-mt-hHy" secondAttribute="bottom" constant="5" id="vg9-6B-w5N"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fBj-FA-DfM">
+                                                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="60"/>
+                                                            <subviews>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yEL-1U-WAi">
+                                                                    <rect key="frame" x="73" y="5" width="42" height="33"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <state key="normal" title="Login">
+                                                                        <color key="titleColor" red="0.14901960780000001" green="0.2274509804" blue="0.32156862749999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    </state>
+                                                                </button>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4yK-oz-2TC" userLabel="Underline">
+                                                                    <rect key="frame" x="20" y="40" width="147.5" height="2"/>
+                                                                    <color key="backgroundColor" red="0.14901960780000001" green="0.2274509804" blue="0.32156862749999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="2" id="Knb-IE-QAf"/>
+                                                                    </constraints>
+                                                                </view>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstItem="4yK-oz-2TC" firstAttribute="top" secondItem="yEL-1U-WAi" secondAttribute="bottom" constant="2" id="9hJ-EU-iuO"/>
+                                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="4yK-oz-2TC" secondAttribute="bottom" constant="5" id="F8M-fe-TZe"/>
+                                                                <constraint firstItem="yEL-1U-WAi" firstAttribute="centerX" secondItem="fBj-FA-DfM" secondAttribute="centerX" id="fh0-T3-kBW"/>
+                                                                <constraint firstItem="yEL-1U-WAi" firstAttribute="top" secondItem="fBj-FA-DfM" secondAttribute="top" constant="5" id="jDL-j1-YSG"/>
+                                                                <constraint firstItem="4yK-oz-2TC" firstAttribute="leading" secondItem="fBj-FA-DfM" secondAttribute="leading" constant="20" id="jeE-cd-COr"/>
+                                                                <constraint firstAttribute="trailing" secondItem="4yK-oz-2TC" secondAttribute="trailing" constant="20" id="k9M-Nb-UCW"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="fBj-FA-DfM" firstAttribute="width" secondItem="Inr-md-3pw" secondAttribute="width" id="WdK-Wk-3Rv"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="zBp-H3-6DN" firstAttribute="top" secondItem="fMc-vS-ZIA" secondAttribute="top" id="1as-rh-mF6"/>
+                                                <constraint firstAttribute="bottom" secondItem="zBp-H3-6DN" secondAttribute="bottom" id="Hzc-B5-Xjg"/>
+                                                <constraint firstItem="zBp-H3-6DN" firstAttribute="leading" secondItem="fMc-vS-ZIA" secondAttribute="leading" id="Lar-Q8-H6C"/>
+                                                <constraint firstAttribute="trailing" secondItem="zBp-H3-6DN" secondAttribute="trailing" id="SpG-Of-OPX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="loginButton" destination="yEL-1U-WAi" id="UH3-kU-Z5w"/>
+                                            <outlet property="loginUnderline" destination="4yK-oz-2TC" id="uis-Fv-NE0"/>
+                                            <outlet property="signUpButton" destination="lDO-t3-QiE" id="3Ce-Io-Ouo"/>
+                                            <outlet property="signUpUnderline" destination="f5J-mt-hHy" id="1aA-DF-Sym"/>
+                                        </connections>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextEntryCellID" rowHeight="55" id="rwz-0X-DZy" userLabel="Text entry cell" customClass="TextEntryCell" customModule="garage_sensor" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="228" width="375" height="55"/>
+                                        <rect key="frame" x="0.0" y="288" width="375" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rwz-0X-DZy" id="SUU-CQ-QIs">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
@@ -79,7 +165,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextInfoCellID" rowHeight="80" id="tGO-zn-2uI" userLabel="Info cell" customClass="InfoTextCell" customModule="garage_sensor" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="283" width="375" height="80"/>
+                                        <rect key="frame" x="0.0" y="343" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tGO-zn-2uI" id="bcd-hO-syv">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
@@ -146,7 +232,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="303" y="-232"/>
+            <point key="canvasLocation" x="301.60000000000002" y="-232.53373313343329"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="iF5-pN-Wxf">

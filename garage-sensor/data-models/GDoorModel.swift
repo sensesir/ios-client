@@ -41,23 +41,7 @@ class GDoorModel: NSObject, FirebaseDBDelegate {
         firebaseInterface = FirebaseInterface()
         super.init()
         print("GDOOR: Data model created")
-        
-        // Initialize DB listener
-        setupDatabaseListeners()
-    }
-    
-    func setupDatabaseListeners() {
-        let profilePath = "users/" + GDoorUser.sharedInstance.uid!
-        let doorStatePath = profilePath + "/" + profileKeys.DoorStateKey
-        let sensorConnStatePath = profilePath + "/" + profileKeys.SensorNetworkStateKey
-        let assignedIPAddressPath = profilePath + "/" + profileKeys.AssignedLocalIPKey
-        let targetIPAddressPath = profilePath + "/" + profileKeys.TargetStaticIPKey
-        
-        firebaseInterface.listenForPath(path: doorStatePath, delegate: self)
-        firebaseInterface.listenForPath(path: sensorConnStatePath, delegate: self)
-        firebaseInterface.listenForPath(path: assignedIPAddressPath, delegate: self)
-        firebaseInterface.listenForPath(path: targetIPAddressPath, delegate: self)
-        print("GDOOR: Set up database listeners for door and sensor state")
+
     }
     
     func assessLocalStaticIPAssignment() {
