@@ -81,11 +81,10 @@ class GDUtilities: NSObject {
     
     // MARK: - Data Handling -
     
-    func doorResJSONDataToDict(jsonData: Data?) -> Dictionary <String, Any> {
+    func jsonDataToDict(jsonData: Data?) -> Dictionary <String, Any> {
         // Converts data to dictionary or nil if error
-        
         do {
-            let jsonDict = try JSONSerialization.jsonObject(with: jsonData!, options: [])               // as! [String: Int]
+            let jsonDict = try JSONSerialization.jsonObject(with: jsonData!, options: []) // as! [String: Int]
             print(jsonDict)
             
             let convertedDict = jsonDict as! [String: Any]

@@ -11,15 +11,14 @@ import Foundation
 
 // Constants
 // local keys
-let userFirstNameKey    = "kUserFirstName"
-let userLastNameKey     = "kUserLastName"
-let userEmailKey        = "kUserEmail"
-let userPasswordKey     = "kUserPassword"
-let signupDateKey       = "kSignupDate"
-let uidKey              = "kUID"
-let userAddressKey      = "kUserAddressKey"
-let userMobileNumKey    = "kUserMobileNum"
-let localTokenKey       = "kLocalToken"
+let userFirstNameKey    = "userFirstName"
+let userLastNameKey     = "userLastName"
+let userEmailKey        = "userEmail"
+let userPasswordKey     = "userPassword"
+let signupDateKey       = "signupDate"
+let uidKey              = "userUID"
+let userAddressKey      = "userAddressKey"
+let userMobileNumKey    = "userMobileNum"
 
 class GDoorUser: NSObject {
     // Class level properties
@@ -29,10 +28,9 @@ class GDoorUser: NSObject {
     var userPassword: String?
     let appVersion: String! = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
     var signupDate: Int?
-    var uid: String?
+    var userUID: String?
     var userAddress: String?
     var userMobileNum: String?
-    var localToken: Bool! = false
     
     // Manager object & DB keys
     let dataManager: UserDefaults!
@@ -49,13 +47,10 @@ class GDoorUser: NSObject {
         attemptToLoadUserData()
     }
     
-    func userHasToken() -> Bool {
+    func userSignedIn() -> Bool {
         // Simple wrapper to check if the user has data
-        if (localToken) {
-            return true;
-        } else{
-            return false;
-        }
+        if (userUID != nil) { return true }
+        else { return false }
     }
     
     // MARK: - Update data -
@@ -63,7 +58,7 @@ class GDoorUser: NSObject {
     func createNewUser(name: String!,
                        email: String!,
                        password: String!,
-                       userUID: String!){
+                       completion: @escaping (_ newUserUID: String?, _ error: Error?) -> Void) {
         
         // Try capture a first and last name
         let spaceSet = CharacterSet.init(charactersIn: " ")
@@ -82,63 +77,46 @@ class GDoorUser: NSObject {
         // Set simple props
         userEmail = email
         userPassword = password
-        uid = userUID
-        localToken = true
         
-        // Log this as the moment the user signed up
-        signupDate = GDUtilities.shared.generateTimeStampForNow()
-        
-        // Persist data & update database
-        persistData()
-        createUserDBProfile()
+        createUserDBProfile { (userUID, error) in
+            if (error != nil) {
+                print("USER: Failed to create profile in DB => \(String(describing: error))")
+                // Todo: call method on UI, delegate callback
+                return
+            }
+            
+            self.persistData()
+            print("USER: Completed new user creation")
+        }
     }
     
     // MARK: - Database interface -
     
-    func createUserDBProfile() {
+    func createUserDBProfile(completion: @escaping (_ newUserUID: String?,_ error: Error?) -> Void) {
         // Method will create a database profile for the user
         // Create a dictionary
-        var userProfile = [dbKeys.UserFirstNameKey:         userFirstName!,
-                           dbKeys.UserEmailKey:             userEmail!,
-                           dbKeys.ActiveDayKey:             1,
-                           dbKeys.DoorCommandsKey:          0,
-                           dbKeys.AppVersionKey:            appVersion,
-                           dbKeys.CityKey:                  "Unknown",
-                           dbKeys.CountryKey:               "Unknown",
-                           dbKeys.DoorStateKey:             2,
-                           dbKeys.LastIPUpdateKey:          0,
-                           dbKeys.LastSeenKey:              signupDate!,
-                           dbKeys.NetworkReconnKey:         0,
-                           dbKeys.PremiumKey:               false,
-                           dbKeys.RemoteIPAddressKey:       "",
-                           dbKeys.SensorNetworkStateKey:    "offline",
-                           dbKeys.SignupDateKey:            signupDate!,
-                           dbKeys.UIDKey:                   uid!,
-                           dbKeys.UserAddressKey:           "Unknown"] as [String:Any]
+        var userProfile = [dbKeys.UserFirstNameKey: userFirstName!,
+                           dbKeys.UserEmailKey:     userEmail!,
+                           dbKeys.AppVersionKey:    appVersion] as [String:String]
         
         // See of there's a last name to add
-        if (userLastName != nil) {
-            userProfile[dbKeys.UserLastNameKey] = userLastName
-        } else {
-            userProfile[dbKeys.UserLastNameKey] = ""
-        }
+        if (userLastName != nil) { userProfile[dbKeys.UserLastNameKey] = userLastName }
+        else { userProfile[dbKeys.UserLastNameKey] = "" }
         
-        // Send the dictionar up to Firebase!
-        let profilePath = "users/" + uid!
-        let firebaseInterface = FirebaseInterface()
-        firebaseInterface.writeToDatabase(writePath: profilePath, value: userProfile)
+        // Send the data to the client API
         print("USER: Writing user profile to DB = ")
         print(userProfile)
+        let api = GDoorAPI()
+        api.createNewUser(userData: userProfile) { (userUID, error) in
+            if (error != nil) { completion(nil, error) }
+            else { completion(userUID, nil) }
+        }
     }
     
     func updateLastSeenTime() {
-        if ((uid?.count == 28) && (localToken)) {
-            // Update the DB
-            let firebaseInterface = FirebaseInterface()
-            let lastSeenPath = "users/" + uid! + "/lastSeen"
-            let lastSeenTime = GDUtilities.shared.generateTimeStampForNow()
-            
-            firebaseInterface.writeToDatabase(writePath: lastSeenPath, value: lastSeenTime)
+        if (userUID?.count == env.UID_LENGTH) {
+            let api = GDoorAPI()
+            api.updateLastSeen(userUID: userUID)
         }
     }
     
@@ -177,9 +155,33 @@ class GDoorUser: NSObject {
         }
             
         else{
-            print("USER: User not logged in")
+            print("USER: Doug not logged in - force it")
+            loadDougsData()
         }
     }
     
-    
+    private func loadDougsData() {
+        localToken = true
+        userFirstName = "TestUser_"
+        userLastName = "0"
+        userEmail = "peza@testing.com"
+        userPassword = "admin123"
+        signupDate = GDUtilities.shared.generateTimeStampForNow()
+        uid = "JPpTrZcb30WoxUgRAAdsk6XiuGt2"
+        
+        // Auth with Firebase [temp]
+        let authInterface: FirebaseAuthInterface! = FirebaseAuthInterface.init()
+        
+        // Email method
+        
+        // Anonymour method
+        authInterface.authAnonymousUser { (success, userUID, error) in
+            if (success) {
+                print("GDOOR: Sign in success with UID => ", userUID!)
+                self.persistData()
+            } else {
+                print("GDOOR: Sign in failure")
+            }
+        }
+    }
 }

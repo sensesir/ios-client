@@ -16,11 +16,14 @@
 		EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */; };
 		EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B050207D251100EA8B9C /* TransientStateVC.swift */; };
 		EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B052207D335900EA8B9C /* GDoorModel.swift */; };
+		EBBDBBD3229E1B9A00A28E5E /* GdoorAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */; };
+		EBBDBBD6229E2B4E00A28E5E /* DevEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD5229E2B4E00A28E5E /* DevEnv.swift */; };
+		EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD7229E2B5C00A28E5E /* ProdEnv.swift */; };
+		EBBDBBDA229E2B6800A28E5E /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD9229E2B6800A28E5E /* Env.swift */; };
 		EBC6AA8B207B8C6E000F41D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AA8A207B8C6E000F41D6 /* AppDelegate.swift */; };
 		EBC6AA94207B8C6E000F41D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AA92207B8C6E000F41D6 /* Main.storyboard */; };
 		EBC6AA96207B8C6E000F41D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AA95207B8C6E000F41D6 /* Assets.xcassets */; };
 		EBC6AA99207B8C6E000F41D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AA97207B8C6E000F41D6 /* LaunchScreen.storyboard */; };
-		EBC6AAA4207BA00B000F41D6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AAA3207BA00B000F41D6 /* GoogleService-Info.plist */; };
 		EBC6AAAB207BA316000F41D6 /* HelveticaNeue-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AAAA207BA316000F41D6 /* HelveticaNeue-Light.otf */; };
 		EBC6AAAF207BB3AE000F41D6 /* DoorControllerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAAE207BB3AE000F41D6 /* DoorControllerVC.swift */; };
 		EBC6AAB1207BBCCF000F41D6 /* FirebaseInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */; };
@@ -43,13 +46,16 @@
 		EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticStateVC.swift; sourceTree = "<group>"; };
 		EB76B050207D251100EA8B9C /* TransientStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransientStateVC.swift; sourceTree = "<group>"; };
 		EB76B052207D335900EA8B9C /* GDoorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorModel.swift; sourceTree = "<group>"; };
+		EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GdoorAPI.swift; sourceTree = "<group>"; };
+		EBBDBBD5229E2B4E00A28E5E /* DevEnv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevEnv.swift; sourceTree = "<group>"; };
+		EBBDBBD7229E2B5C00A28E5E /* ProdEnv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProdEnv.swift; sourceTree = "<group>"; };
+		EBBDBBD9229E2B6800A28E5E /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		EBC6AA87207B8C6E000F41D6 /* garage-sensor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "garage-sensor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBC6AA8A207B8C6E000F41D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EBC6AA93207B8C6E000F41D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EBC6AA95207B8C6E000F41D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EBC6AA98207B8C6E000F41D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EBC6AA9A207B8C6E000F41D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EBC6AAA3207BA00B000F41D6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EBC6AAAA207BA316000F41D6 /* HelveticaNeue-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeue-Light.otf"; sourceTree = "<group>"; };
 		EBC6AAAE207BB3AE000F41D6 /* DoorControllerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorControllerVC.swift; sourceTree = "<group>"; };
 		EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseInterface.swift; sourceTree = "<group>"; };
@@ -122,6 +128,16 @@
 			path = "door-state-vcs";
 			sourceTree = "<group>";
 		};
+		EBBDBBD4229E29F200A28E5E /* config */ = {
+			isa = PBXGroup;
+			children = (
+				EBBDBBD5229E2B4E00A28E5E /* DevEnv.swift */,
+				EBBDBBD7229E2B5C00A28E5E /* ProdEnv.swift */,
+				EBBDBBD9229E2B6800A28E5E /* Env.swift */,
+			);
+			path = config;
+			sourceTree = "<group>";
+		};
 		EBC6AA7E207B8C6E000F41D6 = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +159,7 @@
 		EBC6AA89207B8C6E000F41D6 /* garage-sensor */ = {
 			isa = PBXGroup;
 			children = (
+				EBBDBBD4229E29F200A28E5E /* config */,
 				EB76B048207CAFD600EA8B9C /* utilities */,
 				EB76B042207C88CC00EA8B9C /* Authentication */,
 				EBC6AAA2207B8D34000F41D6 /* data-models */,
@@ -151,7 +168,6 @@
 				EBC6AAAC207BA503000F41D6 /* storyboards */,
 				EBC6AA8A207B8C6E000F41D6 /* AppDelegate.swift */,
 				EBC6AA95207B8C6E000F41D6 /* Assets.xcassets */,
-				EBC6AAA3207BA00B000F41D6 /* GoogleService-Info.plist */,
 				EBC6AA9A207B8C6E000F41D6 /* Info.plist */,
 				EBC6AAA6207BA272000F41D6 /* fonts */,
 			);
@@ -174,6 +190,7 @@
 			children = (
 				EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */,
 				EB76B04B207CEFF800EA8B9C /* HTTPInterface.swift */,
+				EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */,
 			);
 			path = networking;
 			sourceTree = "<group>";
@@ -311,7 +328,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBC6AA99207B8C6E000F41D6 /* LaunchScreen.storyboard in Resources */,
-				EBC6AAA4207BA00B000F41D6 /* GoogleService-Info.plist in Resources */,
 				EBC6AA96207B8C6E000F41D6 /* Assets.xcassets in Resources */,
 				EBC6AAB5207BC97C000F41D6 /* Onboarding.storyboard in Resources */,
 				EBC6AA94207B8C6E000F41D6 /* Main.storyboard in Resources */,
@@ -389,6 +405,8 @@
 				EBC6AAB3207BC402000F41D6 /* GDoorUser.swift in Sources */,
 				EB730C4120846B370076B9B6 /* StandardModalVC.swift in Sources */,
 				EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */,
+				EBBDBBD6229E2B4E00A28E5E /* DevEnv.swift in Sources */,
+				EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */,
 				EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */,
 				EB76B04C207CEFF800EA8B9C /* HTTPInterface.swift in Sources */,
 				EBC6AABB207BCF46000F41D6 /* TextEntryCell.swift in Sources */,
@@ -396,10 +414,12 @@
 				EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */,
 				EBC6AAB1207BBCCF000F41D6 /* FirebaseInterface.swift in Sources */,
 				EBC6AAAF207BB3AE000F41D6 /* DoorControllerVC.swift in Sources */,
+				EBBDBBDA229E2B6800A28E5E /* Env.swift in Sources */,
 				EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */,
 				EBC6AAB8207BC9AF000F41D6 /* SignUpVC.swift in Sources */,
 				EBC6AABD207BCF5A000F41D6 /* InfoTextCell.swift in Sources */,
 				EBC6AA8B207B8C6E000F41D6 /* AppDelegate.swift in Sources */,
+				EBBDBBD3229E1B9A00A28E5E /* GdoorAPI.swift in Sources */,
 				EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -546,7 +566,7 @@
 				DEVELOPMENT_TEAM = 558L8UH5X5;
 				INFOPLIST_FILE = "garage-sensor/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iot-za.garage-sensor";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iot-sa.garage-sensor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -562,7 +582,7 @@
 				DEVELOPMENT_TEAM = 558L8UH5X5;
 				INFOPLIST_FILE = "garage-sensor/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iot-za.garage-sensor";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iot-sa.garage-sensor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

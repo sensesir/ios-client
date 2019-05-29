@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("APP DELEGATE: Here we go, firing up!");
         
         // Initialize firebase & user data
-        FirebaseApp.configure();
         let userHasToken = GDoorUser.sharedInstance.userHasToken()
         assessUILaunchTransition(accessToken: userHasToken)
         
