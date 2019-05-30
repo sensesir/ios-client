@@ -269,7 +269,7 @@
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Welcome to peace of mind about access to your home" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="etI-5C-i3N">
                                                 <rect key="frame" x="40" y="10" width="295" height="99"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                         </subviews>
@@ -285,18 +285,18 @@
                                         <rect key="frame" x="0.0" y="388" width="375" height="259"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="90S-E2-Itm">
-                                                <rect key="frame" x="87.5" y="10" width="200" height="35"/>
+                                                <rect key="frame" x="62.5" y="10" width="250" height="45"/>
                                                 <color key="backgroundColor" red="0.14901960784313725" green="0.22745098039215686" blue="0.32156862745098036" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="35" id="8MD-DX-Mdc"/>
-                                                    <constraint firstAttribute="width" priority="750" constant="200" id="gUg-ZQ-JGB"/>
+                                                    <constraint firstAttribute="height" constant="45" id="8MD-DX-Mdc"/>
+                                                    <constraint firstAttribute="width" priority="750" constant="250" id="gUg-ZQ-JGB"/>
                                                 </constraints>
                                                 <state key="normal" title="Let's go">
                                                     <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <real key="value" value="17.5"/>
+                                                        <real key="value" value="22.5"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>

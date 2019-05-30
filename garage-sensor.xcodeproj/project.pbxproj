@@ -12,7 +12,6 @@
 		EB76B044207C88E600EA8B9C /* FirebaseAuthInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B043207C88E600EA8B9C /* FirebaseAuthInterface.swift */; };
 		EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B046207C929500EA8B9C /* UIEffects.swift */; };
 		EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */; };
-		EB76B04C207CEFF800EA8B9C /* HTTPInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B04B207CEFF800EA8B9C /* HTTPInterface.swift */; };
 		EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */; };
 		EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B050207D251100EA8B9C /* TransientStateVC.swift */; };
 		EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B052207D335900EA8B9C /* GDoorModel.swift */; };
@@ -43,7 +42,6 @@
 		EB76B043207C88E600EA8B9C /* FirebaseAuthInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthInterface.swift; sourceTree = "<group>"; };
 		EB76B046207C929500EA8B9C /* UIEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEffects.swift; sourceTree = "<group>"; };
 		EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDUtilities.swift; sourceTree = "<group>"; };
-		EB76B04B207CEFF800EA8B9C /* HTTPInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPInterface.swift; sourceTree = "<group>"; };
 		EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticStateVC.swift; sourceTree = "<group>"; };
 		EB76B050207D251100EA8B9C /* TransientStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransientStateVC.swift; sourceTree = "<group>"; };
 		EB76B052207D335900EA8B9C /* GDoorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorModel.swift; sourceTree = "<group>"; };
@@ -191,7 +189,6 @@
 			isa = PBXGroup;
 			children = (
 				EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */,
-				EB76B04B207CEFF800EA8B9C /* HTTPInterface.swift */,
 				EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */,
 			);
 			path = networking;
@@ -412,7 +409,6 @@
 				EBD9CD0B229EF3CA002B6E90 /* FormTypeSelectorCell.swift in Sources */,
 				EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */,
 				EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */,
-				EB76B04C207CEFF800EA8B9C /* HTTPInterface.swift in Sources */,
 				EBC6AABB207BCF46000F41D6 /* TextEntryCell.swift in Sources */,
 				EB76B044207C88E600EA8B9C /* FirebaseAuthInterface.swift in Sources */,
 				EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */,

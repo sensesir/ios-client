@@ -116,13 +116,13 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     // MARK: - Door Interface -
     
+    /*
     @IBAction func triggerDoor() {
         print("DOOR CONTROLLER: User attempting to actuate door")
         let stateController = childViewControllers[0] as! UITabBarController
         stateController.selectedIndex = 1;
         
         // Send an HTTP get request to trigger the garage door
-        let httpInterface = HTTPInterface()
         httpInterface.hitActuateDoorAPI { (data, response, error) in
             // Cancel loading interface
             DispatchQueue.main.async {self.transitionToStaticState()}
@@ -155,6 +155,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
             DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: resCode as! Int)}
         }
     }
+ */
     
     func updateUIForTriggerResponse(resCode: Int!) {
         if resCode == 0 {

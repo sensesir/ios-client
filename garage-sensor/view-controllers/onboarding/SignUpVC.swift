@@ -61,7 +61,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Statically state for now
-        if (formType == FormType.SignUp) { return 6 }
+        if (formType == FormType.SignUp) { return 7 }
         return 4
     }
     
@@ -81,17 +81,12 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Generate the correct cells for each type
         let row = indexPath.row
         var cell: UITableViewCell?
+        
         if (row == 0) { cell = generateLogoCell(tableView: tableView) }
-        if (row == 0) { cell = generateFormSelectorCell(tableView: tableView) }
-            
-        else if (formType == FormType.SignUp && (2 ... 5).contains(row)) {
-            cell = generateTextInputCell(tableView: tableView, row: row)
-        } else if (formType == FormType.Login && (2 ... 3).contains(row)) {
-            cell = generateTextInputCell(tableView: tableView, row: row)
-        }
-        else if ((formType == FormType.SignUp && row == 6) || (formType == FormType.Login && row == 4)){
-            cell = generateInfoTextCell(tableView: tableView)
-        }
+        else if (row == 1) { cell = generateFormSelectorCell(tableView: tableView) }
+        else if (formType == FormType.SignUp && (2 ... 5).contains(row)) { cell = generateTextInputCell(tableView: tableView, row: row) }
+        else if (formType == FormType.Login && (2 ... 3).contains(row)) { cell = generateTextInputCell(tableView: tableView, row: row) }
+        else if ((formType == FormType.SignUp && row == 6) || (formType == FormType.Login && row == 4)){ cell = generateInfoTextCell(tableView: tableView) }
         else{
             print("SIGNUP VC: Invalid cell row requesting cell")
             cell = UITableViewCell.init()
@@ -174,12 +169,54 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     // MARK: - User Entry handling -
     
     @objc func userSelectedSignUp () {
-        // Reset page & vars
+        if (formType == FormType.SignUp) {
+            // Already on this page
+            return
+        }
+        
         formType = FormType.SignUp
+        DispatchQueue.main.async { [weak self] in
+            self?.setFormTypeUnderline(newFormType: FormType.SignUp)
+            self?.resetUserData(resetFormType: FormType.Login)
+            self?.signupForm.reloadData()
+        }
     }
     
     @objc func userSelectedLogin () {
+        if (formType == FormType.Login) {
+            // Already on this page
+            return
+        }
+        
         formType = FormType.Login
+        DispatchQueue.main.async { [weak self] in
+            self?.setFormTypeUnderline(newFormType: FormType.Login)
+            self?.resetUserData(resetFormType: FormType.SignUp)
+            self?.signupForm.reloadData()
+        }
+    }
+    
+    func setFormTypeUnderline(newFormType: FormType) {
+        let cell = signupForm.cellForRow(at: IndexPath.init(row: 1, section: 0)) as! FormTypeSelectorCell
+        if (newFormType == FormType.SignUp) {
+            cell.signUpUnderline.isHidden = false
+            cell.loginUnderline.isHidden = true
+        } else {
+            cell.signUpUnderline.isHidden = true
+            cell.loginUnderline.isHidden = false
+        }
+    }
+    
+    func resetUserData(resetFormType: FormType) {
+        // Data vars
+        userName = nil
+        userPassword = nil
+        userEmail = nil
+        userPasswordConfirm = nil
+        nameAttempt = false
+        emailAttepmt = false
+        passwordAttempt = false
+        passwordConfirmAttempt = false
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -242,7 +279,8 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func fullEntryValidityCheck() {
         // Check if we have all green lights
-        let indexPath = IndexPath.init(row: 4, section: 0)
+        let row = formType == FormType.SignUp ? 6 : 5
+        let indexPath = IndexPath.init(row: row, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
         
         if (formType == FormType.SignUp) {
@@ -258,7 +296,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 cell?.submitButton.isHidden = true
             }
                 
-            else if(!validUserName && passwordAttempt){
+            else if(!validUserPassword && passwordAttempt){
                 cell?.userInfo.isHidden = false
                 cell?.userInfo.text = "Password should be longer than 6 characters"
                 cell?.submitButton.isHidden = true
@@ -271,12 +309,16 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             }
                 
             else if (validUserName && validUserEmail && validUserPassword && validPasswordConfirm){
+                print("ENTRY VC: All entries correct, exposing submit button")
                 cell?.userInfo.isHidden = true
                 cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
                 cell?.submitButton.isHidden = false
             }
+            
+            else {
+                print("ENTRY VC: ERROR => Unknown state of inputs")
+            }
         }
-        
     }
     
     func assessUserNameValidity(name: String) -> Bool {
@@ -324,7 +366,10 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     }
     
     func assessPassworkConfirmValidity(confirmPassword: String) -> Bool {
-        if (confirmPassword == userPassword) { return true }
+        if (confirmPassword == userPassword) {
+            validPasswordConfirm = true
+            return true
+        }
         else {
             print("SIGN UP VC: User's confirmed password does not match")
             setErrorLabel(error: "Confirmed password does not match password entry")
@@ -335,7 +380,8 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func setErrorLabel(error: String!) {
         // Get reference to cell
-        let indexPath = IndexPath.init(row: 4, section: 0)
+        let row = formType == FormType.SignUp ? 6 : 5
+        let indexPath = IndexPath.init(row: row, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
         
         // Set the text and show it
