@@ -62,7 +62,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Statically state for now
         if (formType == FormType.SignUp) { return 7 }
-        return 4
+        return 5
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -248,8 +248,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         // Check validity of entry
         var recentEntryValid: Bool! = false
         
-        if (formType == FormType.SignUp) {
-            switch textField.tag {
+        switch textField.tag {
             case 0:
                 userName = textField.text
                 recentEntryValid = assessUserNameValidity(name: textField.text!)
@@ -268,7 +267,6 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 passwordConfirmAttempt = true
             default:
                 print("SIGN UP VC: Invalid text field")
-            }
         }
         
         if recentEntryValid {
@@ -279,45 +277,50 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func fullEntryValidityCheck() {
         // Check if we have all green lights
-        let row = formType == FormType.SignUp ? 6 : 5
+        let row = formType == FormType.SignUp ? 6 : 4
         let indexPath = IndexPath.init(row: row, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
         
-        if (formType == FormType.SignUp) {
-            if (!validUserName && nameAttempt) {
-                cell?.userInfo.isHidden = false
-                cell?.userInfo.text = "User name should be longer than 4 characters"
-                cell?.submitButton.isHidden = true
-            }
+        if (!validUserName && nameAttempt && (formType == FormType.SignUp)) {
+            cell?.userInfo.isHidden = false
+            cell?.userInfo.text = "User name should be longer than 4 characters"
+            cell?.submitButton.isHidden = true
+        }
                 
-            else if (!validUserEmail && emailAttepmt){
-                cell?.userInfo.isHidden = false
-                cell?.userInfo.text = "Hmmm the email address doesn't seem quite right. Please try again."
-                cell?.submitButton.isHidden = true
-            }
+        else if (!validUserEmail && emailAttepmt){
+            cell?.userInfo.isHidden = false
+            cell?.userInfo.text = "Hmmm the email address doesn't seem quite right. Please try again."
+            cell?.submitButton.isHidden = true
+        }
                 
-            else if(!validUserPassword && passwordAttempt){
-                cell?.userInfo.isHidden = false
-                cell?.userInfo.text = "Password should be longer than 6 characters"
-                cell?.submitButton.isHidden = true
-            }
+        else if(!validUserPassword && passwordAttempt && (formType == FormType.SignUp)){
+            cell?.userInfo.isHidden = false
+            cell?.userInfo.text = "Password should be longer than 6 characters"
+            cell?.submitButton.isHidden = true
+        }
                 
-            else if(!validPasswordConfirm && passwordConfirmAttempt) {
-                cell?.userInfo.isHidden = false
-                cell?.userInfo.text = "Passwords don't match"
-                cell?.submitButton.isHidden = true
-            }
+        else if(!validPasswordConfirm && passwordConfirmAttempt && (formType == FormType.SignUp)) {
+            cell?.userInfo.isHidden = false
+            cell?.userInfo.text = "Passwords don't match"
+            cell?.submitButton.isHidden = true
+        }
                 
-            else if (validUserName && validUserEmail && validUserPassword && validPasswordConfirm){
-                print("ENTRY VC: All entries correct, exposing submit button")
-                cell?.userInfo.isHidden = true
-                cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
-                cell?.submitButton.isHidden = false
-            }
+        else if (validUserName && validUserEmail && validUserPassword && validPasswordConfirm){
+            print("ENTRY VC: All entries correct, exposing submit button")
+            cell?.userInfo.isHidden = true
+            cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
+            cell?.submitButton.isHidden = false
+        }
             
-            else {
-                print("ENTRY VC: ERROR => Unknown state of inputs")
-            }
+        else if (validUserEmail && validUserPassword && (formType == FormType.Login)) {
+            print("ENTRY VC: All entries correct, exposing login button")
+            cell?.userInfo.isHidden = true
+            cell?.submitButton.layer.cornerRadius = cell!.submitButton.frame.height/2
+            cell?.submitButton.isHidden = false
+        }
+            
+        else {
+            print("ENTRY VC: ERROR => Unknown state of inputs")
         }
     }
     
@@ -380,7 +383,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func setErrorLabel(error: String!) {
         // Get reference to cell
-        let row = formType == FormType.SignUp ? 6 : 5
+        let row = formType == FormType.SignUp ? 6 : 4
         let indexPath = IndexPath.init(row: row, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
         
