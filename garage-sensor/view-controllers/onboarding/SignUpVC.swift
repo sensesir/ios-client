@@ -126,13 +126,16 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     cell?.userEntry.tag = 0
                     cell?.userEntry.autocapitalizationType = .words
                 case 3:
+                    cell?.userEntry.isSecureTextEntry = false
                     cell?.userEntry.text = "Email"
                     cell?.userEntry.autocapitalizationType = .none
                     cell?.userEntry.tag = 1
                 case 4:
+                    cell?.userEntry.isSecureTextEntry = false
                     cell?.userEntry.text = "Password"
                     cell?.userEntry.tag = 2
                 case 5:
+                    cell?.userEntry.isSecureTextEntry = false
                     cell?.userEntry.text = "Confirm Password"
                     cell?.userEntry.tag = 3
                 default: cell?.userEntry.text = "Error"
@@ -144,6 +147,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     cell?.userEntry.autocapitalizationType = .none
                     cell?.userEntry.tag = 1
                 case 3:
+                    cell?.userEntry.isSecureTextEntry = false
                     cell?.userEntry.text = "Password"
                     cell?.userEntry.tag = 2
                 default: cell?.userEntry.text = "Error"
@@ -168,10 +172,12 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     }
     
     func getInfoCell() -> InfoTextCell {
-        let row = formType == FormType.SignUp ? 6 : 4
-        let indexPath = IndexPath.init(row: row, section: 0)
-        let cell = signupForm.cellForRow(at: indexPath) as! InfoTextCell
-        return cell
+        let signupIndexPath = IndexPath.init(row: 6, section: 0)
+        let signupInfoCell = signupForm.cellForRow(at: signupIndexPath) as? InfoTextCell
+        let loginIndexPath = IndexPath.init(row: 4, section: 0)
+        let loginInfoCell = signupForm.cellForRow(at: loginIndexPath) as? InfoTextCell
+        
+        return signupInfoCell == nil ? loginInfoCell! : signupInfoCell!
     }
     
     
@@ -270,6 +276,15 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 userPassword = textField.text
                 recentEntryValid = assessPasswordVailidity(password: textField.text!)
                 passwordAttempt = true
+            
+                if (passwordConfirmAttempt && formType == FormType.SignUp && recentEntryValid) {
+                    // Need to reasses password confirm attempt
+                    let indexPath = IndexPath.init(row: 5, section: 0)
+                    let cell = signupForm.cellForRow(at: indexPath) as! TextEntryCell
+                    let confirmPasswordText = cell.userEntry!.text
+                    recentEntryValid = assessPassworkConfirmValidity(confirmPassword: confirmPasswordText!)
+                }
+            
             case 3:
                 userPasswordConfirm = textField.text
                 recentEntryValid = assessPassworkConfirmValidity(confirmPassword: textField.text!)
@@ -315,14 +330,14 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         }
                 
         else if (validUserName && validUserEmail && validUserPassword && validPasswordConfirm){
-            print("ENTRY VC: All entries correct, exposing submit button")
+            print("ENTRY VC: All entries for signup correct, exposing submit button")
             cell.userInfo.isHidden = true
             cell.submitButton.layer.cornerRadius = cell.submitButton.frame.height/2
             cell.submitButton.isHidden = false
         }
             
         else if (validUserEmail && validUserPassword && (formType == FormType.Login)) {
-            print("ENTRY VC: All entries correct, exposing login button")
+            print("ENTRY VC: All entries for login correct, exposing login button")
             cell.userInfo.isHidden = true
             cell.submitButton.layer.cornerRadius = cell.submitButton.frame.height/2
             cell.submitButton.isHidden = false
@@ -392,13 +407,9 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func setErrorLabel(error: String!) {
         // Get reference to cell
-        let row = formType == FormType.SignUp ? 6 : 4
-        let indexPath = IndexPath.init(row: row, section: 0)
-        let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
-        
-        // Set the text and show it
-        cell?.userInfo.text = error
-        cell?.userInfo.isHidden = false
+        let cell = getInfoCell()
+        cell.userInfo.text = error
+        cell.userInfo.isHidden = false
     }
     
     // MARK: - Submit Details -
@@ -410,13 +421,14 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         
         if (formType == FormType.SignUp) {
             signUserUp(completion: { (userUID, error) in
-                if (error != nil) {
-                    print("ENTRY VC: Failed to created new user => \(String(describing: error))")
-                    // TODO: explain error
-                    self.signupError()
-                } else {
-                    print("ENTRY VC: Successfully created new user");
-                    self.successfulSignUp(userUID: userUID)
+                DispatchQueue.main.async { [weak self] in
+                    if (error != nil) {
+                        print("ENTRY VC: Failed to created new user => \(String(describing: error))")
+                        self?.signupError()
+                    } else {
+                        print("ENTRY VC: Successfully created new user");
+                        self?.successfulSignUp(userUID: userUID)
+                    }
                 }
             })
         }
@@ -513,11 +525,9 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func signupError() {
         // Show error label
         print("ENTRY VC: Failed to sign user up with email.")
-        
-        let indexPath = IndexPath.init(row: 5, section: 0)
-        let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
-        cell?.userInfo.text = "Signup error - please try again."
-        cell?.userInfo.isHidden = false
+        let cell = getInfoCell()
+        cell.userInfo.text = "Signup error - please try again."
+        cell.userInfo.isHidden = false
     }
     
     func loginError() {
