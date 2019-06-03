@@ -9,18 +9,6 @@
 
 import Foundation
 
-// Constants
-// local keys
-let userFirstNameKey    = "kUserFirstName"
-let userLastNameKey     = "kUserLastName"
-let userEmailKey        = "kUserEmail"
-let userPasswordKey     = "kUserPassword"
-let signupDateKey       = "kSignupDate"
-let uidKey              = "kUID"
-let userAddressKey      = "kUserAddressKey"
-let userMobileNumKey    = "kUserMobileNum"
-let localTokenKey       = "kLocalToken"
-
 class GDoorUser: NSObject {
     // Class level properties
     var userFirstName: String?
@@ -28,15 +16,14 @@ class GDoorUser: NSObject {
     var userEmail: String?
     var userPassword: String?
     let appVersion: String! = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
-    var signupDate: Int?
-    var uid: String?
+    var userUID: String?
     var userAddress: String?
     var userMobileNum: String?
-    var localToken: Bool! = false
+    var sensorUID: String?
     
     // Manager object & DB keys
     let dataManager: UserDefaults!
-    let dbKeys = dbProfileKeys()
+    let profileKeys = dbProfileKeys()
     
     // MARK: - Initialization -
     static let sharedInstance = GDoorUser()
@@ -49,21 +36,18 @@ class GDoorUser: NSObject {
         attemptToLoadUserData()
     }
     
-    func userHasToken() -> Bool {
+    func userSignedIn() -> Bool {
         // Simple wrapper to check if the user has data
-        if (localToken) {
-            return true;
-        } else{
-            return false;
-        }
+        if (userUID != nil) { return true }
+        else { return false }
     }
     
     // MARK: - Update data -
     
-    func createNewUser(name: String!,
+    func setUserProfile(name: String!,
                        email: String!,
                        password: String!,
-                       userUID: String!){
+                       newUserUID: String!) {
         
         // Try capture a first and last name
         let spaceSet = CharacterSet.init(charactersIn: " ")
@@ -82,63 +66,50 @@ class GDoorUser: NSObject {
         // Set simple props
         userEmail = email
         userPassword = password
-        uid = userUID
-        localToken = true
+        userUID = newUserUID
         
-        // Log this as the moment the user signed up
-        signupDate = GDUtilities.shared.generateTimeStampForNow()
+        self.persistData()
+        print("USER: Completed setting user data")
+    }
+    
+    func initDataFromLogin(userData: [String: Any]!) {
+        userFirstName = userData[profileKeys.UserFirstNameKey] as? String
+        userEmail = userData[profileKeys.EmailKey] as? String
+        userMobileNum = userData[profileKeys.UserPasswordKey] as? String
+        userLastName = userData[profileKeys.UserLastNameKey] as? String
+        userUID = userData[profileKeys.UIDKey] as? String
+        sensorUID = userData[profileKeys.SensorUIDKey] as? String
         
-        // Persist data & update database
-        persistData()
-        createUserDBProfile()
+        self.persistData()
     }
     
     // MARK: - Database interface -
     
-    func createUserDBProfile() {
+    func createUserDBProfile(completion: @escaping (_ newUserUID: String?,_ error: Error?) -> Void) {
         // Method will create a database profile for the user
         // Create a dictionary
-        var userProfile = [dbKeys.UserFirstNameKey:         userFirstName!,
-                           dbKeys.UserEmailKey:             userEmail!,
-                           dbKeys.ActiveDayKey:             1,
-                           dbKeys.DoorCommandsKey:          0,
-                           dbKeys.AppVersionKey:            appVersion,
-                           dbKeys.CityKey:                  "Unknown",
-                           dbKeys.CountryKey:               "Unknown",
-                           dbKeys.DoorStateKey:             2,
-                           dbKeys.LastIPUpdateKey:          0,
-                           dbKeys.LastSeenKey:              signupDate!,
-                           dbKeys.NetworkReconnKey:         0,
-                           dbKeys.PremiumKey:               false,
-                           dbKeys.RemoteIPAddressKey:       "",
-                           dbKeys.SensorNetworkStateKey:    "offline",
-                           dbKeys.SignupDateKey:            signupDate!,
-                           dbKeys.UIDKey:                   uid!,
-                           dbKeys.UserAddressKey:           "Unknown"] as [String:Any]
+        var userProfile = [profileKeys.UserFirstNameKey: userFirstName!,
+                           profileKeys.EmailKey:         userEmail!,
+                           profileKeys.AppVersionKey:    appVersion] as [String:String]
         
         // See of there's a last name to add
-        if (userLastName != nil) {
-            userProfile[dbKeys.UserLastNameKey] = userLastName
-        } else {
-            userProfile[dbKeys.UserLastNameKey] = ""
-        }
+        if (userLastName != nil) { userProfile[profileKeys.UserLastNameKey] = userLastName }
+        else { userProfile[profileKeys.UserLastNameKey] = "" }
         
-        // Send the dictionar up to Firebase!
-        let profilePath = "users/" + uid!
-        let firebaseInterface = FirebaseInterface()
-        firebaseInterface.writeToDatabase(writePath: profilePath, value: userProfile)
+        // Send the data to the client API
         print("USER: Writing user profile to DB = ")
         print(userProfile)
+        let api = GDoorAPI()
+        api.createNewUser(userData: userProfile) { (userUID, error) in
+            if (error != nil) { completion(nil, error) }
+            else { completion(userUID, nil) }
+        }
     }
     
     func updateLastSeenTime() {
-        if ((uid?.count == 28) && (localToken)) {
-            // Update the DB
-            let firebaseInterface = FirebaseInterface()
-            let lastSeenPath = "users/" + uid! + "/lastSeen"
-            let lastSeenTime = GDUtilities.shared.generateTimeStampForNow()
-            
-            firebaseInterface.writeToDatabase(writePath: lastSeenPath, value: lastSeenTime)
+        if (userUID?.count == env.UID_LENGTH) {
+            let api = GDoorAPI()
+            api.updateLastSeen(userUID: userUID, completion: nil)
         }
     }
     
@@ -147,39 +118,32 @@ class GDoorUser: NSObject {
     func persistData() {
         // Write all data to disk
         print("USER: Writing data to local storage")
-        if (userFirstName != nil)   {dataManager.set(userFirstName, forKey: userFirstNameKey)}
-        if (userLastName != nil)    {dataManager.set(userLastName, forKey: userLastNameKey)}
-        if (userEmail != nil)       {dataManager.set(userEmail, forKey: userEmailKey)}
-        if (userPassword != nil)    {dataManager.set(userPassword, forKey: userPasswordKey)}
-        if (signupDate != nil)      {dataManager.set(signupDate, forKey: signupDateKey)}
-        if (uid != nil)             {dataManager.set(uid, forKey: uidKey)}
-        if (userAddress != nil)     {dataManager.set(userAddress, forKey: userAddressKey)}
-        if (userMobileNum != nil)   {dataManager.set(userMobileNum, forKey: userMobileNumKey)}
-        
-        // Save the token
-        dataManager.set(localToken, forKey: localTokenKey)
+        if (userFirstName != nil) { dataManager.set(userFirstName, forKey: profileKeys.UserFirstNameKey) }
+        if (userLastName != nil)  { dataManager.set(userLastName, forKey: profileKeys.UserLastNameKey) }
+        if (userEmail != nil)     { dataManager.set(userEmail, forKey: profileKeys.EmailKey) }
+        if (userPassword != nil)  { dataManager.set(userPassword, forKey: profileKeys.UserPasswordKey) }
+        if (userUID != nil)       { dataManager.set(userUID, forKey: profileKeys.UIDKey) }
+        if (userAddress != nil)   { dataManager.set(userAddress, forKey: profileKeys.UserAddressKey) }
+        if (userMobileNum != nil) { dataManager.set(userMobileNum, forKey: profileKeys.UserMobileNumKey) }
     }
     
     // Attempt to load user vars from memory
     private func attemptToLoadUserData() {
-        localToken = dataManager.bool(forKey: localTokenKey)
-        if (localToken) {
+        userUID = dataManager.string(forKey: profileKeys.UIDKey)
+        
+        if (userUID != nil) {
             // User has access and should have data
             print("USER: Loading data from local storage")
-            userFirstName   = dataManager.string(forKey: userFirstNameKey)
-            userLastName    = dataManager.string(forKey: userLastNameKey)
-            userEmail       = dataManager.string(forKey: userEmailKey)
-            userPassword    = dataManager.string(forKey: userPasswordKey)
-            signupDate      = dataManager.integer(forKey: signupDateKey)
-            uid             = dataManager.string(forKey: uidKey)
-            userAddress     = dataManager.string(forKey: userAddressKey)
-            userMobileNum   = dataManager.string(forKey: userMobileNumKey)
+            userFirstName   = dataManager.string(forKey: profileKeys.UserFirstNameKey)
+            userLastName    = dataManager.string(forKey: profileKeys.UserLastNameKey)
+            userEmail       = dataManager.string(forKey: profileKeys.EmailKey)
+            userPassword    = dataManager.string(forKey: profileKeys.UserPasswordKey)
+            userAddress     = dataManager.string(forKey: profileKeys.UserAddressKey)
+            userMobileNum   = dataManager.string(forKey: profileKeys.UserMobileNumKey)
         }
             
         else{
-            print("USER: User not logged in")
+            print("USER: No user data locally")
         }
     }
-    
-    
 }

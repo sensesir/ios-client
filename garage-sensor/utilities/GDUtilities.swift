@@ -10,29 +10,24 @@ import Foundation
 
 struct dbProfileKeys {
     let ActiveDayKey = "activeDays"
-    let DoorCommandsKey = "appGDoorCommands"
     let AppVersionKey = "appVersion"
     let AssignedLocalIPKey = "assignedLocalIP"
     let CityKey = "city"
     let CountryKey = "country"
+    let RegionKey = "region"
     let DoorStateKey = "doorState"
     let EmailKey = "email"
     let FirmwareVersionKey = "firmwareVersion"
-    let LastIPUpdateKey = "lastIPUpdate"
     let LastSeenKey = "lastSeen"
-    let NetworkReconnKey = "networkReconnections"
     let PremiumKey = "premium"
-    let RemoteIPAddressKey = "remoteIPAddress"
-    let SensorBootTimeKey = "sensorBootTime"
-    let SensorNetworkStateKey = "sensorNetworkState"
-    let ServerPortKey = "serverPort"
-    let SignupDateKey = "signupDate"
-    let TargetStaticIPKey = "targetStaticIP"
-    let UIDKey = "uid"
-    let UserAddressKey = "userAddress"
+    let UIDKey = "userUID"
+    let UserAddressKey = "address"
     let UserFirstNameKey = "userFirstName"
     let UserLastNameKey = "userLastName"
-    let UserEmailKey = "email"
+    let UserNameKey = "username"
+    let UserMobileNumKey = "mobileNumber"
+    let UserPasswordKey = "password"
+    let SensorUIDKey = "sensorUID"
 }
 
 struct doorInterfaceErrors {
@@ -81,13 +76,10 @@ class GDUtilities: NSObject {
     
     // MARK: - Data Handling -
     
-    func doorResJSONDataToDict(jsonData: Data?) -> Dictionary <String, Any> {
+    func jsonDataToDict(jsonData: Data?) -> Dictionary <String, Any> {
         // Converts data to dictionary or nil if error
-        
         do {
-            let jsonDict = try JSONSerialization.jsonObject(with: jsonData!, options: [])               // as! [String: Int]
-            print(jsonDict)
-            
+            let jsonDict = try JSONSerialization.jsonObject(with: jsonData!, options: []) // as! [String: Int]
             let convertedDict = jsonDict as! [String: Any]
             return convertedDict
         } catch {

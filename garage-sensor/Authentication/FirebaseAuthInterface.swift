@@ -44,4 +44,19 @@ class FirebaseAuthInterface: NSObject {
             }
         }
     }
+    
+    func authAnonymousUser(completion: @escaping (_ success: Bool, _ userUID: String?, _ authError: Error?) -> Void) {
+        print("FIREBASE AUTH: Authenticating user anonymously");
+        Auth.auth().signInAnonymously() { (authResult, error) in
+            if (error != nil) {
+                print("FIREBASE AITH: Failed to anonymously auth user -> ", error!);
+                completion(false, nil, error);
+            }
+                
+            else {
+                print("FIREBASE AUTH: Successfully auth'd user anonymously");
+                completion(true, authResult?.uid, nil);
+            }
+        }
+    }
 }
