@@ -137,13 +137,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Name etc" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bEO-ei-HDD" userLabel="Name entry">
-                                                    <rect key="frame" x="35" y="16" width="305" height="23"/>
+                                                    <rect key="frame" x="45" y="16" width="285" height="23"/>
                                                     <color key="textColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.30980392156862746" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" textContentType="name"/>
                                                 </textField>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oeE-IM-2a4" userLabel="Underline 1">
-                                                    <rect key="frame" x="20" y="44" width="335" height="1"/>
+                                                    <rect key="frame" x="30" y="44" width="315" height="1"/>
                                                     <color key="backgroundColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="3h2-7r-uui"/>
@@ -151,13 +151,13 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="bEO-ei-HDD" secondAttribute="trailing" constant="20" id="EsJ-Tj-Xv3"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="bEO-ei-HDD" secondAttribute="trailing" constant="30" id="EsJ-Tj-Xv3"/>
                                                 <constraint firstItem="bEO-ei-HDD" firstAttribute="top" secondItem="SUU-CQ-QIs" secondAttribute="topMargin" constant="5" id="S2c-Wh-cng"/>
-                                                <constraint firstItem="bEO-ei-HDD" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leadingMargin" constant="20" id="U4g-eU-bh9"/>
-                                                <constraint firstItem="oeE-IM-2a4" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leading" constant="20" id="f1B-7b-gWE"/>
+                                                <constraint firstItem="bEO-ei-HDD" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leadingMargin" constant="30" id="U4g-eU-bh9"/>
+                                                <constraint firstItem="oeE-IM-2a4" firstAttribute="leading" secondItem="SUU-CQ-QIs" secondAttribute="leading" constant="30" id="f1B-7b-gWE"/>
                                                 <constraint firstItem="oeE-IM-2a4" firstAttribute="top" secondItem="bEO-ei-HDD" secondAttribute="bottom" constant="5" id="gAI-Hl-425"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="bEO-ei-HDD" secondAttribute="bottom" constant="5" id="kf1-yj-h02"/>
-                                                <constraint firstAttribute="trailing" secondItem="oeE-IM-2a4" secondAttribute="trailing" constant="20" id="sqG-aw-Su5"/>
+                                                <constraint firstAttribute="trailing" secondItem="oeE-IM-2a4" secondAttribute="trailing" constant="30" id="sqG-aw-Su5"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

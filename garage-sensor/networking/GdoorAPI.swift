@@ -22,18 +22,28 @@ class GDoorAPI: NSObject {
     func createNewUser(userData: [String:String]!,
                        completion: @escaping (_ newUserUID: String?,_ error: Error?) -> Void) {
         
-        let endpoint = env.CLIENT_API_ROOT_URL + env.CREATE_USER_ENDPOINT;
-        let payload = try! JSONSerialization.data(withJSONObject: userData, options: [])
-        let request = jsonPostReq(endpoint: endpoint, payload: payload)
+        let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_CREATE_USER;
+        let request = jsonPostReq(endpoint: endpoint, payload: userData)
         
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if (error != nil) {
                 completion(nil, error!)
-            } else {
-                let res = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                let newUserUID = res["userUID"] as! String
-                completion(newUserUID, nil)
+                return
             }
+            
+            let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+            let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+            print("CLIENT API: Login response => Code: \(statusCode) Body:\(body)")
+            
+            if (!(200 ... 299).contains(statusCode)) {
+                print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
+                let serverError = NSError(domain:"", code:statusCode, userInfo: body["message"] as! [String : String])
+                completion(nil, serverError)
+                return
+            }
+        
+            let newUserUID = body["userUID"] as! String
+            completion(newUserUID, nil)
         }
         
         // Start the task
@@ -42,19 +52,28 @@ class GDoorAPI: NSObject {
     }
     
     func logUserIn(userCreds: [String:String]!,
-                   completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
+                   completion: @escaping (_ resBody: [String: Any]?,_ error: Error?) -> Void) {
         
-        let endpoint = env.CLIENT_API_ROOT_URL + env.LOG_USER_IN_ENDPOINT;
-        let payload = try! JSONSerialization.data(withJSONObject: userCreds, options: [])
-        let request = jsonPostReq(endpoint: endpoint, payload: payload)
+        let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_LOG_USER_IN;
+        let request = jsonPostReq(endpoint: endpoint, payload: userCreds)
         
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if (error != nil) { completion(false, error!) }
-            else {
-                let res = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                print("CLIENT API: Login response = \(res)")
-                completion(true, nil)
+            if (error != nil) {
+                completion(nil, error!)
+                return;
             }
+
+            let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+            let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+            print("CLIENT API: Login response => Code: \(statusCode) Body:\(body)")
+            
+            if (!(200 ... 299).contains(statusCode)) {
+                let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                completion(body, serverError)
+                return
+            }
+        
+            completion(body, nil)
         }
         
         // Start the task
@@ -66,8 +85,7 @@ class GDoorAPI: NSObject {
                         completion: ((_ response: [String:Any]?, _ error: Error?) -> Void)? ) {
         
         let endpoint = env.CLIENT_API_ROOT_URL + env.UPDATE_LAST_SEEN
-        let payload = try! JSONSerialization.data(withJSONObject: ["userUID": userUID], options: [])
-        let request = jsonPostReq(endpoint: endpoint, payload: payload)
+        let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
         
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if (error != nil) {
@@ -84,11 +102,14 @@ class GDoorAPI: NSObject {
         postTask.resume()
     }
     
-    func jsonPostReq(endpoint: String!, payload: Data) -> URLRequest {
+    func jsonPostReq(endpoint: String!, payload: [String: Any]!) -> URLRequest {
         let endpointUrl = URL.init(string: endpoint)
         var postReq = URLRequest(url: endpointUrl!)
+        let serialPayload = try! JSONSerialization.data(withJSONObject: payload, options: [])
+        
         postReq.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        postReq.httpBody = payload
+        postReq.setValue(env.CLIENT_API_KEY, forHTTPHeaderField: "x-api-key")
+        postReq.httpBody = serialPayload
         postReq.httpMethod = "POST"
         return postReq
     }
