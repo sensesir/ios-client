@@ -19,6 +19,7 @@ class GDoorUser: NSObject {
     var userUID: String?
     var userAddress: String?
     var userMobileNum: String?
+    var sensorUID: String?
     
     // Manager object & DB keys
     let dataManager: UserDefaults!
@@ -77,6 +78,7 @@ class GDoorUser: NSObject {
         userMobileNum = userData[profileKeys.UserPasswordKey] as? String
         userLastName = userData[profileKeys.UserLastNameKey] as? String
         userUID = userData[profileKeys.UIDKey] as? String
+        sensorUID = userData[profileKeys.SensorUIDKey] as? String
         
         self.persistData()
     }

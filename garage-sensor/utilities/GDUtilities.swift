@@ -27,6 +27,7 @@ struct dbProfileKeys {
     let UserNameKey = "username"
     let UserMobileNumKey = "mobileNumber"
     let UserPasswordKey = "password"
+    let SensorUIDKey = "sensorUID"
 }
 
 struct doorInterfaceErrors {

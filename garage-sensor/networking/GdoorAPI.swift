@@ -33,7 +33,7 @@ class GDoorAPI: NSObject {
             
             let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
             let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-            print("CLIENT API: Login response => Code: \(statusCode) Body:\(body)")
+            print("CLIENT API: Create user response => Code: \(statusCode) Body:\(body)")
             
             if (!(200 ... 299).contains(statusCode)) {
                 print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
@@ -91,11 +91,20 @@ class GDoorAPI: NSObject {
             if (error != nil) {
                 print("API: Failed to update last seen => \(String(describing: error))")
                 if (completion != nil) { completion!(nil, error!) }
-            } else {
-                print("API: Updated last seen")
-                let res = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                if (completion != nil) { completion!(res, nil) }
+                return;
             }
+            
+            let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+            let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+            print("CLIENT API: Update last seen => Code: \(statusCode) Body:\(body)")
+            
+            if (!(200 ... 299).contains(statusCode)) {
+                let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                if (completion != nil) { completion!(body, serverError) }
+                return
+            }
+            
+            if (completion != nil) { completion!(body, nil) }
         }
         
         // Start the task (resume is misleading
