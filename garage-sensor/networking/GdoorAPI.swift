@@ -10,7 +10,7 @@ import Foundation
 
 class GDoorAPI: NSObject {
     
-    // MARK: - Create -
+    // MARK: - User profile APIs -
     
     /**
      *  userData (# table): Required =>
@@ -84,7 +84,7 @@ class GDoorAPI: NSObject {
     func updateLastSeen(userUID: String!,
                         completion: ((_ response: [String:Any]?, _ error: Error?) -> Void)? ) {
         
-        let endpoint = env.CLIENT_API_ROOT_URL + env.UPDATE_LAST_SEEN
+        let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_UPDATE_LAST_SEEN
         let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
         
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -110,6 +110,41 @@ class GDoorAPI: NSObject {
         // Start the task (resume is misleading
         postTask.resume()
     }
+    
+    // MARK: - Sensor APIs -
+    
+    func getSensorData(userUID: String!,
+                       completion: @escaping (_ sensorData: [String:Any]?,_ error: Error?) -> Void) {
+        
+        let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_GET_SENSOR_DATA;
+        let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
+        
+        let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if (error != nil) {
+                completion(nil, error!)
+                return
+            }
+            
+            let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+            let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+            print("CLIENT API: Get sensor data res => Code: \(statusCode) Body:\(body)")
+            
+            if (!(200 ... 299).contains(statusCode)) {
+                print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
+                let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                completion(nil, serverError)
+                return
+            }
+            
+            completion(body, nil)
+        }
+        
+        // Start the task
+        print("CLIENT API: Sending req to get sensor data")
+        postTask.resume()
+    }
+    
+    // MARK: - Utilities -
     
     func jsonPostReq(endpoint: String!, payload: [String: Any]!) -> URLRequest {
         let endpointUrl = URL.init(string: endpoint)

@@ -18,7 +18,8 @@ struct DevEnv {
     let ENDPOINT_ACTIVE_DAY       = "/activeDay"
     let ENDPOINT_ADD_SENSOR       = "/addSensor"
     let ENDPOINT_ACTUATE_DOOR     = "/actuateDoor"
-    let UPDATE_LAST_SEEN          = "/updateLastSeen"
+    let ENDPOINT_UPDATE_LAST_SEEN = "/updateLastSeen"
+    let ENDPOINT_GET_SENSOR_DATA  = "/getSensorData"
     
     let UID_LENGTH = 36
 }

@@ -30,6 +30,14 @@ struct dbProfileKeys {
     let SensorUIDKey = "sensorUID"
 }
 
+struct dbSensorKeys {
+    let ONLINE = "online"
+    let DOOR_STATE = "doorState"
+    let LAST_PING = "lastPing"
+    let NETWORK_DOWN = "networkDown"
+    let SENSOR_UID = "sensorUID"
+}
+
 struct doorInterfaceErrors {
     let errorCodeResolver = [1: "Not authorized for action",
                              2: "Door is unreachable",
@@ -95,6 +103,15 @@ class GDUtilities: NSObject {
     }
 }
 
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+}
 
 
 

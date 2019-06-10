@@ -10,15 +10,9 @@ import Foundation
 import UIKit
 
 class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol {
-    // Class props
-    // Constants
-    let sensorSateLabelLookup = ["online": "Sensor Online",
-                                 "offline": "Sensor Offline",
-                                 "unknown": "Sensor connecting"]
-    
-    let sensorStateImageLookup = ["online": "door-online",
-                                  "offline": "door-offline",
-                                  "unknown": "cloud-navy"]
+    let sensorStateImageLookup = ["Sensor Online": "door-online",
+                                  "Sensor Offline": "door-offline",
+                                  "Sensor Connecting": "cloud-navy"]
     
     // Controls
     var doorTriggerInProgress: Bool! = false
@@ -36,13 +30,26 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         // Get reference to child VCs
         let stateController = childViewControllers[0] as! UITabBarController
         staticStateVC = stateController.childViewControllers[0] as? StaticStateVC
-            
-        // Round the buttons
-        styleUI();
         
-        // Setup Daatabase listeners for state changes on door state
+        doorActuator.isHidden = true
+        doorConnStateButton.isHidden = true
+        doorConnStateIcon.isHidden = true
+        styleUI();
+    
         GDoorModel.main.sensorStateDelegate = self
         GDoorModel.main.doorStateDelegate = self
+        
+        GDoorModel.main.inializeSensor { (success, failureMessage, error) in
+            if (error != nil) {
+                // TODO: report error
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.transitionToStaticState()
+                self.updateSensorUIElements()
+            }
+        }
     }
     
     // MARK: - UI Hanlding -
@@ -55,13 +62,8 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         navController?.navigationBar.barTintColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
         navController?.navigationBar.titleTextAttributes = titleAttributes
         
-        // Assess whether con state is known or not
-        if GDoorModel.main.initialDoorStateConfirmed {
-            transitionToStaticState()
-        } else {
-            uiStateForConnecting()
-            transitionToTransientState()
-        }
+        if GDoorModel.main.modelInitialised { transitionToStaticState() }
+        else { transitionToTransientState() }
     }
     
     func transitionToStaticState() {
@@ -79,15 +81,20 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     }
     
     func updateSensorUIElements() {
-        let connStateCode = GDoorModel.main.sensorConnState
-        doorConnStateButton.setTitle(sensorSateLabelLookup[connStateCode!], for: .normal)
-        doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup[connStateCode!]!)
-    }
-    
-    func uiStateForConnecting() {
-        // Set the label to connecting
-        doorConnStateButton.setTitle("Sensor Connecting", for: .normal)
-        doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup["unknown"]!)
+        if (GDoorModel.main.sensorUID == "None") {
+            // Special case of no sensor linked to account
+            doorActuator.isHidden = true
+            doorConnStateButton.isHidden = true
+            doorConnStateIcon.isHidden = true
+        }
+        
+        else {
+            doorActuator.isHidden = false
+            doorConnStateButton.isHidden = false
+            doorConnStateIcon.isHidden = false
+            doorConnStateButton.setTitle(GDoorModel.main.networkState, for: .normal)
+            doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup[GDoorModel.main.networkState!]!)
+        }
     }
     
     func showSuccessModal() {
@@ -195,6 +202,15 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     func sensorLanIPError() {
         // Show the user the LAN static IP config isn't correct
         showFailureModal(errorCode: 8);
+    }
+    
+    // MARK: - Transitions -
+    
+    func transitionToAddSensorStory() {
+        // Transition to WiFi set up (but home screeb for now)
+        let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
+        let introVC = addSensorStory.instantiateInitialViewController()
+        present(introVC!, animated: true, completion: nil)
     }
 }
 

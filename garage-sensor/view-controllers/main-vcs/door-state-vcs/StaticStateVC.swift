@@ -10,18 +10,17 @@ import UIKit
 
 class StaticStateVC: UIViewController {
     // Constants
-    let doorStateImageLookUp = [0: "gdoor-open",
-                                1: "gdoor-logo",
-                                2: "gdoor-unknown"]
-    
-    let doorStateLabelLookUp = [0: "Open",
-                                1: "Closed",
-                                2: "Unknown"]
+    let doorStateImageLookUp = [DoorStateEnum.OPEN: "gdoor-open",
+                                DoorStateEnum.CLOSED: "gdoor-logo",
+                                DoorStateEnum.UNKNOWN: "gdoor-unknown",
+                                DoorStateEnum.ADD_SENSOR: "gdoor-sensor-add"]
     
     // Outlets
     @IBOutlet var connStateLabel: UILabel!
     @IBOutlet var connStateImage: UIImageView!
     @IBOutlet var containerCircle: UIView!
+    @IBOutlet var stateInfoText: UILabel!
+    var addSensorTap: UITapGestureRecognizer?
     
     override func viewDidLoad() {
         // Set state base do door state
@@ -54,24 +53,39 @@ class StaticStateVC: UIViewController {
     
     func updateDoorStateUIItems() {
         // Use the model object to display the state
-        let doorStateCode = GDoorModel.main.doorState!
-        print("STATIC STATE VC: Updating UI elements for new door state = ", doorStateCode)
+        print("STATIC STATE VC: Updating UI elements for new door state = ", GDoorModel.main.doorState!)
+        let currentDoorState = GDoorModel.main.doorStateEnum
+        connStateLabel.text = GDoorModel.main.doorState
+        connStateImage.image = UIImage.init(named: doorStateImageLookUp[currentDoorState!]!)
         
-        if doorStateCode < 2 {
-            // Door state is know, we can stay on this UI
-            connStateLabel.text = doorStateLabelLookUp[doorStateCode]
-            connStateImage.image = UIImage.init(named: doorStateImageLookUp[doorStateCode]!)
+        if (currentDoorState == DoorStateEnum.ADD_SENSOR) {
+            stateInfoText.isHidden = false
+            setAddNewSensorButton()
+        }
+        else {
+            stateInfoText.isHidden = true
+            removeAddNewSensorButton()
+        }
+    }
+    
+    func setAddNewSensorButton() {
+        if (addSensorTap == nil) {
+            addSensorTap = UITapGestureRecognizer.init(target: self, action: #selector(transitionToAddSensorStory))
+            connStateImage.addGestureRecognizer(addSensorTap!)
         }
         
-        else if (doorStateCode == 2){
-            // Unknown state
-            connStateLabel.text = doorStateLabelLookUp[doorStateCode]
-            connStateImage.image = UIImage.init(named: doorStateImageLookUp[doorStateCode]!)
-        }
-        
-        else{
-            print("STATIC STATE VC: Invalid door status code for UI update")
-        }
+        connStateImage.isUserInteractionEnabled = true
+    }
+    
+    func removeAddNewSensorButton() {
+        connStateImage.isUserInteractionEnabled = false
+    }
+    
+    // MARK: - Transition handling -
+    
+    @objc func transitionToAddSensorStory() {
+        let parentView = (self.parent as! UIViewController).parent as! DoorControllerVC
+        parentView.transitionToAddSensorStory()
     }
 }
 
