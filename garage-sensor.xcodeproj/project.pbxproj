@@ -37,6 +37,7 @@
 		EBC8F72F22AEA3AA00E60946 /* PrepSensorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC8F72E22AEA3AA00E60946 /* PrepSensorVC.swift */; };
 		EBC8F73122AEA3C200E60946 /* InitializeSensorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC8F73022AEA3C200E60946 /* InitializeSensorVC.swift */; };
 		EBC8F73322AEA3DD00E60946 /* SensorInitializingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC8F73222AEA3DD00E60946 /* SensorInitializingVC.swift */; };
+		EBC8F73622AF1B2F00E60946 /* SensorAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC8F73522AF1B2F00E60946 /* SensorAPI.swift */; };
 		EBD9CD0B229EF3CA002B6E90 /* FormTypeSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD9CD0A229EF3CA002B6E90 /* FormTypeSelectorCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,8 @@
 		EBC8F72E22AEA3AA00E60946 /* PrepSensorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepSensorVC.swift; sourceTree = "<group>"; };
 		EBC8F73022AEA3C200E60946 /* InitializeSensorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeSensorVC.swift; sourceTree = "<group>"; };
 		EBC8F73222AEA3DD00E60946 /* SensorInitializingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorInitializingVC.swift; sourceTree = "<group>"; };
+		EBC8F73422AEF76900E60946 /* garage-sensor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "garage-sensor.entitlements"; sourceTree = "<group>"; };
+		EBC8F73522AF1B2F00E60946 /* SensorAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorAPI.swift; sourceTree = "<group>"; };
 		EBD9CD0A229EF3CA002B6E90 /* FormTypeSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTypeSelectorCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +174,7 @@
 		EBC6AA89207B8C6E000F41D6 /* garage-sensor */ = {
 			isa = PBXGroup;
 			children = (
+				EBC8F73422AEF76900E60946 /* garage-sensor.entitlements */,
 				EBBDBBD4229E29F200A28E5E /* config */,
 				EB76B048207CAFD600EA8B9C /* utilities */,
 				EB76B042207C88CC00EA8B9C /* Authentication */,
@@ -203,6 +207,7 @@
 			children = (
 				EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */,
 				EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */,
+				EBC8F73522AF1B2F00E60946 /* SensorAPI.swift */,
 			);
 			path = networking;
 			sourceTree = "<group>";
@@ -327,6 +332,11 @@
 					EBC6AA86207B8C6E000F41D6 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.AccessWiFi = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -449,6 +459,7 @@
 				EBC6AAB8207BC9AF000F41D6 /* SignUpVC.swift in Sources */,
 				EBC6AABD207BCF5A000F41D6 /* InfoTextCell.swift in Sources */,
 				EBC8F73322AEA3DD00E60946 /* SensorInitializingVC.swift in Sources */,
+				EBC8F73622AF1B2F00E60946 /* SensorAPI.swift in Sources */,
 				EBC6AA8B207B8C6E000F41D6 /* AppDelegate.swift in Sources */,
 				EBBDBBD3229E1B9A00A28E5E /* GdoorAPI.swift in Sources */,
 				EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */,
@@ -594,6 +605,7 @@
 			baseConfigurationReference = AE0E0F4CE265A630B0F91E1A /* Pods-garage-sensor.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "garage-sensor/garage-sensor.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 558L8UH5X5;
 				INFOPLIST_FILE = "garage-sensor/Info.plist";
@@ -610,6 +622,7 @@
 			baseConfigurationReference = 22AE0681C91A78DDFE6289B6 /* Pods-garage-sensor.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "garage-sensor/garage-sensor.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 558L8UH5X5;
 				INFOPLIST_FILE = "garage-sensor/Info.plist";

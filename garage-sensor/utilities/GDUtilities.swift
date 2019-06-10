@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration.CaptiveNetwork
 
 struct dbProfileKeys {
     let ActiveDayKey = "activeDays"
@@ -100,6 +101,36 @@ class GDUtilities: NSObject {
     func generateTimeStampForNow() -> Int {
         let timestamp = Int(Date.init().timeIntervalSince1970) * 1000           // Convert to Millis
         return timestamp
+    }
+}
+
+public class SSID {
+    class func fetchSSIDInfo() ->  String? {
+        var currentSSID = ""
+        if let interfaces = CNCopySupportedInterfaces() {
+            for i in 0..<CFArrayGetCount(interfaces) {
+                let interfaceName: UnsafeRawPointer = CFArrayGetValueAtIndex(interfaces, i)
+                let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
+                let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString)
+                if let interfaceData = unsafeInterfaceData as? [String: AnyObject] {
+                    currentSSID = interfaceData["SSID"] as! String
+                }
+            }
+        }
+        return currentSSID
+    }
+    
+    class func getAllWiFiNameList() -> String? {
+        var ssid: String?
+        if let interfaces = CNCopySupportedInterfaces() as NSArray? {
+            for interface in interfaces {
+                if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
+                    ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String
+                    break
+                }
+            }
+        }
+        return ssid
     }
 }
 

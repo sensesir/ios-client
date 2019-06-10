@@ -15,4 +15,8 @@ class PrepSensorVC: UIViewController {
     override func viewDidLoad() {
         proceedButton.layer.cornerRadius = proceedButton.frame.height/2
     }
+    
+    @IBAction func unwindFromWiFiConnect(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+        print("PREP SENSOR VC: Unwound from wifi connect VC")
+    }
 }

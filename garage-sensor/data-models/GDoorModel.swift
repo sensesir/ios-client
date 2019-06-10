@@ -91,6 +91,23 @@ class GDoorModel: NSObject {
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
     }
+    
+    // MARK: - Networking -
+    
+    /**
+     *      Method performs 4 asynchronous ops
+     *
+     *      1. Get UID from sensor
+     *      2. Created DB entry for sensor
+     *      3. Send UIDs confirmation
+     *      4. Send wifi creds
+     *
+     */
+    
+    func addNewSensor(ssid: String!, password: String!, completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
+        print("DOOR MODEL: Initializing new sensor")
+        
+    }
 }
 
 

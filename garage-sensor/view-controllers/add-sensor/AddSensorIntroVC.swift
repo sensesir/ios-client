@@ -25,5 +25,7 @@ class AddSensorIntroVC: UIViewController {
         let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         navController?.navigationBar.barTintColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
         navController?.navigationBar.titleTextAttributes = titleAttributes
+        
+        
     }
 }

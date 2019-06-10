@@ -22,4 +22,7 @@ struct DevEnv {
     let ENDPOINT_GET_SENSOR_DATA  = "/getSensorData"
     
     let UID_LENGTH = 36
+    
+    // Adding a new sensor
+    let SENSOR_AP_SSID = "GarageDoor-jPtF"
 }
