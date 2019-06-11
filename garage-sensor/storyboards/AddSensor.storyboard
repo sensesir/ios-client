@@ -386,14 +386,14 @@
                                                         <rect key="frame" x="0.0" y="129" width="414" height="129"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ios-wifi-settings" translatesAutoresizingMaskIntoConstraints="NO" id="OcF-u8-NrW">
-                                                                <rect key="frame" x="30" y="15" width="354" height="99"/>
+                                                                <rect key="frame" x="30" y="0.0" width="354" height="104"/>
                                                             </imageView>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="bottom" secondItem="OcF-u8-NrW" secondAttribute="bottom" constant="15" id="E27-aQ-t4r"/>
+                                                            <constraint firstAttribute="bottom" secondItem="OcF-u8-NrW" secondAttribute="bottom" constant="25" id="E27-aQ-t4r"/>
                                                             <constraint firstAttribute="trailing" secondItem="OcF-u8-NrW" secondAttribute="trailing" constant="30" id="VJG-9U-yDT"/>
-                                                            <constraint firstItem="OcF-u8-NrW" firstAttribute="top" secondItem="ogf-zI-eDY" secondAttribute="top" constant="15" id="Zon-bw-E6I"/>
+                                                            <constraint firstItem="OcF-u8-NrW" firstAttribute="top" secondItem="ogf-zI-eDY" secondAttribute="top" id="Zon-bw-E6I"/>
                                                             <constraint firstItem="OcF-u8-NrW" firstAttribute="leading" secondItem="ogf-zI-eDY" secondAttribute="leading" constant="30" id="vpI-yT-c7l"/>
                                                         </constraints>
                                                     </view>
@@ -441,7 +441,7 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YJd-gX-hnm" userLabel="Instructions">
                                                                         <rect key="frame" x="83" y="0.0" width="331" height="129"/>
                                                                         <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose the network called &quot;GarageDoor-jPtF&quot;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m80-L8-Rdm">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose the network called &quot;GarageDoor-jPtF&quot;.  You MUST wait for the blue tick." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="m80-L8-Rdm">
                                                                                 <rect key="frame" x="10" y="10" width="311" height="109"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                                                                 <nil key="textColor"/>
@@ -890,24 +890,27 @@
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sensor-wifi-conn" translatesAutoresizingMaskIntoConstraints="NO" id="760-DT-4GR">
                                                                 <rect key="frame" x="10" y="10" width="85.5" height="99"/>
                                                             </imageView>
-                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kYQ-Wl-n9y">
-                                                                <rect key="frame" x="35" y="47" width="10" height="10"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kYQ-Wl-n9y">
+                                                                <rect key="frame" x="35" y="43" width="9" height="9.5"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </view>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="width" secondItem="760-DT-4GR" secondAttribute="width" multiplier="0.1" id="3bG-7v-54I"/>
                                                             <constraint firstItem="760-DT-4GR" firstAttribute="leading" secondItem="JPP-wI-Ph2" secondAttribute="leading" constant="10" id="6eV-Yu-1Oa"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="centerY" secondItem="760-DT-4GR" secondAttribute="centerY" multiplier="0.8" id="N8y-sL-zHR"/>
                                                             <constraint firstItem="760-DT-4GR" firstAttribute="top" secondItem="JPP-wI-Ph2" secondAttribute="top" constant="10" id="XHW-xO-5dV"/>
                                                             <constraint firstAttribute="bottom" secondItem="760-DT-4GR" secondAttribute="bottom" constant="10" id="flW-93-D73"/>
                                                             <constraint firstAttribute="trailing" secondItem="760-DT-4GR" secondAttribute="trailing" constant="5" id="fnj-W9-nCu"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="centerX" secondItem="760-DT-4GR" secondAttribute="centerX" multiplier="0.75" id="kdX-VY-vrt"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="height" secondItem="760-DT-4GR" secondAttribute="height" multiplier="0.1" id="pSt-qn-EQZ"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EOp-Q5-iMZ" userLabel="Explainer">
                                                         <rect key="frame" x="100.5" y="0.0" width="251" height="119"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LED flashing white: Your sensor is attempting to connect to WiFi. Click i if not successful in ~2 mins." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="AXD-8E-yAP">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your sensor is attempting to connect to WiFi. Can take ~2mins." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="AXD-8E-yAP">
                                                                 <rect key="frame" x="10" y="5" width="241" height="109"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
@@ -928,6 +931,9 @@
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HNB-Ph-oh5">
                                                                 <rect key="frame" x="16" y="44.5" width="30" height="30"/>
                                                                 <state key="normal" image="help-navy"/>
+                                                                <connections>
+                                                                    <action selector="showWiFiInfoModal" destination="HgX-yS-iMX" eventType="touchUpInside" id="4t2-Cd-ayp"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -975,7 +981,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ez6-H4-Qqo">
                                                         <rect key="frame" x="100.5" y="0.0" width="251" height="119.5"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LED purple: Sensor registering with our server. This can take up to 5 mins. Press i if this is not successful." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="IHR-7h-lql">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sensor registering with our server. This can take up to 5 mins." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="IHR-7h-lql">
                                                                 <rect key="frame" x="10" y="5" width="241" height="109.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
@@ -996,6 +1002,9 @@
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cI8-SZ-vWn">
                                                                 <rect key="frame" x="16" y="45" width="30" height="30"/>
                                                                 <state key="normal" image="help-navy"/>
+                                                                <connections>
+                                                                    <action selector="showMQTTInfoModal" destination="HgX-yS-iMX" eventType="touchUpInside" id="ZSJ-3e-SWn"/>
+                                                                </connections>
                                                             </button>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1022,14 +1031,14 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W4s-HG-Rfg" userLabel="Animation">
                                         <rect key="frame" x="0.0" y="476.5" width="414" height="238"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="oblique-wifi-white" translatesAutoresizingMaskIntoConstraints="NO" id="ccX-ZY-IeS">
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow-navy-oblique" translatesAutoresizingMaskIntoConstraints="NO" id="ccX-ZY-IeS">
                                                 <rect key="frame" x="157" y="77" width="100" height="83.5"/>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud-navy" translatesAutoresizingMaskIntoConstraints="NO" id="Qrc-7r-L35">
-                                                <rect key="frame" x="269" y="2" width="100" height="83"/>
+                                                <rect key="frame" x="227" y="24" width="100" height="83"/>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sensor-mqtt-conn" translatesAutoresizingMaskIntoConstraints="NO" id="3Ia-66-HY7">
-                                                <rect key="frame" x="49" y="147" width="100" height="81"/>
+                                                <rect key="frame" x="62" y="147" width="100" height="81"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1037,15 +1046,15 @@
                                             <constraint firstItem="3Ia-66-HY7" firstAttribute="height" secondItem="ccX-ZY-IeS" secondAttribute="height" priority="750" id="Dcz-Ty-MgY"/>
                                             <constraint firstItem="3Ia-66-HY7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="W4s-HG-Rfg" secondAttribute="leading" constant="20" id="S42-6p-UaA"/>
                                             <constraint firstItem="ccX-ZY-IeS" firstAttribute="height" secondItem="W4s-HG-Rfg" secondAttribute="height" multiplier="0.35" id="UGa-nj-jfH"/>
-                                            <constraint firstItem="ccX-ZY-IeS" firstAttribute="top" secondItem="Qrc-7r-L35" secondAttribute="bottom" constant="-8" id="Vgc-Je-xGb"/>
+                                            <constraint firstItem="ccX-ZY-IeS" firstAttribute="top" secondItem="Qrc-7r-L35" secondAttribute="bottom" constant="-30" id="Vgc-Je-xGb"/>
                                             <constraint firstItem="ccX-ZY-IeS" firstAttribute="centerX" secondItem="W4s-HG-Rfg" secondAttribute="centerX" id="ZRb-LP-Edy"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Qrc-7r-L35" secondAttribute="trailing" constant="44" id="fuG-Zs-1tK"/>
                                             <constraint firstItem="3Ia-66-HY7" firstAttribute="top" secondItem="ccX-ZY-IeS" secondAttribute="bottom" constant="-13.5" id="fwZ-j9-Hl2"/>
                                             <constraint firstItem="Qrc-7r-L35" firstAttribute="top" relation="greaterThanOrEqual" secondItem="W4s-HG-Rfg" secondAttribute="top" id="hSb-bb-vOx"/>
                                             <constraint firstItem="ccX-ZY-IeS" firstAttribute="centerY" secondItem="W4s-HG-Rfg" secondAttribute="centerY" id="krk-aO-g8m"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="3Ia-66-HY7" secondAttribute="bottom" constant="10" id="poV-zO-2bR"/>
-                                            <constraint firstItem="ccX-ZY-IeS" firstAttribute="leading" secondItem="3Ia-66-HY7" secondAttribute="trailing" constant="8" id="ugv-Lb-mYu"/>
-                                            <constraint firstItem="Qrc-7r-L35" firstAttribute="leading" secondItem="ccX-ZY-IeS" secondAttribute="trailing" constant="12" id="vyv-B6-gK1"/>
+                                            <constraint firstItem="ccX-ZY-IeS" firstAttribute="leading" secondItem="3Ia-66-HY7" secondAttribute="trailing" constant="-5" id="ugv-Lb-mYu"/>
+                                            <constraint firstItem="Qrc-7r-L35" firstAttribute="leading" secondItem="ccX-ZY-IeS" secondAttribute="trailing" constant="-30" id="vyv-B6-gK1"/>
                                             <constraint firstItem="Qrc-7r-L35" firstAttribute="height" secondItem="ccX-ZY-IeS" secondAttribute="height" id="xdC-tR-T87"/>
                                         </constraints>
                                     </view>
@@ -1089,6 +1098,7 @@
                         <barButtonItem key="leftBarButtonItem" id="MQV-Iq-sDG"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="mqttConnArrow" destination="ccX-ZY-IeS" id="fhY-AH-FsE"/>
                         <outlet property="whiteLED" destination="kYQ-Wl-n9y" id="dtM-3u-D4o"/>
                     </connections>
                 </viewController>
@@ -1117,6 +1127,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow-navy-oblique" width="100" height="100"/>
         <image name="bullet-one" width="83" height="100"/>
         <image name="bullet-three" width="83.5" height="100"/>
         <image name="bullet-two" width="83.5" height="100"/>
@@ -1124,7 +1135,6 @@
         <image name="garage-wifi-network" width="200" height="44"/>
         <image name="help-navy" width="30" height="30"/>
         <image name="ios-wifi-settings" width="200" height="75"/>
-        <image name="oblique-wifi-white" width="100" height="99.5"/>
         <image name="sensor-mqtt-conn" width="100" height="51"/>
         <image name="sensor-prep" width="200" height="142"/>
         <image name="sensor-wifi-conn" width="100" height="51"/>

@@ -70,30 +70,37 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     
     @IBAction func userSubmittedDetails() {
         print("INIT SENSOR VC: User submitted WiFi details")
-        setLoadingUI()
+        DispatchQueue.main.async { [weak self] in
+            self?.setLoadingUI()
+            self?.dissmissKeyboard()
+        }
+        
         let ssid = ssidEntry.text
         let password = passwordEntry.text
         
-        // Invoke handler on DoorModel, using API
-        while commRetries < env.MAX_SENSOR_INIT_RETIES {
-            print("INIT SENSOR VC: Sensor init attempt \(commRetries + 1)")
-            do {
-                let result = try await(initializeSensor(ssid: ssid, password: password))
-                if (result) { break }
-                
-                // Failure - increment count and delay retry
-                Thread.sleep(forTimeInterval: 5)
-                commRetries += 1
+        // Must make sure not to block main (UI) thread
+        DispatchQueue.global(qos: .background).async {
+            while self.commRetries < env.MAX_SENSOR_INIT_RETIES {
+                print("INIT SENSOR VC: Sensor init attempt \(self.commRetries + 1)")
+                do {
+                    let result = try await(self.initializeSensor(ssid: ssid, password: password))
+                    if (result) {
+                        DispatchQueue.main.async { [weak self] in self?.transitionToSensorInitVC() }
+                        return
+                    }
+                    
+                    // Failure - increment count and delay retry
+                    Thread.sleep(forTimeInterval: 10)
+                    self.commRetries += 1
+                }
+                    
+                catch {
+                    DispatchQueue.main.async { [weak self] in self?.fatalSensorInitFailure() }
+                    break
+                }
             }
             
-            catch {
-                DispatchQueue.main.async { [weak self] in self?.fatalSensorInitFailure() }
-                break
-            }
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.transitionToSensorInitVC()
+            DispatchQueue.main.async { [weak self] in self?.fatalSensorInitFailure() }
         }
     }
     
@@ -127,7 +134,13 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
         print("INIT SENSOR VC: Fatal failure, notifying user")
         clearLoadUI()
         
-        // Todo
+        let commsFailureImage = UIImage.init(named: "door-offline")
+        if let fatalCommsFailureModal = StandardModalVC.initModal(title: "Fatal failure",
+                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network. Please connect to it, waiting for a successful connection and reopen this app",
+                                                         image: commsFailureImage!) {
+            // Present the VC
+            present(fatalCommsFailureModal, animated: true, completion: nil)
+        }
     }
     
     // MARK: - Transitions -
