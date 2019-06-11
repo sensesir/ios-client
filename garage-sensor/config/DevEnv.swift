@@ -25,4 +25,8 @@ struct DevEnv {
     
     // Adding a new sensor
     let SENSOR_AP_SSID = "GarageDoor-jPtF"
+    let SENSOR_ROOT_URL = "http://10.10.10.1"
+    let ENDPOINT_GET_SENSOR_UID = "/getSensorUID"
+    let ENDPOINT_POST_WIFI_CREDS = "/postWifiCreds"
+    let ENDPOINT_SENSOR_UID_RES_CONFIRMATION = "/postSensorUIDConfirm"
 }

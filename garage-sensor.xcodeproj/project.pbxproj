@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A9B50E8D84F8AC9283258828 /* Pods_garage_sensor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */; };
 		EB730C4120846B370076B9B6 /* StandardModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB730C4020846B370076B9B6 /* StandardModalVC.swift */; };
-		EB76B044207C88E600EA8B9C /* FirebaseAuthInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B043207C88E600EA8B9C /* FirebaseAuthInterface.swift */; };
 		EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B046207C929500EA8B9C /* UIEffects.swift */; };
 		EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */; };
 		EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */; };
@@ -25,7 +24,6 @@
 		EBC6AA99207B8C6E000F41D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AA97207B8C6E000F41D6 /* LaunchScreen.storyboard */; };
 		EBC6AAAB207BA316000F41D6 /* HelveticaNeue-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AAAA207BA316000F41D6 /* HelveticaNeue-Light.otf */; };
 		EBC6AAAF207BB3AE000F41D6 /* DoorControllerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAAE207BB3AE000F41D6 /* DoorControllerVC.swift */; };
-		EBC6AAB1207BBCCF000F41D6 /* FirebaseInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */; };
 		EBC6AAB3207BC402000F41D6 /* GDoorUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAB2207BC402000F41D6 /* GDoorUser.swift */; };
 		EBC6AAB5207BC97C000F41D6 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBC6AAB4207BC97C000F41D6 /* Onboarding.storyboard */; };
 		EBC6AAB8207BC9AF000F41D6 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBC6AAB7207BC9AF000F41D6 /* SignUpVC.swift */; };
@@ -46,7 +44,6 @@
 		24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_garage_sensor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE0E0F4CE265A630B0F91E1A /* Pods-garage-sensor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-garage-sensor.debug.xcconfig"; path = "Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor.debug.xcconfig"; sourceTree = "<group>"; };
 		EB730C4020846B370076B9B6 /* StandardModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardModalVC.swift; sourceTree = "<group>"; };
-		EB76B043207C88E600EA8B9C /* FirebaseAuthInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthInterface.swift; sourceTree = "<group>"; };
 		EB76B046207C929500EA8B9C /* UIEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEffects.swift; sourceTree = "<group>"; };
 		EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDUtilities.swift; sourceTree = "<group>"; };
 		EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticStateVC.swift; sourceTree = "<group>"; };
@@ -64,7 +61,6 @@
 		EBC6AA9A207B8C6E000F41D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EBC6AAAA207BA316000F41D6 /* HelveticaNeue-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeue-Light.otf"; sourceTree = "<group>"; };
 		EBC6AAAE207BB3AE000F41D6 /* DoorControllerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoorControllerVC.swift; sourceTree = "<group>"; };
-		EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseInterface.swift; sourceTree = "<group>"; };
 		EBC6AAB2207BC402000F41D6 /* GDoorUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorUser.swift; sourceTree = "<group>"; };
 		EBC6AAB4207BC97C000F41D6 /* Onboarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
 		EBC6AAB7207BC9AF000F41D6 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
@@ -108,14 +104,6 @@
 				24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EB76B042207C88CC00EA8B9C /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-				EB76B043207C88E600EA8B9C /* FirebaseAuthInterface.swift */,
-			);
-			path = Authentication;
 			sourceTree = "<group>";
 		};
 		EB76B045207C91F400EA8B9C /* misc */ = {
@@ -177,7 +165,6 @@
 				EBC8F73422AEF76900E60946 /* garage-sensor.entitlements */,
 				EBBDBBD4229E29F200A28E5E /* config */,
 				EB76B048207CAFD600EA8B9C /* utilities */,
-				EB76B042207C88CC00EA8B9C /* Authentication */,
 				EBC6AAA2207B8D34000F41D6 /* data-models */,
 				EBC6AAA1207B8D05000F41D6 /* networking */,
 				EBC6AAA0207B8CBF000F41D6 /* view-controllers */,
@@ -205,7 +192,6 @@
 		EBC6AAA1207B8D05000F41D6 /* networking */ = {
 			isa = PBXGroup;
 			children = (
-				EBC6AAB0207BBCCF000F41D6 /* FirebaseInterface.swift */,
 				EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */,
 				EBC8F73522AF1B2F00E60946 /* SensorAPI.swift */,
 			);
@@ -308,7 +294,6 @@
 				EBC6AA84207B8C6E000F41D6 /* Frameworks */,
 				EBC6AA85207B8C6E000F41D6 /* Resources */,
 				878A680C33BCD3DCE0BDA355 /* [CP] Embed Pods Frameworks */,
-				BB22EED209BD4F04CF7BABC2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -399,37 +384,18 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AwaitKit/AwaitKit.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AwaitKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BB22EED209BD4F04CF7BABC2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -449,10 +415,8 @@
 				EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */,
 				EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */,
 				EBC6AABB207BCF46000F41D6 /* TextEntryCell.swift in Sources */,
-				EB76B044207C88E600EA8B9C /* FirebaseAuthInterface.swift in Sources */,
 				EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */,
 				EBC8F72F22AEA3AA00E60946 /* PrepSensorVC.swift in Sources */,
-				EBC6AAB1207BBCCF000F41D6 /* FirebaseInterface.swift in Sources */,
 				EBC6AAAF207BB3AE000F41D6 /* DoorControllerVC.swift in Sources */,
 				EBBDBBDA229E2B6800A28E5E /* Env.swift in Sources */,
 				EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */,
