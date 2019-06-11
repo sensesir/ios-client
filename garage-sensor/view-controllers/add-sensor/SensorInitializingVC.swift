@@ -8,18 +8,27 @@
 
 import Foundation
 import UIKit
+import PromiseKit
+import AwaitKit
 
 class SensorInitializingVC: UIViewController {
     @IBOutlet var whiteLED: UIView!
     @IBOutlet var mqttConnArrow: UIImageView!
     
+    var networkPollingTimer: Timer?
+    var sensorStatePollingTimer: Timer?
+    var sensorLinkingComplete: Bool! = false
+    
     override func viewDidLoad() {
         styleUI()
+        startNetworkConnPolling()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         stopPulsingArrow()
         stopFlashingWhiteLED()
+        networkPollingTimer?.invalidate()
+        sensorStatePollingTimer?.invalidate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -69,6 +78,72 @@ class SensorInitializingVC: UIViewController {
         mqttConnArrow.layer.removeAllAnimations()
     }
     
+    // MARK: - Logic -
+    
+    func startNetworkConnPolling() {
+        networkPollingTimer?.invalidate()
+        networkPollingTimer = Timer.scheduledTimer(timeInterval: 5,
+                                                   target: self,
+                                                   selector: #selector(pollNetworkConnState),
+                                                   userInfo: nil,
+                                                   repeats: true)
+    }
+    
+    func startSensorNetworkStateTimer() {
+        sensorStatePollingTimer?.invalidate()
+        sensorStatePollingTimer = Timer.scheduledTimer(timeInterval: 5,
+                                                       target: self,
+                                                       selector: #selector(pollSensorNetworkState),
+                                                       userInfo: nil,
+                                                       repeats: true)
+    }
+    
+    @objc func pollNetworkConnState() {
+        let activeConn = Reachability.isConnectedToNetwork()
+        if (activeConn) {
+            print("SENSOR INIT VC: Re-established connection, linking user and sensor")
+            networkPollingTimer?.invalidate()
+            linkUserAndSensor()
+        } else {
+            print("SENSOR INIT VC: Network connection not yet online")
+        }
+    }
+    
+    func linkUserAndSensor() {
+        let gdoorApi = GDoorAPI()
+        async {
+            do {
+                let res = try await(gdoorApi.initializeSensor(sensorUID: GDoorModel.main.sensorUID!, userUID: GDoorUser.sharedInstance.userUID!))
+                self.sensorLinkingComplete = true
+                DispatchQueue.main.async { [weak self] in self?.startSensorNetworkStateTimer() }
+            }
+                
+            catch {
+                print(error)
+                // Todo: handle - retry ? + fail hard
+            }
+        }
+    }
+    
+    @objc func pollSensorNetworkState() {
+        async {
+            do {
+                let gdoorApi = GDoorAPI()
+                let payload = try await(gdoorApi.getSensorState())
+                
+                if (payload["online"] as? Bool == true) {
+                    print("SENSOR INIT VC: Sensor online")
+                    self.sensorStatePollingTimer?.invalidate()
+                    DispatchQueue.main.async { [weak self] in self?.transitionForSensorInitComplete() }
+                } else {
+                    print("SENSOR INIT VC: Sensor not online yet")
+                }
+            }
+            
+            catch { print(error) }
+        }
+    }
+    
     // MARK: - Info Modals -
     
     @IBAction func showWiFiInfoModal() {
@@ -89,6 +164,12 @@ class SensorInitializingVC: UIViewController {
             // Present the VC
             present(mqttInfoModal, animated: true, completion: nil)
         }
+    }
+    
+    // MARK: - Transitions -
+    
+    func transitionForSensorInitComplete() {
+        performSegue(withIdentifier: "UnwindFromSensorAddStory", sender: self)
     }
     
 }

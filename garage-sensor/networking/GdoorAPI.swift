@@ -126,11 +126,11 @@ class GDoorAPI: NSObject {
                 else {
                     let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
                     let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                    print("SENSOR API: Res from posting sensor UID confirmation => Code: \(statusCode) Body:\(body)")
+                    print("CLIENT API: Res from posting sensor UID confirmation => Code: \(statusCode) Body:\(body)")
                     
                     if (!(200 ... 299).contains(statusCode)) {
                         print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
-                        let serverError = NSError(domain:"", code:statusCode, userInfo: body["message"] as! [String : String])
+                        let serverError = NSError(domain:"", code:statusCode, userInfo: body)
                         seal.reject(serverError)
                         return
                     }
@@ -140,12 +140,45 @@ class GDoorAPI: NSObject {
             }
             
             // Start the task
-            print("SENSOR API: Sending POST req confirming sensorUID res")
+            print("CLIENT API: Sending POST req confirming sensorUID res")
             postTask.resume()
         }
     }
     
     // MARK: - Sensor APIs -
+    
+    func getSensorState() -> Promise<[String:Any]> {
+        return Promise<[String:Any]> { seal in
+            let payload = ["userUID": GDoorUser.sharedInstance.userUID!]
+            let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_GET_SENSOR_STATE
+            let request = jsonPostReq(endpoint: endpoint, payload: payload)
+            
+            let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if (error != nil) {
+                    seal.reject(error!)
+                }
+                    
+                else {
+                    let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+                    let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+                    print("CLIENT API: => Code: \(statusCode) Body:\(body)")
+                    
+                    if (!(200 ... 299).contains(statusCode)) {
+                        print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
+                        let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                        seal.reject(serverError)
+                        return
+                    }
+                    
+                    seal.fulfill(body)
+                }
+            }
+            
+            // Start the task
+            print("CLIENT API: Sending POST req confirming sensorUID res")
+            postTask.resume()
+        }
+    }
     
     func getSensorData(userUID: String!,
                        completion: @escaping (_ sensorData: [String:Any]?,_ error: Error?) -> Void) {

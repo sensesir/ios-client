@@ -212,6 +212,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         let introVC = addSensorStory.instantiateInitialViewController()
         present(introVC!, animated: true, completion: nil)
     }
+    
+    @IBAction func unwindFromAddSensorStory(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+        print("DOOR CONTROLLER: Unwound after completing sensor setup")
+    }
 }
 
 

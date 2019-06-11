@@ -441,7 +441,7 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YJd-gX-hnm" userLabel="Instructions">
                                                                         <rect key="frame" x="83" y="0.0" width="331" height="129"/>
                                                                         <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose the network called &quot;GarageDoor-jPtF&quot;.  You MUST wait for the blue tick." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="m80-L8-Rdm">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose the network called &quot;GarageDoor-jPtF&quot;. You MUST wait for the blue tick." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="m80-L8-Rdm">
                                                                                 <rect key="frame" x="10" y="10" width="311" height="109"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                                                                 <nil key="textColor"/>
@@ -1100,9 +1100,11 @@
                     <connections>
                         <outlet property="mqttConnArrow" destination="ccX-ZY-IeS" id="fhY-AH-FsE"/>
                         <outlet property="whiteLED" destination="kYQ-Wl-n9y" id="dtM-3u-D4o"/>
+                        <segue destination="Ckr-AN-yM6" kind="unwind" identifier="UnwindFromSensorAddStory" unwindAction="unwindFromAddSensorStoryFor:towardsViewController:" id="vck-xA-7n4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hV1-R1-IDv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Ckr-AN-yM6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4798.5507246376819" y="-244.41964285714283"/>
         </scene>

@@ -57,8 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (accessToken) {
             // Go into the main app
             print("APP DELEGATE: Launching main UI")
-            let onboardStory = UIStoryboard(name: "Main", bundle: nil)
-            let mainVC = onboardStory.instantiateInitialViewController()
+            let mainStory = UIStoryboard(name: "Main", bundle: nil)
+            let mainVC = mainStory.instantiateInitialViewController()
             
             // Present over current VC
             window?.rootViewController = mainVC

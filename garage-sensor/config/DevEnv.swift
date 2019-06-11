@@ -19,6 +19,7 @@ struct DevEnv {
     let ENDPOINT_ADD_SENSOR        = "/addSensor"
     let ENDPOINT_ACTUATE_DOOR      = "/actuateDoor"
     let ENDPOINT_UPDATE_LAST_SEEN  = "/updateLastSeen"
+    let ENDPOINT_GET_SENSOR_STATE  = "/getSensorState"
     let ENDPOINT_GET_SENSOR_DATA   = "/getSensorData"
     let ENDPOINT_INITIALIZE_SENSOR = "/initializeSensor"
     
