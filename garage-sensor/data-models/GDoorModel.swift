@@ -68,6 +68,10 @@ class GDoorModel: NSObject {
     
     // MARK: - Local data handling -
     
+    func setSensorUID(newUID: String!) {
+        sensorUID = newUID
+    }
+    
     func setSensorData(sensorData: [String:Any]!) {
         // Check if the user has a sensor or not
         sensorUID = sensorData[sensorDBKeys.SENSOR_UID] as? String

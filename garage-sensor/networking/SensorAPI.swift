@@ -12,6 +12,7 @@ import AwaitKit
 
 class SensorApi: NSObject {
     
+    
     func getSensorUID() -> Promise<String> {
         return Promise<String> { seal in
             let endpoint = env.SENSOR_ROOT_URL + env.ENDPOINT_GET_SENSOR_UID
@@ -19,7 +20,8 @@ class SensorApi: NSObject {
             
             let getTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if (error != nil) {
-                    seal.reject(error!)
+                    let localServerError = NSError(domain:"", code: env.NETWORK_ERROR_GET_SENSOR_UID, userInfo: ["error": error!])
+                    seal.reject(localServerError)
                 }
                 
                 else {
@@ -29,7 +31,7 @@ class SensorApi: NSObject {
                     
                     if (!(200 ... 299).contains(statusCode)) {
                         print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
-                        let serverError = NSError(domain:"", code:statusCode, userInfo: body["message"] as! [String : String])
+                        let serverError = NSError(domain:"", code:env.NETWORK_ERROR_GET_SENSOR_UID, userInfo: body["message"] as! [String : String])
                         seal.reject(serverError)
                         return
                     }
@@ -45,15 +47,16 @@ class SensorApi: NSObject {
         }
     }
     
-    func postWiFiCreds(ssid: String!, password: String!) -> Promise<Any> {
+    func postWiFiCreds(ssid: String!, password: String?) -> Promise<Any> {
         return Promise<Any> { seal in
-            let wifiCreds = ["wifiSSID": ssid, "wifiPassword": password]
+            let wifiCreds = ["wifiSSID": ssid, "wifiPassword": password ?? ""]
             let endpoint = env.SENSOR_ROOT_URL + env.ENDPOINT_POST_WIFI_CREDS
             let request = jsonPostReq(endpoint: endpoint, payload: wifiCreds as [String : Any])
             
             let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if (error != nil) {
-                    seal.reject(error!)
+                    let localServerError = NSError(domain:"", code: env.NETWORK_ERROR_POST_WIFI_CREDS, userInfo: ["error": error!])
+                    seal.reject(localServerError)
                 }
                     
                 else {
@@ -63,7 +66,7 @@ class SensorApi: NSObject {
                     
                     if (!(200 ... 299).contains(statusCode)) {
                         print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
-                        let serverError = NSError(domain:"", code:statusCode, userInfo: body["message"] as! [String : String])
+                        let serverError = NSError(domain:"", code:env.NETWORK_ERROR_POST_WIFI_CREDS, userInfo: body["message"] as! [String : String])
                         seal.reject(serverError)
                         return
                     }

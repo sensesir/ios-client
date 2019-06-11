@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import PromiseKit
+import AwaitKit
 
 class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var ssidEntry: UITextField!
@@ -16,6 +18,9 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var loadSpinner: UIActivityIndicatorView!
     
     var availableNetworks: String?
+    var loadView: UIView?
+    
+    var commRetries: Int! = 0
     
     override func viewDidLoad() {
         styleUI()
@@ -25,6 +30,15 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     func styleUI() {
         enterButton.layer.cornerRadius = enterButton.frame.height/2.0;
         disableEnterButton()
+    }
+    
+    func setLoadingUI() {
+        loadView = UIEffects.fullScreenLoadOverlay()
+        self.view.addSubview(loadView!)
+    }
+    
+    func clearLoadUI() {
+        loadView?.removeFromSuperview()
     }
     
     // MARK: - Text field handling -
@@ -56,10 +70,71 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     
     @IBAction func userSubmittedDetails() {
         print("INIT SENSOR VC: User submitted WiFi details")
+        setLoadingUI()
+        let ssid = ssidEntry.text
+        let password = passwordEntry.text
         
         // Invoke handler on DoorModel, using API
+        while commRetries < env.MAX_SENSOR_INIT_RETIES {
+            print("INIT SENSOR VC: Sensor init attempt \(commRetries + 1)")
+            do {
+                let result = try await(initializeSensor(ssid: ssid, password: password))
+                if (result) { break }
+                
+                // Failure - increment count and delay retry
+                Thread.sleep(forTimeInterval: 5)
+                commRetries += 1
+            }
+            
+            catch {
+                DispatchQueue.main.async { [weak self] in self?.fatalSensorInitFailure() }
+                break
+            }
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.transitionToSensorInitVC()
+        }
     }
     
+    func initializeSensor(ssid: String!, password: String?) -> Promise<Bool> {
+        return async {
+            let sensorApi = SensorApi()
+            
+            do {
+                let sensorUID = try await(sensorApi.getSensorUID())
+                GDoorModel.main.setSensorUID(newUID: sensorUID)
+                print("INIT SENSOR VC: Received sensorUID => \(sensorUID)")
+                
+                try await(sensorApi.postWiFiCreds(ssid: ssid!, password: password))
+                print("INIT SENSOR VC: Sent Wifi creds")
+                try await(sensorApi.postSensorUIDResConfirmation())
+                print("INIT SENSOR VC: Sent sensor UID reception confirmation")
+                
+                return true
+            }
+                
+            catch {
+                print(error)
+                return false
+            }
+        }
+    }
     
+    // MARK: - Failure handling -
+    
+    func fatalSensorInitFailure() {
+        print("INIT SENSOR VC: Fatal failure, notifying user")
+        clearLoadUI()
+        
+        // Todo
+    }
+    
+    // MARK: - Transitions -
+    
+    func transitionToSensorInitVC() {
+        print("INIT SENSOR VC: Transitioning to sensor initializing VC")
+        performSegue(withIdentifier: "SensorInitializingSegue", sender: self)
+    }
   
 }
