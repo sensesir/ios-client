@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StaticStateVC: UIViewController {
+class StaticStateVC: UIViewController, DoorStateProtocol {
     // Constants
     let doorStateImageLookUp = [DoorStateEnum.OPEN: "gdoor-open",
                                 DoorStateEnum.CLOSED: "gdoor-logo",
@@ -79,6 +79,12 @@ class StaticStateVC: UIViewController {
     
     func removeAddNewSensorButton() {
         connStateImage.isUserInteractionEnabled = false
+    }
+    
+    // MARK: - Delegate management -
+    
+    func doorStateUpdated() {
+        updateDoorStateUIItems()
     }
     
     // MARK: - Transition handling -

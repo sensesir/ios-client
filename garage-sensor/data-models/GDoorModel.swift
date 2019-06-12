@@ -37,6 +37,7 @@ class GDoorModel: NSObject {
     var networkDown: Date?
     var sensorUID: String?
     var modelInitialised: Bool! = false
+    var updateTimer: Timer?
     
     // Interfaces
     weak var doorStateDelegate: DoorStateProtocol?
@@ -66,8 +67,15 @@ class GDoorModel: NSObject {
         }
     }
     
-    func updateSensorData() {
-        
+    @objc func periodicSensorUpdate() {
+        updateModel { (success, message, error) in
+            if (success!) {
+                DispatchQueue.main.async {
+                    print("DOOR MODEL: Updated state - periodic")
+                    self.doorStateDelegate?.doorStateUpdated()
+                }
+            }
+        }
     }
     
     // MARK: - Local data handling -
@@ -98,6 +106,31 @@ class GDoorModel: NSObject {
         else if (doorState == "Open")   { doorStateEnum = DoorStateEnum.OPEN}
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
+        
+        startUpdateTimer()
+    }
+    
+    // MARK: - Remote State Management -
+    
+    func startUpdateTimer() {
+        if (sensorUID == nil && (doorStateEnum == DoorStateEnum.ADD_SENSOR)) {
+            // Only update for initialized sensors
+            return
+        }
+        
+        DispatchQueue.main .async {
+            self.updateTimer?.invalidate()
+            self.updateTimer = Timer.scheduledTimer(timeInterval: 3,
+                                               target: self,
+                                               selector: #selector(self.periodicSensorUpdate),
+                                               userInfo: nil,
+                                               repeats: false)
+        }
+    }
+    
+    func stopUpdateTimer() {
+        updateTimer?.invalidate()
+        updateTimer = nil
     }
 }
 
