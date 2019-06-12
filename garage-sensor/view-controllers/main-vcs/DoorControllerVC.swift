@@ -38,18 +38,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
         GDoorModel.main.sensorStateDelegate = self
         GDoorModel.main.doorStateDelegate = self
-        
-        GDoorModel.main.inializeSensor { (success, failureMessage, error) in
-            if (error != nil) {
-                // TODO: report error
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.transitionToStaticState()
-                self.updateSensorUIElements()
-            }
-        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateDoorState()
     }
     
     // MARK: - UI Hanlding -
@@ -69,6 +61,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     func transitionToStaticState() {
         let stateController = childViewControllers[0] as! UITabBarController
         stateController.selectedIndex = 0;
+        
+        // Update the static state VCs UI
+        let staticStateVC = stateController.childViewControllers[0] as? StaticStateVC
+        staticStateVC?.updateDoorStateUIItems();
     }
     
     func transitionToTransientState() {
@@ -123,46 +119,19 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     // MARK: - Door Interface -
     
-    /*
-    @IBAction func triggerDoor() {
-        print("DOOR CONTROLLER: User attempting to actuate door")
-        let stateController = childViewControllers[0] as! UITabBarController
-        stateController.selectedIndex = 1;
-        
-        // Send an HTTP get request to trigger the garage door
-        httpInterface.hitActuateDoorAPI { (data, response, error) in
-            // Cancel loading interface
-            DispatchQueue.main.async {self.transitionToStaticState()}
-            
-            if (error != nil){
-                // Inspect error
-                print("DOOR CONTROLLER: Error in http req = ", error!)
-                var errorCode = 9;
-                if ((error! as NSError).code == -1001){errorCode = 4}
-                DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: errorCode)}
+    func updateDoorState() {
+        GDoorModel.main.updateModel { (success, failureMessage, error) in
+            if (error != nil) {
+                // TODO: report error
                 return
             }
             
-            // Check for any errors
-            if let httpCode = response as? HTTPURLResponse, httpCode.statusCode != 200 {
-                let statusCode = httpCode.statusCode
-                print("DOOR CONTROLLER: Error response from server. Code => ", statusCode)
-                
-                // Update UI
-                var errorCode = 7;
-                if (statusCode == 408){errorCode = 4}   // Sensor, not server error
-                DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: errorCode)}
-                return
+            DispatchQueue.main.async {
+                self.transitionToStaticState()
+                self.updateSensorUIElements()
             }
-            
-            // Check the response
-            print("DOOR CONTROLLER: Got http response from door")
-            let resCodeDict = GDUtilities.shared.doorResJSONDataToDict(jsonData: data)
-            let resCode = resCodeDict["message"]
-            DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: resCode as! Int)}
         }
     }
- */
     
     func updateUIForTriggerResponse(resCode: Int!) {
         if resCode == 0 {
@@ -176,6 +145,11 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
             print("DOOR CONTROLLER: Error while attempting to trigger door. Code = ", resCode)
             showFailureModal(errorCode: resCode)
         }
+    }
+    
+    @IBAction func actuateDoor() {
+        print("DOOR CONTROLLER: Sending door actuation trigger")
+        
     }
     
     // MARK: - Delegate Callbacks -

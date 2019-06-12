@@ -51,8 +51,8 @@ class GDoorModel: NSObject {
     }
     
     // Requests the sensor Data from the client API
-    func inializeSensor(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
-        print("GDOOR: Initializing sensor...")
+    func updateModel(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
+        print("GDOOR: Updating sensor data")
         let api = GDoorAPI()
         let userUID = GDoorUser.sharedInstance.userUID!
         api.getSensorData(userUID: userUID) { (sensorData, error) in
@@ -64,6 +64,10 @@ class GDoorModel: NSObject {
             self.setSensorData(sensorData: sensorData!)
             completion(true, nil, nil)
         }
+    }
+    
+    func updateSensorData() {
+        
     }
     
     // MARK: - Local data handling -
@@ -94,23 +98,6 @@ class GDoorModel: NSObject {
         else if (doorState == "Open")   { doorStateEnum = DoorStateEnum.OPEN}
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
-    }
-    
-    // MARK: - Networking -
-    
-    /**
-     *      Method performs 4 asynchronous ops
-     *
-     *      1. Get UID from sensor
-     *      2. Created DB entry for sensor
-     *      3. Send UIDs confirmation
-     *      4. Send wifi creds
-     *
-     */
-    
-    func addNewSensor(ssid: String!, password: String!, completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
-        print("DOOR MODEL: Initializing new sensor")
-        
     }
 }
 
