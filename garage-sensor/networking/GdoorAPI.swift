@@ -211,6 +211,36 @@ class GDoorAPI: NSObject {
         postTask.resume()
     }
     
+    func actuateDoor(userUID: String!,
+                     completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
+        let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_ACTUATE_DOOR
+        let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
+        
+        let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if (error != nil) {
+                completion(false, error!)
+                return
+            }
+            
+            let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+            let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+            print("CLIENT API: Create user response => Code: \(statusCode) Body:\(body)")
+            
+            if (!(200 ... 299).contains(statusCode)) {
+                print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
+                let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                completion(nil, serverError)
+                return
+            }
+            
+            completion(true, nil)
+        }
+        
+        // Start the task
+        print("CLIENT API: Sending req to create new user")
+        postTask.resume()
+    }
+    
     // MARK: - Utilities -
     
     func jsonPostReq(endpoint: String!, payload: [String: Any]!) -> URLRequest {

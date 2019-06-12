@@ -149,7 +149,16 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     @IBAction func actuateDoor() {
         print("DOOR CONTROLLER: Sending door actuation trigger")
-        
+        let gdoorApi = GDoorAPI()
+        gdoorApi.actuateDoor(userUID: GDoorUser.sharedInstance.userUID!) { (success, error) in
+            if (error != nil) {
+                // TODO: Handle
+                return
+            }
+            
+            print("DOOR CONTROLLER: Successfully actuated door")
+            // Todo: show modal
+        }
     }
     
     // MARK: - Delegate Callbacks -
