@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A9B50E8D84F8AC9283258828 /* Pods_garage_sensor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */; };
+		EB611A4022B14C5400899998 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = EB611A3F22B14C5400899998 /* awsconfiguration.json */; };
+		EB611A4322B153BF00899998 /* awsiot-identity.p12 in Resources */ = {isa = PBXBuildFile; fileRef = EB611A4222B153BF00899998 /* awsiot-identity.p12 */; };
+		EB611A4522B1544200899998 /* IoTPubSub.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB611A4422B1544200899998 /* IoTPubSub.swift */; };
 		EB730C4120846B370076B9B6 /* StandardModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB730C4020846B370076B9B6 /* StandardModalVC.swift */; };
 		EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B046207C929500EA8B9C /* UIEffects.swift */; };
 		EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */; };
@@ -44,6 +47,9 @@
 		22AE0681C91A78DDFE6289B6 /* Pods-garage-sensor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-garage-sensor.release.xcconfig"; path = "Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor.release.xcconfig"; sourceTree = "<group>"; };
 		24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_garage_sensor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE0E0F4CE265A630B0F91E1A /* Pods-garage-sensor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-garage-sensor.debug.xcconfig"; path = "Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor.debug.xcconfig"; sourceTree = "<group>"; };
+		EB611A3F22B14C5400899998 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
+		EB611A4222B153BF00899998 /* awsiot-identity.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "awsiot-identity.p12"; sourceTree = "<group>"; };
+		EB611A4422B1544200899998 /* IoTPubSub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IoTPubSub.swift; sourceTree = "<group>"; };
 		EB730C4020846B370076B9B6 /* StandardModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardModalVC.swift; sourceTree = "<group>"; };
 		EB76B046207C929500EA8B9C /* UIEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEffects.swift; sourceTree = "<group>"; };
 		EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDUtilities.swift; sourceTree = "<group>"; };
@@ -108,6 +114,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		EB611A4122B1537F00899998 /* supporing-files */ = {
+			isa = PBXGroup;
+			children = (
+				EB611A4222B153BF00899998 /* awsiot-identity.p12 */,
+			);
+			path = "supporing-files";
+			sourceTree = "<group>";
+		};
 		EB76B045207C91F400EA8B9C /* misc */ = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +179,7 @@
 		EBC6AA89207B8C6E000F41D6 /* garage-sensor */ = {
 			isa = PBXGroup;
 			children = (
+				EB611A3F22B14C5400899998 /* awsconfiguration.json */,
 				EBC8F73422AEF76900E60946 /* garage-sensor.entitlements */,
 				EBBDBBD4229E29F200A28E5E /* config */,
 				EB76B048207CAFD600EA8B9C /* utilities */,
@@ -175,6 +190,7 @@
 				EBC6AA8A207B8C6E000F41D6 /* AppDelegate.swift */,
 				EBC6AA95207B8C6E000F41D6 /* Assets.xcassets */,
 				EBC6AA9A207B8C6E000F41D6 /* Info.plist */,
+				EB611A4122B1537F00899998 /* supporing-files */,
 				EBC6AAA6207BA272000F41D6 /* fonts */,
 			);
 			path = "garage-sensor";
@@ -197,6 +213,7 @@
 			children = (
 				EBBDBBD2229E1B9A00A28E5E /* GdoorAPI.swift */,
 				EBC8F73522AF1B2F00E60946 /* SensorAPI.swift */,
+				EB611A4422B1544200899998 /* IoTPubSub.swift */,
 			);
 			path = networking;
 			sourceTree = "<group>";
@@ -352,6 +369,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBC8F72822AE9E3600E60946 /* AddSensor.storyboard in Resources */,
+				EB611A4022B14C5400899998 /* awsconfiguration.json in Resources */,
+				EB611A4322B153BF00899998 /* awsiot-identity.p12 in Resources */,
 				EBC6AA99207B8C6E000F41D6 /* LaunchScreen.storyboard in Resources */,
 				EBC6AA96207B8C6E000F41D6 /* Assets.xcassets in Resources */,
 				EBC6AAB5207BC97C000F41D6 /* Onboarding.storyboard in Resources */,
@@ -388,11 +407,23 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-garage-sensor/Pods-garage-sensor-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AWSAuthCore/AWSAuthCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSIoT/AWSIoT.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSMobileClient/AWSMobileClient.framework",
 				"${BUILT_PRODUCTS_DIR}/AwaitKit/AwaitKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSAuthCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProvider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSIoT.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSMobileClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AwaitKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 			);
@@ -432,6 +463,7 @@
 				EBBDBBD3229E1B9A00A28E5E /* GdoorAPI.swift in Sources */,
 				EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */,
 				EBC8F72D22AEA39300E60946 /* AddSensorIntroVC.swift in Sources */,
+				EB611A4522B1544200899998 /* IoTPubSub.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

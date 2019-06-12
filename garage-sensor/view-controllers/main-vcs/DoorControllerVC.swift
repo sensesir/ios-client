@@ -17,6 +17,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     // Controls
     var doorTriggerInProgress: Bool! = false
     var staticStateVC: StaticStateVC?
+    var iotPubSub: IoTPubSub! = IoTPubSub()
     
     // UI props
     @IBOutlet var stateContainer:       UIView!
@@ -38,6 +39,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
         GDoorModel.main.sensorStateDelegate = self
         GDoorModel.main.doorStateDelegate = self
+        
+        // Temp
+        iotPubSub.initAWSIoT()
+        iotPubSub.connectToDeviceGateway()  // Probably needs delay
     }
     
     override func viewWillAppear(_ animated: Bool) {

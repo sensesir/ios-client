@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AWSCore
 
 struct DevEnv {
     // Networking
@@ -36,4 +37,14 @@ struct DevEnv {
     let NETWORK_ERROR_POST_WIFI_CREDS = 001
     let NETWORK_ERROR_POST_UID_CONF   = 002
     let MAX_SENSOR_INIT_RETIES = 5
+    
+    // IOT
+    let CertificateSigningRequestCommonName = "mobile-client-dev"
+    let CertificateSigningRequestCountryName = "South Africa"
+    let CertificateSigningRequestOrganizationName = "SenseSir"
+    let CertificateSigningRequestOrganizationalUnitName = "Dev"
+    let POLICY_NAME = "mobile-client-dev"
+    
+    let IOT_ENDPOINT = "anwaqu8y2zf77-ats.iot.eu-west-1.amazonaws.com/mqtt"
+    let AWS_REGION = AWSRegionType.EUWest1
 }

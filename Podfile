@@ -8,4 +8,8 @@ target 'garage-sensor' do
   # Pods for garage-sensor
   pod 'AwaitKit', '~> 5.1.0'
 
+  # Pods for AWS
+  pod 'AWSMobileClient'
+  pod 'AWSIoT'
+
 end

@@ -1,6 +1,18 @@
 PODS:
   - AwaitKit (5.1.0):
     - PromiseKit (~> 6)
+  - AWSAuthCore (2.9.9):
+    - AWSCore (= 2.9.9)
+  - AWSCognitoIdentityProvider (2.9.9):
+    - AWSCognitoIdentityProviderASF (= 1.0.1)
+    - AWSCore (= 2.9.9)
+  - AWSCognitoIdentityProviderASF (1.0.1)
+  - AWSCore (2.9.9)
+  - AWSIoT (2.9.9):
+    - AWSCore (= 2.9.9)
+  - AWSMobileClient (2.9.9):
+    - AWSAuthCore (= 2.9.9)
+    - AWSCognitoIdentityProvider (= 2.9.9)
   - PromiseKit (6.8.4):
     - PromiseKit/CorePromise (= 6.8.4)
     - PromiseKit/Foundation (= 6.8.4)
@@ -13,16 +25,30 @@ PODS:
 
 DEPENDENCIES:
   - AwaitKit (~> 5.1.0)
+  - AWSIoT
+  - AWSMobileClient
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AwaitKit
+    - AWSAuthCore
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSIoT
+    - AWSMobileClient
     - PromiseKit
 
 SPEC CHECKSUMS:
   AwaitKit: a8a3d8982097ee09ac75f5c5d3952fbcc2f26f1c
+  AWSAuthCore: cf17233a3bb8fd8b6b8a80ec651c4d44f67e3e9e
+  AWSCognitoIdentityProvider: aab6a2cf2d6e734367b2b6ec6d89d24970d14398
+  AWSCognitoIdentityProviderASF: f94f1a502e72ef3d0a1de93e10bf7a79c8698118
+  AWSCore: 705dbb60efeec05bc6bbee416e7f5e9837af0749
+  AWSIoT: 6141ffffc93548a91818a7db9779ba9d15d86c8a
+  AWSMobileClient: f290953e3554a3b0a27eace67297b5f39775ed48
   PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
 
-PODFILE CHECKSUM: 06f2b9782f023f0555f2132e0282778c784edf0d
+PODFILE CHECKSUM: e37b092fac2df70ff7b8bac06097e796f1d9e832
 
 COCOAPODS: 1.7.1
