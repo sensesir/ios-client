@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AWSCore
 
 struct DevEnv {
     // Networking
@@ -36,4 +37,13 @@ struct DevEnv {
     let NETWORK_ERROR_POST_WIFI_CREDS = 001
     let NETWORK_ERROR_POST_UID_CONF   = 002
     let MAX_SENSOR_INIT_RETIES = 5
+    
+    // AWS
+    let AWS_REGION = AWSRegionType.EUWest1
+    let AWS_IDENTITY_POOL_ID = "eu-west-1:be1e0ba9-a4df-4835-b9ed-afaa78e92728"
+    let AWS_PUBSUB_KEY = "AWSIoTPubSub"
+    
+    // PUBSUB
+    
+    let SUB_DOOR_STATE_CHANGE = "arn:aws:sns:eu-west-1:126281209629:mobile-client_ios_v1_event_doorStateChange"
 }

@@ -65,6 +65,9 @@ class StaticStateVC: UIViewController {
         else {
             stateInfoText.isHidden = true
             removeAddNewSensorButton()
+            
+            // Init pubsub
+            GDoorPubSub.client.connectToIoT()
         }
     }
     

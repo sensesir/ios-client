@@ -48,6 +48,7 @@ class GDoorModel: NSObject {
     private override init() {
         super.init()
         print("GDOOR: Data model created")
+        initPubsub()
     }
     
     // Requests the sensor Data from the client API
@@ -68,6 +69,11 @@ class GDoorModel: NSObject {
     
     func updateSensorData() {
         
+    }
+    
+    func initPubsub() {
+        print("GDOOR: Attempting to init Pubsub")
+        GDoorPubSub.client.iotSubscribe()
     }
     
     // MARK: - Local data handling -
@@ -99,6 +105,8 @@ class GDoorModel: NSObject {
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
     }
+    
+    // MARK: - PUBSUB -
 }
 
 

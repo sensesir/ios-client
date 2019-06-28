@@ -146,4 +146,11 @@ class GDoorUser: NSObject {
             print("USER: No user data locally")
         }
     }
+    
+    // MARK: - Sign user in with AWS -
+    
+    func signUserInAWS() {
+        
+    }
+    
 }
