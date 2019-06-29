@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AWSIoT
 
 protocol DoorStateProtocol: class {
     func doorStateUpdated()
@@ -24,12 +25,13 @@ enum DoorStateEnum: Int {
     case ADD_SENSOR = 2
 }
 
-class GDoorModel: NSObject {
+class GDoorModel: NSObject, GDoorPubSubDelegate {
     // Constants
     let profileKeys = dbProfileKeys()
     let sensorDBKeys = dbSensorKeys()
     
     // Properties
+    var pubsubClient: GDoorPubSub?
     var doorState: String! = "Unknown"
     var doorStateEnum: DoorStateEnum! = DoorStateEnum.UNKNOWN
     var networkState: String! = "Sensor Connecting"
@@ -51,8 +53,8 @@ class GDoorModel: NSObject {
     }
     
     // Requests the sensor Data from the client API
-    func updateModel(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
-        print("GDOOR: Updating sensor data")
+    func initializeModel(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
+        print("GDOOR: Initializing sensor data")
         let api = GDoorAPI()
         let userUID = GDoorUser.sharedInstance.userUID!
         api.getSensorData(userUID: userUID) { (sensorData, error) in
@@ -62,12 +64,28 @@ class GDoorModel: NSObject {
             }
             
             self.setSensorData(sensorData: sensorData!)
+            self.pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
+            self.pubsubClient!.connectToDeviceGateway()
             completion(true, nil, nil)
         }
     }
     
-    func updateSensorData() {
-        
+    func updateModel() {
+        print("GDOOR: Updating model")
+        let api = GDoorAPI()
+        let userUID = GDoorUser.sharedInstance.userUID!
+        api.getSensorData(userUID: userUID) { (sensorData, error) in
+            if (error != nil) {
+                print("GDOOR: Failed to updat model => \(String(describing: error))")
+                return
+            }
+            
+            self.setSensorData(sensorData: sensorData!)
+            DispatchQueue.main.async {
+                self.doorStateDelegate?.doorStateUpdated()
+                self.sensorStateDelegate?.sensorStateUpdated()
+            }
+        }
     }
     
     // MARK: - Local data handling -
@@ -98,6 +116,19 @@ class GDoorModel: NSObject {
         else if (doorState == "Open")   { doorStateEnum = DoorStateEnum.OPEN}
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
+    }
+    
+    // MARK: - Pubsub delegate handling -
+    
+    func sensorDataUpdated() {
+        if (sensorUID != nil) {
+            print("GDOOR: Sensor model updated, checking database")
+            updateModel()
+        }
+    }
+    
+    func connectionStateUpdate(newState: AWSIoTMQTTStatus) {
+        // Not required yet
     }
 }
 

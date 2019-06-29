@@ -10,7 +10,7 @@ import Foundation
 import PromiseKit
 import AwaitKit
 
-class SensorApi: NSObject {
+class GDoorSensorApi: NSObject {
     
     
     func getSensorUID() -> Promise<String> {

@@ -1,6 +1,9 @@
 PODS:
   - AwaitKit (5.1.0):
     - PromiseKit (~> 6)
+  - AWSCore (2.9.9)
+  - AWSIoT (2.9.9):
+    - AWSCore (= 2.9.9)
   - PromiseKit (6.8.4):
     - PromiseKit/CorePromise (= 6.8.4)
     - PromiseKit/Foundation (= 6.8.4)
@@ -13,16 +16,21 @@ PODS:
 
 DEPENDENCIES:
   - AwaitKit (~> 5.1.0)
+  - AWSIoT
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AwaitKit
+    - AWSCore
+    - AWSIoT
     - PromiseKit
 
 SPEC CHECKSUMS:
   AwaitKit: a8a3d8982097ee09ac75f5c5d3952fbcc2f26f1c
+  AWSCore: 705dbb60efeec05bc6bbee416e7f5e9837af0749
+  AWSIoT: 6141ffffc93548a91818a7db9779ba9d15d86c8a
   PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
 
-PODFILE CHECKSUM: 06f2b9782f023f0555f2132e0282778c784edf0d
+PODFILE CHECKSUM: 55393881e654d1f0b86a1ce651a7f9cb5385138a
 
 COCOAPODS: 1.7.1
