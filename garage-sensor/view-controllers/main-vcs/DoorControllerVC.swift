@@ -10,15 +10,9 @@ import Foundation
 import UIKit
 
 class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol {
-    // Class props
-    // Constants
-    let sensorSateLabelLookup = ["online": "Sensor Online",
-                                 "offline": "Sensor Offline",
-                                 "unknown": "Sensor connecting"]
-    
-    let sensorStateImageLookup = ["online": "door-online",
-                                  "offline": "door-offline",
-                                  "unknown": "cloud-navy"]
+    let sensorStateImageLookup = ["Sensor Online": "door-online",
+                                  "Sensor Offline": "door-offline",
+                                  "Sensor Connecting": "cloud-navy"]
     
     // Controls
     var doorTriggerInProgress: Bool! = false
@@ -36,13 +30,19 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         // Get reference to child VCs
         let stateController = childViewControllers[0] as! UITabBarController
         staticStateVC = stateController.childViewControllers[0] as? StaticStateVC
-            
-        // Round the buttons
-        styleUI();
         
-        // Setup Daatabase listeners for state changes on door state
+        doorActuator.isHidden = true
+        doorConnStateButton.isHidden = true
+        doorConnStateIcon.isHidden = true
+        styleUI();
+    
         GDoorModel.main.sensorStateDelegate = self
         GDoorModel.main.doorStateDelegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // TODO: Consider moving to viewDidLoad
+        initializeDoorState()
     }
     
     // MARK: - UI Hanlding -
@@ -55,18 +55,17 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         navController?.navigationBar.barTintColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
         navController?.navigationBar.titleTextAttributes = titleAttributes
         
-        // Assess whether con state is known or not
-        if GDoorModel.main.initialDoorStateConfirmed {
-            transitionToStaticState()
-        } else {
-            uiStateForConnecting()
-            transitionToTransientState()
-        }
+        if GDoorModel.main.modelInitialised { transitionToStaticState() }
+        else { transitionToTransientState() }
     }
     
     func transitionToStaticState() {
         let stateController = childViewControllers[0] as! UITabBarController
         stateController.selectedIndex = 0;
+        
+        // Update the static state VCs UI
+        let staticStateVC = stateController.childViewControllers[0] as? StaticStateVC
+        staticStateVC?.updateDoorStateUIItems();
     }
     
     func transitionToTransientState() {
@@ -79,15 +78,20 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     }
     
     func updateSensorUIElements() {
-        let connStateCode = GDoorModel.main.sensorConnState
-        doorConnStateButton.setTitle(sensorSateLabelLookup[connStateCode!], for: .normal)
-        doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup[connStateCode!]!)
-    }
-    
-    func uiStateForConnecting() {
-        // Set the label to connecting
-        doorConnStateButton.setTitle("Sensor Connecting", for: .normal)
-        doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup["unknown"]!)
+        if (GDoorModel.main.sensorUID == "None") {
+            // Special case of no sensor linked to account
+            doorActuator.isHidden = true
+            doorConnStateButton.isHidden = true
+            doorConnStateIcon.isHidden = true
+        }
+        
+        else {
+            doorActuator.isHidden = false
+            doorConnStateButton.isHidden = false
+            doorConnStateIcon.isHidden = false
+            doorConnStateButton.setTitle(GDoorModel.main.networkState, for: .normal)
+            doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup[GDoorModel.main.networkState!]!)
+        }
     }
     
     func showSuccessModal() {
@@ -116,46 +120,19 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     // MARK: - Door Interface -
     
-    /*
-    @IBAction func triggerDoor() {
-        print("DOOR CONTROLLER: User attempting to actuate door")
-        let stateController = childViewControllers[0] as! UITabBarController
-        stateController.selectedIndex = 1;
-        
-        // Send an HTTP get request to trigger the garage door
-        httpInterface.hitActuateDoorAPI { (data, response, error) in
-            // Cancel loading interface
-            DispatchQueue.main.async {self.transitionToStaticState()}
-            
-            if (error != nil){
-                // Inspect error
-                print("DOOR CONTROLLER: Error in http req = ", error!)
-                var errorCode = 9;
-                if ((error! as NSError).code == -1001){errorCode = 4}
-                DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: errorCode)}
+    func initializeDoorState() {
+        GDoorModel.main.initializeModel { (success, failureMessage, error) in
+            if (error != nil) {
+                // TODO: report error
                 return
             }
             
-            // Check for any errors
-            if let httpCode = response as? HTTPURLResponse, httpCode.statusCode != 200 {
-                let statusCode = httpCode.statusCode
-                print("DOOR CONTROLLER: Error response from server. Code => ", statusCode)
-                
-                // Update UI
-                var errorCode = 7;
-                if (statusCode == 408){errorCode = 4}   // Sensor, not server error
-                DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: errorCode)}
-                return
+            DispatchQueue.main.async {
+                self.transitionToStaticState()
+                self.updateSensorUIElements()
             }
-            
-            // Check the response
-            print("DOOR CONTROLLER: Got http response from door")
-            let resCodeDict = GDUtilities.shared.doorResJSONDataToDict(jsonData: data)
-            let resCode = resCodeDict["message"]
-            DispatchQueue.main.async {self.updateUIForTriggerResponse(resCode: resCode as! Int)}
         }
     }
- */
     
     func updateUIForTriggerResponse(resCode: Int!) {
         if resCode == 0 {
@@ -168,6 +145,20 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         else{
             print("DOOR CONTROLLER: Error while attempting to trigger door. Code = ", resCode)
             showFailureModal(errorCode: resCode)
+        }
+    }
+    
+    @IBAction func actuateDoor() {
+        print("DOOR CONTROLLER: Sending door actuation trigger")
+        let gdoorApi = GDoorAPI()
+        gdoorApi.actuateDoor(userUID: GDoorUser.sharedInstance.userUID!) { (success, error) in
+            if (error != nil) {
+                // TODO: Handle
+                return
+            }
+            
+            print("DOOR CONTROLLER: Successfully actuated door")
+            // Todo: show modal
         }
     }
     
@@ -195,6 +186,19 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     func sensorLanIPError() {
         // Show the user the LAN static IP config isn't correct
         showFailureModal(errorCode: 8);
+    }
+    
+    // MARK: - Transitions -
+    
+    func transitionToAddSensorStory() {
+        // Transition to WiFi set up (but home screeb for now)
+        let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
+        let introVC = addSensorStory.instantiateInitialViewController()
+        present(introVC!, animated: true, completion: nil)
+    }
+    
+    @IBAction func unwindFromAddSensorStory(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+        print("DOOR CONTROLLER: Unwound after completing sensor setup")
     }
 }
 

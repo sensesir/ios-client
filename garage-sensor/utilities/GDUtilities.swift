@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration.CaptiveNetwork
 
 struct dbProfileKeys {
     let ActiveDayKey = "activeDays"
@@ -28,6 +29,14 @@ struct dbProfileKeys {
     let UserMobileNumKey = "mobileNumber"
     let UserPasswordKey = "password"
     let SensorUIDKey = "sensorUID"
+}
+
+struct dbSensorKeys {
+    let ONLINE = "online"
+    let DOOR_STATE = "doorState"
+    let LAST_PING = "lastPing"
+    let NETWORK_DOWN = "networkDown"
+    let SENSOR_UID = "sensorUID"
 }
 
 struct doorInterfaceErrors {
@@ -84,6 +93,7 @@ class GDUtilities: NSObject {
             return convertedDict
         } catch {
             // Couldn't get JSON
+            print(error.localizedDescription)
             return [:]
         }
     }
@@ -93,8 +103,65 @@ class GDUtilities: NSObject {
         let timestamp = Int(Date.init().timeIntervalSince1970) * 1000           // Convert to Millis
         return timestamp
     }
+    
+    class func getMajorVersionNumber() -> String {
+        let bundleInfo = Bundle.main.infoDictionary!
+        let version = bundleInfo["CFBundleShortVersionString"] as! String
+        let versionNumbers = version.components(separatedBy: ".")
+        return versionNumbers[0]
+    }
+    
+    class func convertToDictionary(text: String) -> [String: Any]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
 }
 
+public class SSID {
+    class func fetchSSIDInfo() ->  String? {
+        var currentSSID = ""
+        if let interfaces = CNCopySupportedInterfaces() {
+            for i in 0..<CFArrayGetCount(interfaces) {
+                let interfaceName: UnsafeRawPointer = CFArrayGetValueAtIndex(interfaces, i)
+                let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
+                let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString)
+                if let interfaceData = unsafeInterfaceData as? [String: AnyObject] {
+                    currentSSID = interfaceData["SSID"] as! String
+                }
+            }
+        }
+        return currentSSID
+    }
+    
+    class func getAllWiFiNameList() -> String? {
+        var ssid: String?
+        if let interfaces = CNCopySupportedInterfaces() as NSArray? {
+            for interface in interfaces {
+                if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
+                    ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String
+                    break
+                }
+            }
+        }
+        return ssid
+    }
+}
+
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+}
 
 
 

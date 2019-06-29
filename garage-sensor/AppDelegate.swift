@@ -22,9 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userHasToken = GDoorUser.sharedInstance.userSignedIn()
         assessUILaunchTransition(accessToken: userHasToken)
         
-        if userHasToken {
-        }
-        
         return true
     }
 
@@ -36,7 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        GDoorUser.sharedInstance.updateLastSeenTime()
+        print("APP DELEGATE: App entering background")
+        // GDoorUser.sharedInstance.updateLastSeenTime() /* Not currently function - very quick app suspension */
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -46,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         GDoorUser.sharedInstance.updateLastSeenTime()
+        if (GDoorModel.main.sensorUID != nil) { GDoorModel.main.updateModel() }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -57,8 +56,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (accessToken) {
             // Go into the main app
             print("APP DELEGATE: Launching main UI")
-            let onboardStory = UIStoryboard(name: "Main", bundle: nil)
-            let mainVC = onboardStory.instantiateInitialViewController()
+            let mainStory = UIStoryboard(name: "Main", bundle: nil)
+            let mainVC = mainStory.instantiateInitialViewController()
             
             // Present over current VC
             window?.rootViewController = mainVC

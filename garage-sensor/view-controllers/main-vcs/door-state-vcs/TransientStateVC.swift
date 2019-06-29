@@ -9,11 +9,6 @@
 import UIKit
 
 class TransientStateVC: UIViewController {
-    // Constants
-    let doorStateLabelLookUp = [0: "Sending",
-                                1: "Sending",
-                                2: "Connecting"]
-    
     // Outlets
     @IBOutlet var circleContainer: UIView!
     @IBOutlet var stateTitle: UILabel!
@@ -28,8 +23,6 @@ class TransientStateVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         // Check the state of the door model and update UI accordingly
         setUIForTransientState()
-        
-        // Start animation
         pulseWifiLogo()
     }
     
@@ -47,7 +40,7 @@ class TransientStateVC: UIViewController {
     
     func setUIForTransientState() {
         // Assess the door model and set UI accordingly
-        stateTitle.text = doorStateLabelLookUp[GDoorModel.main.doorState]
+        stateTitle.text = GDoorModel.main.networkState
     }
     
     // MARK: - Animation -

@@ -6,8 +6,7 @@ target 'garage-sensor' do
   use_frameworks!
 
   # Pods for garage-sensor
-  pod 'Firebase/Core'
-  pod 'Firebase/Database'
-  pod 'Firebase/Auth'
+  pod 'AwaitKit', '~> 5.1.0'
+  pod 'AWSIoT'
 
 end
