@@ -122,13 +122,11 @@ class GDoorPubSub: NSObject {
         let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic]
         
         for topic in topicArray {
-            if (topic != nil) {
-                print("PUBSUB: Registering subscription to => \(String(describing: topic))")
-                dataManager!.subscribe(toTopic: topic!,
-                                       qoS: .messageDeliveryAttemptedAtLeastOnce,
-                                       messageCallback: messageReceived)
+            print("PUBSUB: Registering subscription to => \(String(describing: topic))")
+            dataManager!.subscribe(toTopic: topic!,                                 // Should fail hard if topic is nil (no user UID)
+                                   qoS: .messageDeliveryAttemptedAtLeastOnce,
+                                   messageCallback: messageReceived)
             }
-        }
     }
     
     // MARK: - Topic generators -

@@ -106,7 +106,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     
     func initializeSensor(ssid: String!, password: String?) -> Promise<Bool> {
         return async {
-            let sensorApi = SensorApi()
+            let sensorApi = GDoorSensorApi()
             
             do {
                 let sensorUID = try await(sensorApi.getSensorUID())

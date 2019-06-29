@@ -50,8 +50,6 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     private override init() {
         super.init()
         print("GDOOR: Data model created")
-        pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
-        pubsubClient!.connectToDeviceGateway()
     }
     
     // Requests the sensor Data from the client API
@@ -66,6 +64,8 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
             }
             
             self.setSensorData(sensorData: sensorData!)
+            self.pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
+            self.pubsubClient!.connectToDeviceGateway()
             completion(true, nil, nil)
         }
     }
@@ -121,12 +121,14 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     // MARK: - Pubsub delegate handling -
     
     func sensorDataUpdated() {
-        print("GDOOR: Sensor model updated, checking database")
-        updateModel()
+        if (sensorUID != nil) {
+            print("GDOOR: Sensor model updated, checking database")
+            updateModel()
+        }
     }
     
     func connectionStateUpdate(newState: AWSIoTMQTTStatus) {
-        // Handle
+        // Not required yet
     }
 }
 

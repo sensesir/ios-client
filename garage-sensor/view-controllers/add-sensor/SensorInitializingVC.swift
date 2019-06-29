@@ -125,6 +125,13 @@ class SensorInitializingVC: UIViewController {
         }
     }
     
+    /*
+     *  Refactor required: No need to perform using polling timer and periodic http requests.
+     *  We can now use the pubsub module, watching for a connected event, but in the philosophy
+     *  of changing as little as possible, this optimisation won't be implemented untill the
+     *  final app platform is decided on
+     */
+    
     @objc func pollSensorNetworkState() {
         async {
             do {

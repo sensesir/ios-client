@@ -41,7 +41,8 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        updateDoorState()
+        // TODO: Consider moving to viewDidLoad
+        initializeDoorState()
     }
     
     // MARK: - UI Hanlding -
@@ -119,7 +120,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     // MARK: - Door Interface -
     
-    func updateDoorState() {
+    func initializeDoorState() {
         GDoorModel.main.initializeModel { (success, failureMessage, error) in
             if (error != nil) {
                 // TODO: report error
