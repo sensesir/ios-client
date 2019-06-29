@@ -76,12 +76,15 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         let userUID = GDoorUser.sharedInstance.userUID!
         api.getSensorData(userUID: userUID) { (sensorData, error) in
             if (error != nil) {
-                print("GDOOR: Failed to updat model => \(error)")
+                print("GDOOR: Failed to updat model => \(String(describing: error))")
                 return
             }
             
             self.setSensorData(sensorData: sensorData!)
-            DispatchQueue.main.async { self.doorStateDelegate?.doorStateUpdated() }
+            DispatchQueue.main.async {
+                self.doorStateDelegate?.doorStateUpdated()
+                self.sensorStateDelegate?.sensorStateUpdated()
+            }
         }
     }
     
@@ -117,8 +120,8 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     
     // MARK: - Pubsub delegate handling -
     
-    func doorStateChange() {
-        print("GDOOR: Door state changed")
+    func sensorDataUpdated() {
+        print("GDOOR: Sensor model updated, checking database")
         updateModel()
     }
     

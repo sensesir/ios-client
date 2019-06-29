@@ -13,7 +13,7 @@ import PromiseKit
 
 protocol GDoorPubSubDelegate {
     func connectionStateUpdate(newState: AWSIoTMQTTStatus)
-    func doorStateChange()
+    func sensorDataUpdated()
 }
 
 class GDoorPubSub: NSObject {
@@ -116,22 +116,60 @@ class GDoorPubSub: NSObject {
             self.handleEvent(payload: payloadDictionary)
         }
         
-        let topic = topicSubDoorStateChanges()
-        if (topic != nil) {
-            print("PUBSUB: Registering subscription to => \(String(describing: topic))")
-            dataManager!.subscribe(toTopic: topic!,
-                                   qoS: .messageDeliveryAttemptedAtLeastOnce,
-                                   messageCallback: messageReceived)
+        let doorStateChangeTopic = topicSubDoorStateChanges()
+        let connectedTopic = topicConnected()
+        let disconnectedTopic = topicDisconnected()
+        let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic]
+        
+        for topic in topicArray {
+            if (topic != nil) {
+                print("PUBSUB: Registering subscription to => \(String(describing: topic))")
+                dataManager!.subscribe(toTopic: topic!,
+                                       qoS: .messageDeliveryAttemptedAtLeastOnce,
+                                       messageCallback: messageReceived)
+            }
         }
     }
     
+    // MARK: - Topic generators -
+    
     func topicSubDoorStateChanges() -> String? {
         // target/uid/version/category/descriptor
-        let target = env.IOT_TARGET
+        let target = env.MQTT_TARGET
         let uid = GDoorUser.sharedInstance.userUID
         let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
-        let category = env.IOT_SUB_EVENT
-        let descriptor = env.IOT_SUB_DOOR_STATE_CHANGE
+        let category = env.MQTT_SUB_EVENT
+        let descriptor = env.MQTT_SUB_DOOR_STATE_CHANGE
+        
+        if (uid != nil) {
+            let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
+            return topic
+        } else {
+            return nil
+        }
+    }
+    
+    func topicDisconnected() -> String? {
+        let target = env.MQTT_TARGET
+        let uid = GDoorUser.sharedInstance.userUID
+        let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
+        let category = env.MQTT_SUB_EVENT
+        let descriptor = env.MQTT_SUB_DISCONNECT
+        
+        if (uid != nil) {
+            let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
+            return topic
+        } else {
+            return nil
+        }
+    }
+    
+    func topicConnected() -> String? {
+        let target = env.MQTT_TARGET
+        let uid = GDoorUser.sharedInstance.userUID
+        let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
+        let category = env.MQTT_SUB_EVENT
+        let descriptor = env.MQTT_SUB_CONNECTED
         
         if (uid != nil) {
             let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
@@ -156,8 +194,13 @@ class GDoorPubSub: NSObject {
         }
         
         let event = payload["event"] as! String
-        if (event == env.IOT_SUB_DOOR_STATE_CHANGE) {
-            delegate?.doorStateChange()
+        if (event == env.MQTT_SUB_DOOR_STATE_CHANGE ||
+            event == env.MQTT_SUB_CONNECTED ||
+            event == env.MQTT_SUB_DISCONNECT) {
+            print("PUBSUB: Received message of event => \(event)")
+            delegate?.sensorDataUpdated()
+        } else {
+            print("PUBSUB: Warning, unknown event type \(event)")
         }
     }
 }

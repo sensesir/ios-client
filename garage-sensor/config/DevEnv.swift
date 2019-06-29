@@ -44,7 +44,11 @@ struct DevEnv {
     let AWS_IOT_ENDPOINT = "wss://anwaqu8y2zf77-ats.iot.eu-west-1.amazonaws.com/mqtt"
     let AWS_PUBSUB_KEY = "AWSPubSub"
     let AWS_IOT_DATA_MANAGER_KEY = "AWSIotDataManager"
-    let IOT_TARGET = "mobileClient"
-    let IOT_SUB_EVENT = "event"
-    let IOT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
+    
+    // MQTT
+    let MQTT_TARGET = "mobileClient"
+    let MQTT_SUB_EVENT = "event"
+    let MQTT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
+    let MQTT_SUB_CONNECTED = "connected"
+    let MQTT_SUB_DISCONNECT = "disconnected"
 }
