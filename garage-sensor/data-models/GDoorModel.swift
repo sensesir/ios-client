@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AWSIoT
 
 protocol DoorStateProtocol: class {
     func doorStateUpdated()
@@ -24,12 +25,13 @@ enum DoorStateEnum: Int {
     case ADD_SENSOR = 2
 }
 
-class GDoorModel: NSObject {
+class GDoorModel: NSObject, GDoorPubSubDelegate {
     // Constants
     let profileKeys = dbProfileKeys()
     let sensorDBKeys = dbSensorKeys()
     
     // Properties
+    var pubsubClient: GDoorPubSub?
     var doorState: String! = "Unknown"
     var doorStateEnum: DoorStateEnum! = DoorStateEnum.UNKNOWN
     var networkState: String! = "Sensor Connecting"
@@ -48,6 +50,8 @@ class GDoorModel: NSObject {
     private override init() {
         super.init()
         print("GDOOR: Data model created")
+        pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
+        pubsubClient!.connectToDeviceGateway()
     }
     
     // Requests the sensor Data from the client API
@@ -98,6 +102,17 @@ class GDoorModel: NSObject {
         else if (doorState == "Open")   { doorStateEnum = DoorStateEnum.OPEN}
         else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
         else { print("DOOR MODEL: Error - undefined door state") }
+    }
+    
+    // MARK: - Pubsub delegate handling -
+    
+    func doorStateChange() {
+        print("GDOOR: Door state changed")
+        
+    }
+    
+    func connectionStateUpdate(newState: AWSIoTMQTTStatus) {
+        // Handle
     }
 }
 

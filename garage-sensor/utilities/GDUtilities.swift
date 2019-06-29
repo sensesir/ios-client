@@ -93,6 +93,7 @@ class GDUtilities: NSObject {
             return convertedDict
         } catch {
             // Couldn't get JSON
+            print(error.localizedDescription)
             return [:]
         }
     }
@@ -101,6 +102,24 @@ class GDUtilities: NSObject {
     func generateTimeStampForNow() -> Int {
         let timestamp = Int(Date.init().timeIntervalSince1970) * 1000           // Convert to Millis
         return timestamp
+    }
+    
+    class func getMajorVersionNumber() -> String {
+        let bundleInfo = Bundle.main.infoDictionary!
+        let version = bundleInfo["CFBundleShortVersionString"] as! String
+        let versionNumbers = version.components(separatedBy: ".")
+        return versionNumbers[0]
+    }
+    
+    class func convertToDictionary(text: String) -> [String: Any]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
     }
 }
 

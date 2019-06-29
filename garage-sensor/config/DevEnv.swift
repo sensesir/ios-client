@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AWSCore
 
 struct DevEnv {
     // Networking
@@ -36,4 +37,14 @@ struct DevEnv {
     let NETWORK_ERROR_POST_WIFI_CREDS = 001
     let NETWORK_ERROR_POST_UID_CONF   = 002
     let MAX_SENSOR_INIT_RETIES = 5
+    
+    // IoT
+    let AWS_REGION = AWSRegionType.EUWest1
+    let AWS_IDENTITY_POOL_ID = "eu-west-1:a7c3f493-2ab3-455e-9601-c1e707dbcdcb"
+    let AWS_IOT_ENDPOINT = "wss://anwaqu8y2zf77-ats.iot.eu-west-1.amazonaws.com/mqtt"
+    let AWS_PUBSUB_KEY = "AWSPubSub"
+    let AWS_IOT_DATA_MANAGER_KEY = "AWSIotDataManager"
+    let IOT_TARGET = "mobileClient"
+    let IOT_SUB_EVENT = "event"
+    let IOT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
 }
