@@ -55,8 +55,8 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     }
     
     // Requests the sensor Data from the client API
-    func updateModel(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
-        print("GDOOR: Updating sensor data")
+    func initializeModel(completion: @escaping (_ success: Bool?,_ failureMessage: String?,_ error: Error?) -> Void) {
+        print("GDOOR: Initializing sensor data")
         let api = GDoorAPI()
         let userUID = GDoorUser.sharedInstance.userUID!
         api.getSensorData(userUID: userUID) { (sensorData, error) in
@@ -70,8 +70,19 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
-    func updateSensorData() {
-        
+    func updateModel() {
+        print("GDOOR: Updating model")
+        let api = GDoorAPI()
+        let userUID = GDoorUser.sharedInstance.userUID!
+        api.getSensorData(userUID: userUID) { (sensorData, error) in
+            if (error != nil) {
+                print("GDOOR: Failed to updat model => \(error)")
+                return
+            }
+            
+            self.setSensorData(sensorData: sensorData!)
+            DispatchQueue.main.async { self.doorStateDelegate?.doorStateUpdated() }
+        }
     }
     
     // MARK: - Local data handling -
@@ -108,7 +119,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     
     func doorStateChange() {
         print("GDOOR: Door state changed")
-        
+        updateModel()
     }
     
     func connectionStateUpdate(newState: AWSIoTMQTTStatus) {

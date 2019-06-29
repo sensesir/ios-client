@@ -120,7 +120,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     // MARK: - Door Interface -
     
     func updateDoorState() {
-        GDoorModel.main.updateModel { (success, failureMessage, error) in
+        GDoorModel.main.initializeModel { (success, failureMessage, error) in
             if (error != nil) {
                 // TODO: report error
                 return
