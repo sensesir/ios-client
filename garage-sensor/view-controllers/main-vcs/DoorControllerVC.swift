@@ -38,11 +38,13 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
         GDoorModel.main.sensorStateDelegate = self
         GDoorModel.main.doorStateDelegate = self
+        
+        initializeDoorState()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // TODO: Consider moving to viewDidLoad
-        initializeDoorState()
+        // Refresh door state (but not reconnect to AWS IoT?
+        // Check if we require a reconnection
     }
     
     // MARK: - UI Hanlding -
@@ -55,7 +57,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         navController?.navigationBar.barTintColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
         navController?.navigationBar.titleTextAttributes = titleAttributes
         
-        if GDoorModel.main.modelInitialised { transitionToStaticState() }
+        if (GDoorModel.main.sensorUID != nil) { transitionToStaticState() }
         else { transitionToTransientState() }
     }
     
@@ -91,12 +93,26 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
             doorConnStateIcon.isHidden = false
             doorConnStateButton.setTitle(GDoorModel.main.networkState, for: .normal)
             doorConnStateIcon.image = UIImage.init(named: sensorStateImageLookup[GDoorModel.main.networkState!]!)
+            
+            if (GDoorModel.main.networkState! == "Sensor Online") { enableDoorTrigger() }
+            else { disableDoorTrigger() }
         }
+    }
+    
+    func enableDoorTrigger() {
+        doorActuator.backgroundColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
+        doorActuator.isUserInteractionEnabled = true
+    }
+    
+    func disableDoorTrigger() {
+        // Case of sensor being disconnected - door is not triggerable
+        doorActuator.backgroundColor = UIColor.init(red: 125/255.0, green: 125/255.0, blue: 125/255.0, alpha: 1.0)
+        doorActuator.isUserInteractionEnabled = false
     }
     
     func showSuccessModal() {
         let successImage = UIImage.init(named: "success-tick-green")
-        if let successModal = StandardModalVC.initModal(title: "Trigger Sent!",
+        if let successModal = StandardModalVC.initModal(title: "Command Sent!",
                                                         descText: "The door trigger command was successfully sent",
                                                         image: successImage!) {
             // Present the VC
@@ -148,17 +164,35 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         }
     }
     
-    @IBAction func actuateDoor() {
+    @IBAction func actuateDoorRequested() {
+        print("DOOR CONTROLLER: User requested door actuation, confirming")
+        
+        let altDoorState = GDoorModel.main.altDoorState
+        let modalText = "Are you sure you want to \(altDoorState!) the garage door?"
+        var triggerImage = UIImage.init(named: "gdoor-logo")
+        if (altDoorState == "open") { triggerImage = UIImage.init(named: "gdoor-open") }
+        
+        let actuateConfirmModal = ModalWithConfirmVC.initModal(title: "Are you sure?",
+                                                               descText: modalText,
+                                                               image: triggerImage!,
+                                                               buttonTitle: "Confirm") {
+            self.actuateDoor()
+        }
+        
+        present(actuateConfirmModal!, animated: true, completion: nil)
+    }
+    
+    func actuateDoor() {
         print("DOOR CONTROLLER: Sending door actuation trigger")
         let gdoorApi = GDoorAPI()
         gdoorApi.actuateDoor(userUID: GDoorUser.sharedInstance.userUID!) { (success, error) in
             if (error != nil) {
-                // TODO: Handle
+                DispatchQueue.main.async { self.showFailureModal(errorCode: 7) }
                 return
             }
             
             print("DOOR CONTROLLER: Successfully actuated door")
-            // Todo: show modal
+            DispatchQueue.main.async { self.showSuccessModal() }
         }
     }
     
@@ -190,6 +224,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     // MARK: - Transitions -
     
+    @IBAction func sensorConnStateSelected() {
+        transitionToSensorInfo()
+    }
+    
     func transitionToAddSensorStory() {
         // Transition to WiFi set up (but home screeb for now)
         let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
@@ -197,8 +235,16 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         present(introVC!, animated: true, completion: nil)
     }
     
+    func transitionToSensorInfo() {
+        performSegue(withIdentifier: "SensorInfoSegue", sender: self)
+    }
+    
     @IBAction func unwindFromAddSensorStory(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         print("DOOR CONTROLLER: Unwound after completing sensor setup")
+    }
+    
+    @IBAction func unwindFromSensorInfo(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+        print("DOOR CONTROLLER: Unwound from sensor info page")
     }
 }
 

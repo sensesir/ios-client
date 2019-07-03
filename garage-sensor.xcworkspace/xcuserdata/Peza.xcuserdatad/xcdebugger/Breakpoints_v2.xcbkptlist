@@ -2,4 +2,54 @@
 <Bucket
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "garage-sensor/view-controllers/main-vcs/DoorControllerVC.swift"
+            timestampString = "583877672.597766"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "217"
+            endingLineNumber = "217"
+            landmarkName = "sensorStateUpdated()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "garage_sensor.DoorControllerVC.sensorStateUpdated() -&gt; ()"
+                  moduleName = "garage-sensor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Peza/workspace/garage-door-sensor_MVP/gdoor-ios/garage-sensor/view-controllers/main-vcs/DoorControllerVC.swift"
+                  timestampString = "583871240.415563"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "215"
+                  endingLineNumber = "215"
+                  offsetFromSymbolStart = "152">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in garage_sensor.DoorControllerVC.sensorStateUpdated() -&gt; ()"
+                  moduleName = "garage-sensor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Peza/workspace/garage-door-sensor_MVP/gdoor-ios/garage-sensor/view-controllers/main-vcs/DoorControllerVC.swift"
+                  timestampString = "583871240.41741"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "215"
+                  endingLineNumber = "215"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

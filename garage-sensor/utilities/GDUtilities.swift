@@ -99,6 +99,7 @@ class GDUtilities: NSObject {
     }
     
     // MARK: - Time handling methods -
+    
     func generateTimeStampForNow() -> Int {
         let timestamp = Int(Date.init().timeIntervalSince1970) * 1000           // Convert to Millis
         return timestamp
@@ -153,6 +154,8 @@ public class SSID {
     }
 }
 
+// MARK: - Class extensions -
+
 extension String {
     func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + self.lowercased().dropFirst()
@@ -161,6 +164,17 @@ extension String {
     mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
+}
+
+extension Date
+{
+    func toString( dateFormat format  : String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
 }
 
 
