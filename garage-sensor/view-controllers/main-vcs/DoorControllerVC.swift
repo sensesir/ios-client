@@ -42,11 +42,6 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         initializeDoorState()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        // Refresh door state (but not reconnect to AWS IoT?
-        // Check if we require a reconnection
-    }
-    
     // MARK: - UI Hanlding -
 
     func styleUI() {
@@ -56,6 +51,11 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         let titleAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         navController?.navigationBar.barTintColor = UIColor.init(red: 48/255.0, green: 61/255.0, blue: 79/255.0, alpha: 1.0)
         navController?.navigationBar.titleTextAttributes = titleAttributes
+        
+        // Make conn state button clickable
+        let imageTap = UITapGestureRecognizer.init(target: self, action: #selector(transitionToSensorInfo))
+        doorConnStateIcon.isUserInteractionEnabled = true
+        doorConnStateIcon.addGestureRecognizer(imageTap)
         
         if (GDoorModel.main.sensorUID != nil) { transitionToStaticState() }
         else { transitionToTransientState() }
@@ -196,6 +196,21 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         }
     }
     
+    // MARK: - WIFI -
+    
+    @IBAction func userSelectedWiFiChange() {
+        let modalText = "Are you sure you want to reset your sensor's wifi credentials? This will require loading the new credentials on your sensor."
+        let triggerImage = UIImage.init(named: "door-online")
+        let wifiResetModal = ModalWithConfirmVC.initModal(title: "Reset WiFi Credentials",
+                                                               descText: modalText,
+                                                               image: triggerImage!,
+                                                               buttonTitle: "Confirm") {
+            DispatchQueue.main.async { self.transitionToWiFiCredSet() }
+        }
+        
+        present(wifiResetModal!, animated: true, completion: nil)
+    }
+    
     // MARK: - Delegate Callbacks -
     
     func doorStateUpdated() {
@@ -234,8 +249,17 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         let introVC = addSensorStory.instantiateInitialViewController()
         present(introVC!, animated: true, completion: nil)
     }
+        
+    func transitionToWiFiCredSet() {
+        let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
+        let addSensorNavVC = addSensorStory.instantiateInitialViewController() as! UINavigationController
+        self.present(addSensorNavVC, animated: true, completion: {
+            let prepSensorVC = addSensorStory.instantiateViewController(withIdentifier: "PrepSensorVC")
+            addSensorNavVC.pushViewController(prepSensorVC, animated: false)
+        })
+    }
     
-    func transitionToSensorInfo() {
+    @objc func transitionToSensorInfo() {
         performSegue(withIdentifier: "SensorInfoSegue", sender: self)
     }
     

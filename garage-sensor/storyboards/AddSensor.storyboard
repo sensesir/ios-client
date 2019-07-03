@@ -109,7 +109,7 @@
         <!--Power on Sensor-->
         <scene sceneID="Jt3-uS-5Bg">
             <objects>
-                <viewController id="DDm-rX-Kxp" customClass="PrepSensorVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PrepSensorVC" id="DDm-rX-Kxp" customClass="PrepSensorVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5fi-7b-Vea">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -315,7 +315,7 @@
         <!--Connect to sensors wifi-->
         <scene sceneID="yBj-Tp-GHn">
             <objects>
-                <viewController id="lU8-me-ACu" customClass="LocalWiFiConnectVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LocalWiFiConnectVC" id="lU8-me-ACu" customClass="LocalWiFiConnectVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ziE-7d-AHD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -637,9 +637,9 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ec0-lV-J6h" userLabel="SSID name">
                                                         <rect key="frame" x="0.0" y="0.0" width="118.5" height="79.5"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zed-Yl-Pgz">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zed-Yl-Pgz">
                                                                 <rect key="frame" x="10" y="10" width="98.5" height="59.5"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -656,13 +656,13 @@
                                                         <rect key="frame" x="118.5" y="0.0" width="295.5" height="79.5"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="ldD-uV-WyW">
-                                                                <rect key="frame" x="20" y="26.5" width="255.5" height="26"/>
+                                                                <rect key="frame" x="20" y="28.5" width="255.5" height="22"/>
                                                                 <nil key="textColor"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                             </textField>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lMi-dy-eLt" userLabel="SSID Underline">
-                                                                <rect key="frame" x="20" y="57.5" width="255.5" height="1"/>
+                                                                <rect key="frame" x="20" y="55.5" width="255.5" height="1"/>
                                                                 <color key="backgroundColor" red="0.18823529410000001" green="0.23921568630000001" blue="0.30980392159999998" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="fYu-5A-aeb"/>
@@ -704,9 +704,9 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GUR-wx-YkR" userLabel="Password title">
                                                         <rect key="frame" x="0.0" y="0.0" width="118.5" height="70"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ewP-xP-zGb">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ewP-xP-zGb">
                                                                 <rect key="frame" x="10" y="10" width="98.5" height="50"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -723,13 +723,13 @@
                                                         <rect key="frame" x="118.5" y="0.0" width="295.5" height="70"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ukK-5h-Hy0">
-                                                                <rect key="frame" x="20" y="23" width="255.5" height="24"/>
+                                                                <rect key="frame" x="20" y="24" width="255.5" height="22"/>
                                                                 <nil key="textColor"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
                                                             </textField>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dqo-vA-EnJ">
-                                                                <rect key="frame" x="20" y="52" width="255.5" height="1"/>
+                                                                <rect key="frame" x="20" y="51" width="255.5" height="1"/>
                                                                 <color key="backgroundColor" red="0.18823529410000001" green="0.23921568630000001" blue="0.30980392159999998" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="1" id="JC6-ca-iVq"/>
@@ -887,24 +887,37 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JPP-wI-Ph2" userLabel="Diagram">
                                                         <rect key="frame" x="0.0" y="0.0" width="100.5" height="119"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sensor-wifi-conn" translatesAutoresizingMaskIntoConstraints="NO" id="760-DT-4GR">
-                                                                <rect key="frame" x="10" y="10" width="85.5" height="99"/>
-                                                            </imageView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lXB-HK-LC3">
+                                                                <rect key="frame" x="10" y="37.5" width="85.5" height="44.5"/>
+                                                                <color key="backgroundColor" white="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="lXB-HK-LC3" secondAttribute="height" multiplier="86:45" id="n1x-8b-8Hs"/>
+                                                                </constraints>
+                                                            </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kYQ-Wl-n9y">
-                                                                <rect key="frame" x="35" y="43" width="9" height="9.5"/>
+                                                                <rect key="frame" x="33" y="42.5" width="10" height="10"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KS4-P1-qNT" userLabel="GreenLED">
+                                                                <rect key="frame" x="18.5" y="42.5" width="10.5" height="10"/>
+                                                                <color key="backgroundColor" red="0.3557136572215468" green="1" blue="0.49383738372344621" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="KS4-P1-qNT" secondAttribute="height" multiplier="1:1" id="Ec5-KJ-aTF"/>
+                                                                </constraints>
                                                             </view>
                                                         </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="width" secondItem="760-DT-4GR" secondAttribute="width" multiplier="0.1" id="3bG-7v-54I"/>
-                                                            <constraint firstItem="760-DT-4GR" firstAttribute="leading" secondItem="JPP-wI-Ph2" secondAttribute="leading" constant="10" id="6eV-Yu-1Oa"/>
-                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="centerY" secondItem="760-DT-4GR" secondAttribute="centerY" multiplier="0.8" id="N8y-sL-zHR"/>
-                                                            <constraint firstItem="760-DT-4GR" firstAttribute="top" secondItem="JPP-wI-Ph2" secondAttribute="top" constant="10" id="XHW-xO-5dV"/>
-                                                            <constraint firstAttribute="bottom" secondItem="760-DT-4GR" secondAttribute="bottom" constant="10" id="flW-93-D73"/>
-                                                            <constraint firstAttribute="trailing" secondItem="760-DT-4GR" secondAttribute="trailing" constant="5" id="fnj-W9-nCu"/>
-                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="centerX" secondItem="760-DT-4GR" secondAttribute="centerX" multiplier="0.75" id="kdX-VY-vrt"/>
-                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="height" secondItem="760-DT-4GR" secondAttribute="height" multiplier="0.1" id="pSt-qn-EQZ"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="leading" secondItem="KS4-P1-qNT" secondAttribute="trailing" constant="4" id="0ZC-np-bEN"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="height" secondItem="KS4-P1-qNT" secondAttribute="height" id="7Oa-BO-EVW"/>
+                                                            <constraint firstItem="KS4-P1-qNT" firstAttribute="height" secondItem="lXB-HK-LC3" secondAttribute="height" multiplier="0.23" id="Dme-87-Uf4"/>
+                                                            <constraint firstItem="lXB-HK-LC3" firstAttribute="centerY" secondItem="JPP-wI-Ph2" secondAttribute="centerY" id="OU1-1d-wbO"/>
+                                                            <constraint firstItem="KS4-P1-qNT" firstAttribute="centerX" secondItem="lXB-HK-LC3" secondAttribute="centerX" multiplier="0.45" id="ViY-tf-dI1"/>
+                                                            <constraint firstItem="lXB-HK-LC3" firstAttribute="leading" secondItem="JPP-wI-Ph2" secondAttribute="leading" constant="10" id="Yxd-kK-GWA"/>
+                                                            <constraint firstItem="KS4-P1-qNT" firstAttribute="top" secondItem="lXB-HK-LC3" secondAttribute="top" constant="5" id="bpD-6j-Lkq"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="centerY" secondItem="KS4-P1-qNT" secondAttribute="centerY" id="f6k-pA-LoN"/>
+                                                            <constraint firstAttribute="trailing" secondItem="lXB-HK-LC3" secondAttribute="trailing" constant="5" id="fyq-YJ-Cme"/>
+                                                            <constraint firstItem="kYQ-Wl-n9y" firstAttribute="width" secondItem="KS4-P1-qNT" secondAttribute="width" id="kJ1-YY-e2m"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EOp-Q5-iMZ" userLabel="Explainer">
@@ -1098,7 +1111,9 @@
                         <barButtonItem key="leftBarButtonItem" id="MQV-Iq-sDG"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="greenLED" destination="KS4-P1-qNT" id="sI1-1A-yTA"/>
                         <outlet property="mqttConnArrow" destination="ccX-ZY-IeS" id="fhY-AH-FsE"/>
+                        <outlet property="sensorBox" destination="lXB-HK-LC3" id="h1t-t7-tg8"/>
                         <outlet property="whiteLED" destination="kYQ-Wl-n9y" id="dtM-3u-D4o"/>
                         <segue destination="Ckr-AN-yM6" kind="unwind" identifier="UnwindFromSensorAddStory" unwindAction="unwindFromAddSensorStoryFor:towardsViewController:" id="vck-xA-7n4"/>
                     </connections>
@@ -1111,7 +1126,7 @@
         <!--Navigation Controller-->
         <scene sceneID="dLD-hm-6ae">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="a8c-ta-1Tg" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="AddSensorNavVC" automaticallyAdjustsScrollViewInsets="NO" id="a8c-ta-1Tg" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="j6Z-of-8Vy">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -1139,7 +1154,6 @@
         <image name="ios-wifi-settings" width="200" height="75"/>
         <image name="sensor-mqtt-conn" width="100" height="51"/>
         <image name="sensor-prep" width="200" height="142"/>
-        <image name="sensor-wifi-conn" width="100" height="51"/>
         <image name="ss-wifi" width="200" height="199.5"/>
         <image name="success-tick-green" width="200" height="200"/>
         <image name="teach-wifi" width="200" height="36.5"/>

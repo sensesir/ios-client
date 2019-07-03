@@ -133,7 +133,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Sense Sir" id="zkO-Ye-ybU">
                         <barButtonItem key="leftBarButtonItem" image="profile-white" id="EhB-4F-0Sf"/>
-                        <barButtonItem key="rightBarButtonItem" image="wifi-vertacle-white" id="7rA-sc-JlP"/>
+                        <barButtonItem key="rightBarButtonItem" image="wifi-vertacle-white" id="7rA-sc-JlP">
+                            <connections>
+                                <action selector="userSelectedWiFiChange" destination="703-4V-yAM" id="nJ6-UQ-I0y"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="doorActuator" destination="k2R-Xp-PYo" id="efQ-fg-bCW"/>

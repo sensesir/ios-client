@@ -22,8 +22,9 @@ class SensorInfoVC: UIViewController, UITableViewDataSource {
         sensorInfoTable.rowHeight = 48.0
     }
     
-    // MARK: - UI -
-    
+    override func viewWillAppear(_ animated: Bool) {
+        sensorInfoTable.reloadData()
+    }
     
     // MARK: - Table view handling -
     
@@ -50,13 +51,17 @@ class SensorInfoVC: UIViewController, UITableViewDataSource {
         case 1:
             cell?.value.text = GDoorModel.main.doorState
         case 2:
-            if (GDoorModel.main.networkDown == nil) { cell?.value.text = "Never" }
-            else { cell?.value.text = GDoorModel.main.networkDown!.toString(dateFormat: "HH:mm  dd-MMM-yyyy") }
-        case 3:
             if (GDoorModel.main.lastPing == nil) { cell?.value.text = "Never" }
             else { cell?.value.text = GDoorModel.main.lastPing!.toString(dateFormat: "HH:mm  dd-MMM-yyyy") }
-        // case 4:
-            
+        case 3:
+            if (GDoorModel.main.networkDown == nil) { cell?.value.text = "Never" }
+            else { cell?.value.text = GDoorModel.main.networkDown!.toString(dateFormat: "HH:mm  dd-MMM-yyyy") }
+        case 4:
+            if (GDoorModel.main.wifiSSID == nil) { cell?.value.text = "" }
+            else { cell?.value.text = GDoorModel.main.wifiSSID }
+        case 5:
+            if (GDoorModel.main.wifiPassword == nil) { cell?.value.text = "" }
+            else { cell?.value.text = GDoorModel.main.wifiPassword }
         default:
             print("SENSOR INFO VC: Error - unknown table row \(indexPath.row)")
         }

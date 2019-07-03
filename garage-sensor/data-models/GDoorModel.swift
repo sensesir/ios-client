@@ -39,6 +39,8 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     var lastPing: Date?
     var networkDown: Date?
     var sensorUID: String?
+    var wifiSSID: String?
+    var wifiPassword: String?
     
     // Interfaces
     weak var doorStateDelegate: DoorStateProtocol?
@@ -50,6 +52,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     private override init() {
         super.init()
         print("GDOOR: Data model created")
+        loadDataFromDisk()
     }
     
     // Requests the sensor Data from the client API
@@ -86,6 +89,10 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
                 self.sensorStateDelegate?.sensorStateUpdated()
             }
         }
+    }
+    
+    func assessIoTConnection() {
+        pubsubClient?.assessMQTTConnection()
     }
     
     // MARK: - Local data handling -
@@ -126,6 +133,25 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         } else {
             print("DOOR MODEL: Error - undefined door state")
         }
+    }
+    
+    func setWifiCreds(ssid: String!, password: String!) {
+        wifiSSID = ssid
+        wifiPassword = password
+        persistWiFiCreds()
+    }
+    
+    func persistWiFiCreds() {
+        print("GDOOR: Writing data to local storage")
+        let dataManager = UserDefaults.standard
+        if (wifiSSID != nil) { dataManager.set(wifiSSID, forKey: "wifiSSID") }
+        if (wifiPassword != nil)  { dataManager.set(wifiPassword, forKey: "wifiPassword") }
+    }
+    
+    func loadDataFromDisk() {
+        let dataManager = UserDefaults.standard
+        wifiSSID = dataManager.string(forKey: "wifiSSID")
+        wifiPassword = dataManager.string(forKey: "wifiPassword")
     }
     
     // MARK: - Pubsub delegate handling -
