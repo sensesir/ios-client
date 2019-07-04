@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import Bugsnag
 
 class GDoorUser: NSObject {
     // Class level properties
@@ -125,6 +126,8 @@ class GDoorUser: NSObject {
         if (userUID != nil)       { dataManager.set(userUID, forKey: profileKeys.UIDKey) }
         if (userAddress != nil)   { dataManager.set(userAddress, forKey: profileKeys.UserAddressKey) }
         if (userMobileNum != nil) { dataManager.set(userMobileNum, forKey: profileKeys.UserMobileNumKey) }
+        
+        setBugsnapUserInfo()
     }
     
     // Attempt to load user vars from memory
@@ -140,10 +143,19 @@ class GDoorUser: NSObject {
             userPassword    = dataManager.string(forKey: profileKeys.UserPasswordKey)
             userAddress     = dataManager.string(forKey: profileKeys.UserAddressKey)
             userMobileNum   = dataManager.string(forKey: profileKeys.UserMobileNumKey)
+            
+            setBugsnapUserInfo()
         }
             
         else{
             print("USER: No user data locally")
         }
+    }
+    
+    func setBugsnapUserInfo() {
+        let userFullName = (userLastName == nil) ? userFirstName : "\(userFirstName!) \(userLastName!)"
+        Bugsnag.configuration()?.setUser(userUID,
+                                         withName: userFullName,
+                                         andEmail: userEmail)
     }
 }
