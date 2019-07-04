@@ -13,6 +13,8 @@ import AwaitKit
 
 class SensorInitializingVC: UIViewController {
     @IBOutlet var whiteLED: UIView!
+    @IBOutlet var greenLED: UIView!
+    @IBOutlet var sensorBox: UIView!
     @IBOutlet var mqttConnArrow: UIImageView!
     
     var networkPollingTimer: Timer?
@@ -33,6 +35,8 @@ class SensorInitializingVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         whiteLED.layer.cornerRadius = whiteLED.frame.height/2.0
+        greenLED.layer.cornerRadius = greenLED.frame.height/2.0
+        sensorBox.layer.cornerRadius = 4.0
     }
     
     // MARK: - UI Handling -
@@ -147,7 +151,10 @@ class SensorInitializingVC: UIViewController {
                 }
             }
             
-            catch { print(error) }
+            catch {
+                print(error)
+                // TODO: Handle
+            }
         }
     }
     

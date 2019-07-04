@@ -85,6 +85,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
                 do {
                     let result = try await(self.initializeSensor(ssid: ssid, password: password))
                     if (result) {
+                        GDoorModel.main.setWifiCreds(ssid: ssid, password: password)
                         DispatchQueue.main.async { [weak self] in self?.transitionToSensorInitVC() }
                         return
                     }
@@ -136,7 +137,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
         
         let commsFailureImage = UIImage.init(named: "door-offline")
         if let fatalCommsFailureModal = StandardModalVC.initModal(title: "Fatal failure",
-                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network. Please connect to it, waiting for a successful connection and reopen this app",
+                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network. Please connect to it, wait for a successful connection and reopen this app",
                                                          image: commsFailureImage!) {
             // Present the VC
             present(fatalCommsFailureModal, animated: true, completion: nil)

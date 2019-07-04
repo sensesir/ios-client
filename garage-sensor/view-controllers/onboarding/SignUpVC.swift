@@ -49,6 +49,9 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewDidLoad() {
         // Initialize the table view
         initSignupForm()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
     }
     
     // MARK: - Table view initializers -
@@ -180,6 +183,19 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return signupInfoCell == nil ? loginInfoCell! : signupInfoCell!
     }
     
+    // MARK: - Scrollview handle -
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            signupForm.contentInset = UIEdgeInsetsMake(0, 0, keyboardSize.height, 0)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            signupForm.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        }
+    }
     
     // MARK: - User Entry handling -
     

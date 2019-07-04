@@ -8,12 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		A9B50E8D84F8AC9283258828 /* Pods_garage_sensor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */; };
+		EB19BBE922CD33CE0051A0A5 /* SensorInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB19BBE822CD33CE0051A0A5 /* SensorInfoVC.swift */; };
+		EB19BBEC22CD35EA0051A0A5 /* SensorInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB19BBEB22CD35EA0051A0A5 /* SensorInfoCell.swift */; };
 		EB730C4120846B370076B9B6 /* StandardModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB730C4020846B370076B9B6 /* StandardModalVC.swift */; };
 		EB76B047207C929500EA8B9C /* UIEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B046207C929500EA8B9C /* UIEffects.swift */; };
 		EB76B04A207CAFEE00EA8B9C /* GDUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */; };
 		EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */; };
 		EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B050207D251100EA8B9C /* TransientStateVC.swift */; };
 		EB76B053207D335900EA8B9C /* GDoorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB76B052207D335900EA8B9C /* GDoorModel.swift */; };
+		EB869EA222C809FF008E4455 /* ModalWithConfirmVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB869EA122C809FF008E4455 /* ModalWithConfirmVC.swift */; };
 		EB90921422C674B90057DCAE /* GDoorPubSub.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB90921322C674B90057DCAE /* GDoorPubSub.swift */; };
 		EBBDBBD3229E1B9A00A28E5E /* GDoorAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD2229E1B9A00A28E5E /* GDoorAPI.swift */; };
 		EBBDBBD6229E2B4E00A28E5E /* DevEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBDBBD5229E2B4E00A28E5E /* DevEnv.swift */; };
@@ -45,12 +48,15 @@
 		22AE0681C91A78DDFE6289B6 /* Pods-garage-sensor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-garage-sensor.release.xcconfig"; path = "Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor.release.xcconfig"; sourceTree = "<group>"; };
 		24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_garage_sensor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE0E0F4CE265A630B0F91E1A /* Pods-garage-sensor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-garage-sensor.debug.xcconfig"; path = "Pods/Target Support Files/Pods-garage-sensor/Pods-garage-sensor.debug.xcconfig"; sourceTree = "<group>"; };
+		EB19BBE822CD33CE0051A0A5 /* SensorInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorInfoVC.swift; sourceTree = "<group>"; };
+		EB19BBEB22CD35EA0051A0A5 /* SensorInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorInfoCell.swift; sourceTree = "<group>"; };
 		EB730C4020846B370076B9B6 /* StandardModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardModalVC.swift; sourceTree = "<group>"; };
 		EB76B046207C929500EA8B9C /* UIEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEffects.swift; sourceTree = "<group>"; };
 		EB76B049207CAFEE00EA8B9C /* GDUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDUtilities.swift; sourceTree = "<group>"; };
 		EB76B04E207D24FA00EA8B9C /* StaticStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticStateVC.swift; sourceTree = "<group>"; };
 		EB76B050207D251100EA8B9C /* TransientStateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransientStateVC.swift; sourceTree = "<group>"; };
 		EB76B052207D335900EA8B9C /* GDoorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorModel.swift; sourceTree = "<group>"; };
+		EB869EA122C809FF008E4455 /* ModalWithConfirmVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalWithConfirmVC.swift; sourceTree = "<group>"; };
 		EB90921322C674B90057DCAE /* GDoorPubSub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorPubSub.swift; sourceTree = "<group>"; };
 		EBBDBBD2229E1B9A00A28E5E /* GDoorAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDoorAPI.swift; sourceTree = "<group>"; };
 		EBBDBBD5229E2B4E00A28E5E /* DevEnv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevEnv.swift; sourceTree = "<group>"; };
@@ -108,6 +114,14 @@
 				24070C199DEBD27E72FCA1A3 /* Pods_garage_sensor.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EB19BBEA22CD35990051A0A5 /* component-vcs */ = {
+			isa = PBXGroup;
+			children = (
+				EB19BBEB22CD35EA0051A0A5 /* SensorInfoCell.swift */,
+			);
+			path = "component-vcs";
 			sourceTree = "<group>";
 		};
 		EB76B045207C91F400EA8B9C /* misc */ = {
@@ -243,8 +257,10 @@
 		EBC6AAAD207BB37E000F41D6 /* main-vcs */ = {
 			isa = PBXGroup;
 			children = (
+				EB19BBEA22CD35990051A0A5 /* component-vcs */,
 				EB76B04D207D14AB00EA8B9C /* door-state-vcs */,
 				EBC6AAAE207BB3AE000F41D6 /* DoorControllerVC.swift */,
+				EB19BBE822CD33CE0051A0A5 /* SensorInfoVC.swift */,
 			);
 			path = "main-vcs";
 			sourceTree = "<group>";
@@ -284,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				EB730C4020846B370076B9B6 /* StandardModalVC.swift */,
+				EB869EA122C809FF008E4455 /* ModalWithConfirmVC.swift */,
 			);
 			path = modals;
 			sourceTree = "<group>";
@@ -420,6 +437,7 @@
 				EBC8F73122AEA3C200E60946 /* InitializeSensorVC.swift in Sources */,
 				EB76B051207D251100EA8B9C /* TransientStateVC.swift in Sources */,
 				EBBDBBD6229E2B4E00A28E5E /* DevEnv.swift in Sources */,
+				EB19BBEC22CD35EA0051A0A5 /* SensorInfoCell.swift in Sources */,
 				EBC8F72B22AE9FAA00E60946 /* LocalWiFiConnectVC.swift in Sources */,
 				EBD9CD0B229EF3CA002B6E90 /* FormTypeSelectorCell.swift in Sources */,
 				EBBDBBD8229E2B5C00A28E5E /* ProdEnv.swift in Sources */,
@@ -430,6 +448,8 @@
 				EBC6AAAF207BB3AE000F41D6 /* DoorControllerVC.swift in Sources */,
 				EBBDBBDA229E2B6800A28E5E /* Env.swift in Sources */,
 				EBD8B25A22B03C11001D6DE5 /* Reachability.swift in Sources */,
+				EB869EA222C809FF008E4455 /* ModalWithConfirmVC.swift in Sources */,
+				EB19BBE922CD33CE0051A0A5 /* SensorInfoVC.swift in Sources */,
 				EB76B04F207D24FA00EA8B9C /* StaticStateVC.swift in Sources */,
 				EBC6AAB8207BC9AF000F41D6 /* SignUpVC.swift in Sources */,
 				EB90921422C674B90057DCAE /* GDoorPubSub.swift in Sources */,
