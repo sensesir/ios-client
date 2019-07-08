@@ -49,6 +49,9 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     override func viewDidLoad() {
         // Initialize the table view
         initSignupForm()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
     }
     
     // MARK: - Table view initializers -
@@ -180,6 +183,19 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return signupInfoCell == nil ? loginInfoCell! : signupInfoCell!
     }
     
+    // MARK: - Scrollview handle -
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            signupForm.contentInset = UIEdgeInsetsMake(0, 0, keyboardSize.height, 0)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            signupForm.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        }
+    }
     
     // MARK: - User Entry handling -
     
@@ -484,7 +500,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func successfulSignUp(userUID: String!) {
         // Send user details to user object model & transition to WiFi setup (main for now)
-        print("SIGN UP VC: Successfully user initialization")
+        print("SIGN UP VC: Successful user initialization")
         GDoorUser.sharedInstance.setUserProfile(name: userName,
                                                 email: userEmail,
                                                 password: userPassword,

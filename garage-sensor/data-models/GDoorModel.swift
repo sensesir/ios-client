@@ -33,12 +33,14 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     // Properties
     var pubsubClient: GDoorPubSub?
     var doorState: String! = "Unknown"
+    var altDoorState: String! = "trigger"  // conjugate to the actual door state
     var doorStateEnum: DoorStateEnum! = DoorStateEnum.UNKNOWN
     var networkState: String! = "Sensor Connecting"
     var lastPing: Date?
     var networkDown: Date?
     var sensorUID: String?
-    var modelInitialised: Bool! = false
+    var wifiSSID: String?
+    var wifiPassword: String?
     
     // Interfaces
     weak var doorStateDelegate: DoorStateProtocol?
@@ -50,6 +52,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     private override init() {
         super.init()
         print("GDOOR: Data model created")
+        loadDataFromDisk()
     }
     
     // Requests the sensor Data from the client API
@@ -88,6 +91,10 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
+    func assessIoTConnection() {
+        pubsubClient?.assessMQTTConnection()
+    }
+    
     // MARK: - Local data handling -
     
     func setSensorUID(newUID: String!) {
@@ -109,13 +116,42 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         
         // Date handling
         let dateFormatter = ISO8601DateFormatter()
-        lastPing = dateFormatter.date(from: (sensorData[sensorDBKeys.LAST_PING] as! String))
-        networkDown = dateFormatter.date(from: (sensorData[sensorDBKeys.NETWORK_DOWN] as! String))
+        let lastPingString = (sensorData[sensorDBKeys.LAST_PING] as! String).replacingOccurrences(of: "\\.\\d+", with: "", options: .regularExpression)
+        let networkDownString = (sensorData[sensorDBKeys.NETWORK_DOWN] as! String).replacingOccurrences(of: "\\.\\d+", with: "", options: .regularExpression)
+        lastPing = dateFormatter.date(from: lastPingString)
+        networkDown = dateFormatter.date(from: networkDownString)
         
-        if (doorState == "Unknown")     { doorStateEnum = DoorStateEnum.UNKNOWN }
-        else if (doorState == "Open")   { doorStateEnum = DoorStateEnum.OPEN}
-        else if (doorState == "Closed") { doorStateEnum = DoorStateEnum.CLOSED }
-        else { print("DOOR MODEL: Error - undefined door state") }
+        if (doorState == "Unknown") {
+            doorStateEnum = DoorStateEnum.UNKNOWN
+            altDoorState = "trigger"
+        } else if (doorState == "Open") {
+            doorStateEnum = DoorStateEnum.OPEN
+            altDoorState = "close"
+        } else if (doorState == "Closed") {
+            doorStateEnum = DoorStateEnum.CLOSED
+            altDoorState = "open"
+        } else {
+            print("DOOR MODEL: Error - undefined door state")
+        }
+    }
+    
+    func setWifiCreds(ssid: String!, password: String!) {
+        wifiSSID = ssid
+        wifiPassword = password
+        persistWiFiCreds()
+    }
+    
+    func persistWiFiCreds() {
+        print("GDOOR: Writing data to local storage")
+        let dataManager = UserDefaults.standard
+        if (wifiSSID != nil) { dataManager.set(wifiSSID, forKey: "wifiSSID") }
+        if (wifiPassword != nil)  { dataManager.set(wifiPassword, forKey: "wifiPassword") }
+    }
+    
+    func loadDataFromDisk() {
+        let dataManager = UserDefaults.standard
+        wifiSSID = dataManager.string(forKey: "wifiSSID")
+        wifiPassword = dataManager.string(forKey: "wifiPassword")
     }
     
     // MARK: - Pubsub delegate handling -

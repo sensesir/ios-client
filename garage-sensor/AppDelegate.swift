@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Bugsnag
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         print("APP DELEGATE: Here we go, firing up!");
+        Bugsnag.start(withApiKey: env.BUGSNAG_KEY)
         
         // Initialize firebase & user data
         let userHasToken = GDoorUser.sharedInstance.userSignedIn()
@@ -44,7 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         GDoorUser.sharedInstance.updateLastSeenTime()
-        if (GDoorModel.main.sensorUID != nil) { GDoorModel.main.updateModel() }
+        if (GDoorModel.main.sensorUID != nil) {
+            GDoorModel.main.updateModel()
+            GDoorModel.main.assessIoTConnection()
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

@@ -129,6 +129,16 @@ class GDoorPubSub: NSObject {
             }
     }
     
+    func assessMQTTConnection() {
+        // Check if we're connected to IoT
+        let mqttStatus = dataManager?.getConnectionStatus()
+        if (mqttStatus == .disconnected) {
+            print("PUBSUB: Disconnected from IoT, attempting reconnection")
+            dataManager?.disconnect()
+            connectToDeviceGateway()
+        }
+    }
+    
     // MARK: - Topic generators -
     
     func topicSubDoorStateChanges() -> String? {
