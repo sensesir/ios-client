@@ -74,6 +74,7 @@ class GDoorUser: NSObject {
     }
     
     func initDataFromLogin(userData: [String: Any]!) {
+        
         userFirstName = userData[profileKeys.UserFirstNameKey] as? String
         userEmail = userData[profileKeys.EmailKey] as? String
         userMobileNum = userData[profileKeys.UserPasswordKey] as? String

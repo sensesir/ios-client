@@ -500,7 +500,7 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func successfulSignUp(userUID: String!) {
         // Send user details to user object model & transition to WiFi setup (main for now)
-        print("SIGN UP VC: Successfully user initialization")
+        print("SIGN UP VC: Successful user initialization")
         GDoorUser.sharedInstance.setUserProfile(name: userName,
                                                 email: userEmail,
                                                 password: userPassword,
