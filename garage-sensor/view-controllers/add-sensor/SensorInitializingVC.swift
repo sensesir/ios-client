@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import PromiseKit
 import AwaitKit
+import Bugsnag
 
 class SensorInitializingVC: UIViewController {
     @IBOutlet var whiteLED: UIView!
@@ -125,6 +126,7 @@ class SensorInitializingVC: UIViewController {
             catch {
                 print(error)
                 // Todo: handle - retry ? + fail hard
+                Bugsnag.notifyError(error)
             }
         }
     }
@@ -155,6 +157,7 @@ class SensorInitializingVC: UIViewController {
             catch {
                 print(error)
                 // TODO: Handle
+                Bugsnag.notifyError(error)
             }
         }
     }

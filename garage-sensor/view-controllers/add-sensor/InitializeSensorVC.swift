@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import PromiseKit
 import AwaitKit
+import Bugsnag
 
 class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var ssidEntry: UITextField!
@@ -142,6 +143,9 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
             // Present the VC
             present(fatalCommsFailureModal, animated: true, completion: nil)
         }
+        
+        // Log error with bugsnag
+        Bugsnag.notifyError(NSError(domain:"wifi-cred-pass", code:004, userInfo:nil))
     }
     
     // MARK: - Transitions -
