@@ -8,6 +8,7 @@
 
 import Foundation
 import AWSIoT
+import PromiseKit
 
 protocol DoorStateProtocol: class {
     func doorStateUpdated()
@@ -73,6 +74,8 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
+    // Networking
+    
     func updateModel() {
         print("GDOOR: Updating model")
         let api = GDoorAPI()
@@ -87,6 +90,24 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
             DispatchQueue.main.async {
                 self.doorStateDelegate?.doorStateUpdated()
                 self.sensorStateDelegate?.sensorStateUpdated()
+            }
+        }
+    }
+    
+    func updateModelPromise() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            print("GDOOR: Updating model via promise method")
+            let api = GDoorAPI()
+            let userUID = GDoorUser.sharedInstance.userUID!
+            api.getSensorData(userUID: userUID) { (sensorData, error) in
+                if (error != nil) {
+                    print("GDOOR: Failed to updat model => \(String(describing: error))")
+                    seal.reject(error!)
+                    return
+                }
+                
+                self.setSensorData(sensorData: sensorData!)
+                seal.fulfill(true)
             }
         }
     }

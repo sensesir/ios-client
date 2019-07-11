@@ -145,6 +145,7 @@ class SensorInitializingVC: UIViewController {
                 if (payload["online"] as? Bool == true) {
                     print("SENSOR INIT VC: Sensor online")
                     self.sensorStatePollingTimer?.invalidate()
+                    try await(GDoorModel.main.updateModelPromise())
                     DispatchQueue.main.async { [weak self] in self?.transitionForSensorInitComplete() }
                 } else {
                     print("SENSOR INIT VC: Sensor not online yet")
