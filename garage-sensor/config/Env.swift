@@ -9,5 +9,5 @@
 import Foundation
 
 // Set environment here
-let env = DevEnv();
+let env = ProdEnv();
 
