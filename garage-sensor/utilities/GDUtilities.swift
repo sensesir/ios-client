@@ -123,6 +123,16 @@ class GDUtilities: NSObject {
         }
         return nil
     }
+    
+    class func dictToJSONSerial(payload: [String:Any]) -> Data? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
+            return jsonData
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
 }
 
 public class SSID {

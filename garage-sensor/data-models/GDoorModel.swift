@@ -75,7 +75,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
-    // Networking
+    // MARK: - Networking -
     
     func updateModel() {
         print("GDOOR: Updating model")
@@ -115,6 +115,11 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     
     func assessIoTConnection() {
         pubsubClient?.assessMQTTConnection()
+    }
+    
+    func updateRSSI() {
+        print("GDOOR: Refreshing RSSI value")
+        pubsubClient?.refreshRSSI(sensorUID: sensorUID!)
     }
     
     // MARK: - Local data handling -

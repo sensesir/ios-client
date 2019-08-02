@@ -46,8 +46,10 @@ struct DevEnv {
     let AWS_IOT_DATA_MANAGER_KEY = "AWSIotDataManager"
     
     // MQTT
-    let MQTT_TARGET = "mobileClient"
+    let MQTT_TARGET_MOBILE_CLIENT = "mobileClient"
+    let MQTT_TARGET_SENSOR = "gdoor"
     let MQTT_SUB_EVENT = "event"
+    let MQTT_PUB_COMMAND = "command"
     let MQTT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
     let MQTT_SUB_CONNECTED = "connected"
     let MQTT_SUB_DISCONNECT = "disconnected"

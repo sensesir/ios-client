@@ -10,6 +10,8 @@ import UIKit
 
 class SensorInfoVC: UIViewController, UITableViewDataSource, SensorStateProtocol {
     @IBOutlet var sensorInfoTable: UITableView!
+    @IBOutlet var refreshRSSI: UIButton!
+    
     let rowTitles = ["Sensor State",
                      "Door State",
                      "Last Ping",
@@ -26,6 +28,10 @@ class SensorInfoVC: UIViewController, UITableViewDataSource, SensorStateProtocol
     override func viewWillAppear(_ animated: Bool) {
         sensorInfoTable.reloadData()
         GDoorModel.main.sensorStateDelegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        refreshRSSI.layer.cornerRadius = refreshRSSI.frame.height/2.0
     }
     
     // MARK: - Table view handling -
@@ -72,6 +78,10 @@ class SensorInfoVC: UIViewController, UITableViewDataSource, SensorStateProtocol
         }
         
         return cell!
+    }
+    
+    @IBAction func updateRSSI(sender: UIButton) {
+        GDoorModel.main.updateRSSI()
     }
     
     func sensorStateUpdated() {
