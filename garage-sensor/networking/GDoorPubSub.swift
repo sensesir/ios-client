@@ -14,6 +14,7 @@ import PromiseKit
 protocol GDoorPubSubDelegate {
     func connectionStateUpdate(newState: AWSIoTMQTTStatus)
     func sensorDataUpdated()
+    func sensorRSSIUpdated(rssi: Float)
 }
 
 class GDoorPubSub: NSObject {
@@ -119,7 +120,8 @@ class GDoorPubSub: NSObject {
         let doorStateChangeTopic = topicSubDoorStateChanges()
         let connectedTopic = topicConnected()
         let disconnectedTopic = topicDisconnected()
-        let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic]
+        let rssiTopic = topicRSSIEvent()
+        let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic, rssiTopic]
         
         for topic in topicArray {
             print("PUBSUB: Registering subscription to => \(String(describing: topic))")
@@ -187,6 +189,21 @@ class GDoorPubSub: NSObject {
         }
     }
     
+    func topicRSSIEvent() -> String? {
+        let target = env.MQTT_TARGET
+        let uid = GDoorUser.sharedInstance.userUID
+        let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
+        let category = env.MQTT_SUB_EVENT
+        let descriptor = env.MQTT_SUB_RSSI
+        
+        if (uid != nil) {
+            let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
+            return topic
+        } else {
+            return nil
+        }
+    }
+    
     // MARK: - Handling events -
     
     func handleEvent(payload: [String:Any]) {
@@ -207,7 +224,13 @@ class GDoorPubSub: NSObject {
             event == env.MQTT_SUB_DISCONNECT) {
             print("PUBSUB: Received message of event => \(event)")
             delegate?.sensorDataUpdated()
-        } else {
+        } else if (event == env.MQTT_SUB_RSSI) {
+            // Different kind of delegate update [different view controller]
+            let rssi = payload["rssi"] as! Float
+            delegate?.sensorRSSIUpdated(rssi: rssi)
+        }
+        
+        else {
             print("PUBSUB: Warning, unknown event type \(event)")
         }
     }

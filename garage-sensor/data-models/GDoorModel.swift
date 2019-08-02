@@ -38,6 +38,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     var doorStateEnum: DoorStateEnum! = DoorStateEnum.UNKNOWN
     var networkState: String! = "Sensor Connecting"
     var lastPing: Date?
+    var lastRSSI: Float?
     var networkDown: Date?
     var sensorUID: String?
     var wifiSSID: String?
@@ -142,6 +143,10 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         lastPing = dateFormatter.date(from: lastPingString)
         networkDown = dateFormatter.date(from: networkDownString)
         
+        // RSSI value has issues
+        let rssiVal = (sensorData[sensorDBKeys.LAST_RSSI] as! NSNumber)
+        lastRSSI = rssiVal.floatValue
+        
         if (doorState == "Unknown") {
             doorStateEnum = DoorStateEnum.UNKNOWN
             altDoorState = "trigger"
@@ -182,6 +187,12 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
             print("GDOOR: Sensor model updated, checking database")
             updateModel()
         }
+    }
+    
+    func sensorRSSIUpdated(rssi: Float) {
+        // Attempt tp update VC if delegate allocated
+        lastRSSI = rssi
+        sensorStateDelegate?.sensorStateUpdated()
     }
     
     func connectionStateUpdate(newState: AWSIoTMQTTStatus) {

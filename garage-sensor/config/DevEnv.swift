@@ -51,6 +51,7 @@ struct DevEnv {
     let MQTT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
     let MQTT_SUB_CONNECTED = "connected"
     let MQTT_SUB_DISCONNECT = "disconnected"
+    let MQTT_SUB_RSSI = "rssi"
     
     // Bug tracking
     let BUGSNAG_KEY = "acf29ef9a71b19f39c099ae38bf2988e"

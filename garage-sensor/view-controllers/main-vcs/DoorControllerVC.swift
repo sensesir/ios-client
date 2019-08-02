@@ -42,6 +42,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         initializeDoorState()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        GDoorModel.main.sensorStateDelegate = self
+    }
+    
     // MARK: - UI Hanlding -
 
     func styleUI() {

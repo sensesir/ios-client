@@ -35,6 +35,7 @@ struct dbSensorKeys {
     let ONLINE = "online"
     let DOOR_STATE = "doorState"
     let LAST_PING = "lastPing"
+    let LAST_RSSI = "lastRSSI"
     let NETWORK_DOWN = "networkDown"
     let SENSOR_UID = "sensorUID"
 }
