@@ -14,6 +14,7 @@ import PromiseKit
 protocol GDoorPubSubDelegate {
     func connectionStateUpdate(newState: AWSIoTMQTTStatus)
     func sensorDataUpdated()
+    func sensorRSSIUpdated(rssi: Float)
 }
 
 class GDoorPubSub: NSObject {
@@ -110,6 +111,10 @@ class GDoorPubSub: NSObject {
         }
     }
     
+    func disconnectDeviceGateway() {
+        dataManager?.disconnect()
+    }
+    
     func registerSubscriptions() {
         func messageReceived(payload: Data) {
             let payloadDictionary = GDUtilities.shared.jsonDataToDict(jsonData: payload)
@@ -119,7 +124,8 @@ class GDoorPubSub: NSObject {
         let doorStateChangeTopic = topicSubDoorStateChanges()
         let connectedTopic = topicConnected()
         let disconnectedTopic = topicDisconnected()
-        let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic]
+        let rssiTopic = topicRSSIEvent()
+        let topicArray = [doorStateChangeTopic, connectedTopic, disconnectedTopic, rssiTopic]
         
         for topic in topicArray {
             print("PUBSUB: Registering subscription to => \(String(describing: topic))")
@@ -139,11 +145,16 @@ class GDoorPubSub: NSObject {
         }
     }
     
+    func getConnectionStatus() -> AWSIoTMQTTStatus? {
+        let mqttStatus = dataManager?.getConnectionStatus()
+        return mqttStatus
+    }
+    
     // MARK: - Topic generators -
     
     func topicSubDoorStateChanges() -> String? {
         // target/uid/version/category/descriptor
-        let target = env.MQTT_TARGET
+        let target = env.MQTT_TARGET_MOBILE_CLIENT
         let uid = GDoorUser.sharedInstance.userUID
         let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
         let category = env.MQTT_SUB_EVENT
@@ -158,7 +169,7 @@ class GDoorPubSub: NSObject {
     }
     
     func topicDisconnected() -> String? {
-        let target = env.MQTT_TARGET
+        let target = env.MQTT_TARGET_MOBILE_CLIENT
         let uid = GDoorUser.sharedInstance.userUID
         let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
         let category = env.MQTT_SUB_EVENT
@@ -173,11 +184,41 @@ class GDoorPubSub: NSObject {
     }
     
     func topicConnected() -> String? {
-        let target = env.MQTT_TARGET
+        let target = env.MQTT_TARGET_MOBILE_CLIENT
         let uid = GDoorUser.sharedInstance.userUID
         let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
         let category = env.MQTT_SUB_EVENT
         let descriptor = env.MQTT_SUB_CONNECTED
+        
+        if (uid != nil) {
+            let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
+            return topic
+        } else {
+            return nil
+        }
+    }
+    
+    func topicRSSIEvent() -> String? {
+        let target = env.MQTT_TARGET_MOBILE_CLIENT
+        let uid = GDoorUser.sharedInstance.userUID
+        let softwareVersion = "v" + GDUtilities.getMajorVersionNumber()
+        let category = env.MQTT_SUB_EVENT
+        let descriptor = env.MQTT_SUB_RSSI
+        
+        if (uid != nil) {
+            let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
+            return topic
+        } else {
+            return nil
+        }
+    }
+    
+    func topicRSSICommand() -> String? {
+        let target = env.MQTT_TARGET_SENSOR
+        let uid = GDoorModel.main.sensorUID
+        let softwareVersion = "v1" // Set somewhere
+        let category = env.MQTT_PUB_COMMAND
+        let descriptor = env.MQTT_SUB_RSSI
         
         if (uid != nil) {
             let topic = "\(target)/\(uid!)/\(softwareVersion)/\(category)/\(descriptor)"
@@ -207,8 +248,42 @@ class GDoorPubSub: NSObject {
             event == env.MQTT_SUB_DISCONNECT) {
             print("PUBSUB: Received message of event => \(event)")
             delegate?.sensorDataUpdated()
-        } else {
+        } else if (event == env.MQTT_SUB_RSSI) {
+            // Different kind of delegate update [different view controller]
+            let rssi = getRSSIValue(payload: payload)
+            delegate?.sensorRSSIUpdated(rssi: rssi)
+        }
+        
+        else {
             print("PUBSUB: Warning, unknown event type \(event)")
         }
+    }
+    
+    // MARK: - Publish events -
+    
+    func refreshRSSI(sensorUID: String) {
+        let topic = topicRSSICommand()
+        let payload = ["sensorUID": sensorUID, "command": "rssi"]           // Use constants
+        let serialPayload = GDUtilities.dictToJSONSerial(payload: payload)
+        
+        if (topic == nil || serialPayload == nil) {
+            print("PUBSUB: Failed to generate topic/payload for rssi event")
+            // Bugsnag **
+            return
+        }
+        
+        dataManager?.publishData(serialPayload!,
+                                 onTopic: topic!,
+                                 qoS: .messageDeliveryAttemptedAtLeastOnce)
+    }
+    
+    func getRSSIValue(payload: [String: Any]) -> Float {
+        var rssiFloat = payload["rssi"] as? Float
+        if (rssiFloat == nil) {
+            // Old type = NSNumber
+            rssiFloat = (payload["rssi"] as! NSNumber).floatValue
+        }
+        
+        return rssiFloat!
     }
 }

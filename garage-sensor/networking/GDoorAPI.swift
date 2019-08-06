@@ -120,6 +120,7 @@ class GDoorAPI: NSObject {
             
             let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if (error != nil) {
+                    print("SENSOR API: Failed to link sensor and user account => \(error!)")
                     seal.reject(error!)
                 }
                     
@@ -142,6 +143,38 @@ class GDoorAPI: NSObject {
             // Start the task
             print("CLIENT API: Sending POST req confirming sensorUID res")
             postTask.resume()
+        }
+    }
+    
+    func pingServer() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_SERVER_PING;
+            let request = getReqSimple(endpoint: endpoint)
+            
+            let getTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if (error != nil) {
+                    let localServerError = NSError(domain:"", code: env.NETWORK_ERROR_SERVER_PING, userInfo: ["error": error!])
+                    seal.reject(localServerError)
+                }
+                    
+                else {
+                    let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+                    print("SENSOR API: Received res for sensor ping => Code: \(statusCode)")
+                    
+                    if (!(200 ... 299).contains(statusCode)) {
+                        print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
+                        let serverError = NSError(domain:"", code:env.NETWORK_ERROR_SERVER_PING, userInfo: ["message": "Failed to ping server"])
+                        seal.reject(serverError)
+                        return
+                    }
+                    
+                    seal.fulfill(true)
+                }
+            }
+            
+            // Start the task
+            print("CLIENT API: Pinging server")
+            getTask.resume()
         }
     }
     
@@ -211,6 +244,37 @@ class GDoorAPI: NSObject {
         postTask.resume()
     }
     
+    func getSensorDataPromise(userUID: String!) -> Promise<[String:Any]> {
+        return Promise<[String:Any]> { seal in
+            let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_GET_SENSOR_DATA;
+            let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
+            
+            let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if (error != nil) {
+                    seal.reject(error!)
+                    return
+                }
+                
+                let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+                let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+                print("CLIENT API: Get sensor data res => Code: \(statusCode) Body:\(body)")
+                
+                if (!(200 ... 299).contains(statusCode)) {
+                    print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
+                    let serverError = NSError(domain:"", code:statusCode, userInfo: body)
+                    seal.reject(serverError)
+                    return
+                }
+                
+                seal.fulfill(body)
+            }
+            
+            // Start the task
+            print("CLIENT API: Sending req to get sensor data")
+            postTask.resume()
+        }
+    }
+    
     func actuateDoor(userUID: String!,
                      completion: @escaping (_ success: Bool?,_ error: Error?) -> Void) {
         let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_ACTUATE_DOOR
@@ -242,6 +306,14 @@ class GDoorAPI: NSObject {
     }
     
     // MARK: - Utilities -
+    
+    func getReqSimple(endpoint: String!) -> URLRequest {
+        let endpointUrl = URL.init(string: endpoint)
+        var getReq = URLRequest(url: endpointUrl!)
+        getReq.setValue(env.CLIENT_API_KEY, forHTTPHeaderField: "x-api-key")
+        getReq.httpMethod = "GET"
+        return getReq
+    }
     
     func jsonPostReq(endpoint: String!, payload: [String: Any]!) -> URLRequest {
         let endpointUrl = URL.init(string: endpoint)

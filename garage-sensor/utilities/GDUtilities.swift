@@ -35,6 +35,7 @@ struct dbSensorKeys {
     let ONLINE = "online"
     let DOOR_STATE = "doorState"
     let LAST_PING = "lastPing"
+    let LAST_RSSI = "lastRSSI"
     let NETWORK_DOWN = "networkDown"
     let SENSOR_UID = "sensorUID"
 }
@@ -121,6 +122,16 @@ class GDUtilities: NSObject {
             }
         }
         return nil
+    }
+    
+    class func dictToJSONSerial(payload: [String:Any]) -> Data? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
+            return jsonData
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 }
 

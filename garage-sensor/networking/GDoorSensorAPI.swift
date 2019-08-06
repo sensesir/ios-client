@@ -12,6 +12,37 @@ import AwaitKit
 
 class GDoorSensorApi: NSObject {
     
+    func pingSensor() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            let endpoint = env.SENSOR_ROOT_URL
+            let request = getReqSimple(endpoint: endpoint)
+            
+            let getTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if (error != nil) {
+                    let localServerError = NSError(domain:"", code: env.NETWORK_ERROR_GET_SENSOR_UID, userInfo: ["error": error!])
+                    seal.reject(localServerError)
+                }
+                    
+                else {
+                    let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+                    print("SENSOR API: Received res for sensor ping => Code: \(statusCode)")
+                    
+                    if (!(200 ... 299).contains(statusCode)) {
+                        print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
+                        let serverError = NSError(domain:"", code:env.NETWORK_ERROR_GET_SENSOR_UID, userInfo: ["message": "Failed to ping sensor"])
+                        seal.reject(serverError)
+                        return
+                    }
+                    
+                    seal.fulfill(true)
+                }
+            }
+            
+            // Start the task
+            print("SENSOR API: Sending GET req for sensor UID")
+            getTask.resume()
+        }
+    }
     
     func getSensorUID() -> Promise<String> {
         return Promise<String> { seal in
@@ -77,6 +108,40 @@ class GDoorSensorApi: NSObject {
             
             // Start the task
             print("SENSOR API: Sending POST req to pass wifi creds")
+            postTask.resume()
+        }
+    }
+    
+    func postUserUID() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            let payload = ["userUID": GDoorUser.sharedInstance.userUID!]
+            let endpoint = env.SENSOR_ROOT_URL + env.ENDPOINT_POST_USER_UID
+            let request = jsonPostReq(endpoint: endpoint, payload: payload)
+            
+            let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if (error != nil) {
+                    let localServerError = NSError(domain:"", code: env.NETWORK_ERROR_POST_USER_UID, userInfo: ["error": error!])
+                    seal.reject(localServerError)
+                }
+                    
+                else {
+                    let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
+                    let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
+                    print("SENSOR API: Res from posting user UID => Code: \(statusCode) Body:\(body)")
+                    
+                    if (!(200 ... 299).contains(statusCode)) {
+                        print("SENSOR API: Request failed with code = \(String(describing: statusCode))")
+                        let serverError = NSError(domain:"", code:env.NETWORK_ERROR_POST_USER_UID, userInfo: body["message"] as! [String : String])
+                        seal.reject(serverError)
+                        return
+                    }
+                    
+                    seal.fulfill(true)
+                }
+            }
+            
+            // Start the task
+            print("SENSOR API: Sending POST req to pass userUID")
             postTask.resume()
         }
     }

@@ -38,6 +38,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
     var doorStateEnum: DoorStateEnum! = DoorStateEnum.UNKNOWN
     var networkState: String! = "Sensor Connecting"
     var lastPing: Date?
+    var lastRSSI: Float?
     var networkDown: Date?
     var sensorUID: String?
     var wifiSSID: String?
@@ -74,7 +75,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
-    // Networking
+    // MARK: - Networking -
     
     func updateModel() {
         print("GDOOR: Updating model")
@@ -116,6 +117,15 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         pubsubClient?.assessMQTTConnection()
     }
     
+    func updateRSSI() {
+        print("GDOOR: Refreshing RSSI value")
+        pubsubClient?.refreshRSSI(sensorUID: sensorUID!)
+    }
+    
+    func disconnectIoT() {
+        pubsubClient?.disconnectDeviceGateway()
+    }
+    
     // MARK: - Local data handling -
     
     func setSensorUID(newUID: String!) {
@@ -141,6 +151,10 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         let networkDownString = (sensorData[sensorDBKeys.NETWORK_DOWN] as! String).replacingOccurrences(of: "\\.\\d+", with: "", options: .regularExpression)
         lastPing = dateFormatter.date(from: lastPingString)
         networkDown = dateFormatter.date(from: networkDownString)
+        
+        // RSSI value has issues
+        let rssiVal = (sensorData[sensorDBKeys.LAST_RSSI] as! NSNumber)
+        lastRSSI = rssiVal.floatValue
         
         if (doorState == "Unknown") {
             doorStateEnum = DoorStateEnum.UNKNOWN
@@ -175,13 +189,43 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         wifiPassword = dataManager.string(forKey: "wifiPassword")
     }
     
-    // MARK: - Pubsub delegate handling -
+    // MARK: - Pubsub -
+    
+    func resetPubsub() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            
+            DispatchQueue.global(qos: .background).async {
+                print("GDOOR: Resetting MQTT connection on GDoor Model object")
+                self.pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
+                self.pubsubClient!.connectToDeviceGateway()
+                
+                for _ in 0...20 {
+                    let connectionStatus = self.pubsubClient?.getConnectionStatus()
+                    if (connectionStatus == .connected) {
+                        seal.fulfill(true)
+                        return
+                    }
+                    
+                    sleep(1)
+                }
+                
+                print("GDOOR: Failed to connected to MQTT in time")
+                seal.fulfill(false)
+            }
+        }
+    }
     
     func sensorDataUpdated() {
         if (sensorUID != nil) {
             print("GDOOR: Sensor model updated, checking database")
             updateModel()
         }
+    }
+    
+    func sensorRSSIUpdated(rssi: Float) {
+        // Attempt tp update VC if delegate allocated
+        lastRSSI = rssi
+        sensorStateDelegate?.sensorStateUpdated()
     }
     
     func connectionStateUpdate(newState: AWSIoTMQTTStatus) {

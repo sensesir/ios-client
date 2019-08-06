@@ -248,7 +248,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yjt-TK-EQP" userLabel="Modal content view">
                                 <rect key="frame" x="30" y="120" width="315" height="338"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Modal title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpg-6S-8TP">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Modal title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="bpg-6S-8TP">
                                         <rect key="frame" x="20" y="20" width="275" height="32"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                         <nil key="textColor"/>
@@ -400,7 +400,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ldo-qW-fXB">
-                                <rect key="frame" x="0.0" y="74" width="375" height="593"/>
+                                <rect key="frame" x="0.0" y="74" width="375" height="525"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SensorInfoCell" rowHeight="55" id="hoM-Rw-uCA" customClass="SensorInfoCell" customModule="garage_sensor" customModuleProvider="target">
@@ -451,13 +451,31 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3TA-vh-pjE">
+                                <rect key="frame" x="87.5" y="609" width="200" height="38"/>
+                                <color key="backgroundColor" red="0.18823529410000001" green="0.23921568630000001" blue="0.30980392159999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="bDP-bw-GO5"/>
+                                    <constraint firstAttribute="width" priority="750" constant="200" id="c8s-rk-UdT"/>
+                                </constraints>
+                                <state key="normal" title="Refresh RSSI">
+                                    <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="updateRSSIWithSender:" destination="a75-Lg-zSI" eventType="touchUpInside" id="NlR-zC-cNI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="3TA-vh-pjE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2d-rn-C3f" secondAttribute="leading" constant="30" id="Ehf-3V-wTW"/>
+                            <constraint firstItem="3TA-vh-pjE" firstAttribute="top" secondItem="ldo-qW-fXB" secondAttribute="bottom" constant="10" id="KId-AH-zvg"/>
                             <constraint firstItem="ldo-qW-fXB" firstAttribute="top" secondItem="m2d-rn-C3f" secondAttribute="top" constant="10" id="LH5-nR-7sY"/>
-                            <constraint firstItem="m2d-rn-C3f" firstAttribute="bottom" secondItem="ldo-qW-fXB" secondAttribute="bottom" id="gJH-Bz-Epk"/>
+                            <constraint firstItem="3TA-vh-pjE" firstAttribute="centerX" secondItem="X2o-40-SO3" secondAttribute="centerX" id="YAg-Ro-1Ue"/>
                             <constraint firstItem="m2d-rn-C3f" firstAttribute="trailing" secondItem="ldo-qW-fXB" secondAttribute="trailing" id="hYc-Dz-YV0"/>
                             <constraint firstItem="ldo-qW-fXB" firstAttribute="leading" secondItem="m2d-rn-C3f" secondAttribute="leading" id="mrv-rG-9gR"/>
+                            <constraint firstItem="m2d-rn-C3f" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3TA-vh-pjE" secondAttribute="trailing" constant="30" id="sL4-25-GRd"/>
+                            <constraint firstItem="m2d-rn-C3f" firstAttribute="bottom" secondItem="3TA-vh-pjE" secondAttribute="bottom" constant="20" id="yN3-zp-5uy"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="m2d-rn-C3f"/>
                     </view>
@@ -469,6 +487,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="refreshRSSI" destination="3TA-vh-pjE" id="f3h-o5-WtT"/>
                         <outlet property="sensorInfoTable" destination="ldo-qW-fXB" id="7hr-qt-44M"/>
                     </connections>
                 </viewController>

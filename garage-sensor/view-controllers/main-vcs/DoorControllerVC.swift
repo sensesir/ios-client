@@ -42,6 +42,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
         initializeDoorState()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        GDoorModel.main.sensorStateDelegate = self
+    }
+    
     // MARK: - UI Hanlding -
 
     func styleUI() {
@@ -265,6 +269,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     
     @IBAction func unwindFromAddSensorStory(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         print("DOOR CONTROLLER: Unwound after completing sensor setup")
+        GDoorUser.sharedInstance.addingSensor = false
         sensorStateUpdated()
     }
     

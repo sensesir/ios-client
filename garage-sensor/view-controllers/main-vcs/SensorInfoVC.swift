@@ -8,11 +8,14 @@
 
 import UIKit
 
-class SensorInfoVC: UIViewController, UITableViewDataSource {
+class SensorInfoVC: UIViewController, UITableViewDataSource, SensorStateProtocol {
     @IBOutlet var sensorInfoTable: UITableView!
+    @IBOutlet var refreshRSSI: UIButton!
+    
     let rowTitles = ["Sensor State",
                      "Door State",
                      "Last Ping",
+                     "RSSI",
                      "Network Down",
                      "Sensor WiFi SSID",
                      "WiFi Password"]
@@ -24,6 +27,11 @@ class SensorInfoVC: UIViewController, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         sensorInfoTable.reloadData()
+        GDoorModel.main.sensorStateDelegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        refreshRSSI.layer.cornerRadius = refreshRSSI.frame.height/2.0
     }
     
     // MARK: - Table view handling -
@@ -54,12 +62,15 @@ class SensorInfoVC: UIViewController, UITableViewDataSource {
             if (GDoorModel.main.lastPing == nil) { cell?.value.text = "Never" }
             else { cell?.value.text = GDoorModel.main.lastPing!.toString(dateFormat: "HH:mm  dd-MMM-yyyy") }
         case 3:
+            if (GDoorModel.main.lastRSSI == nil) { cell?.value.text = "Unknown" }
+            else { cell?.value.text = "\(GDoorModel.main.lastRSSI!)" }
+        case 4:
             if (GDoorModel.main.networkDown == nil) { cell?.value.text = "Never" }
             else { cell?.value.text = GDoorModel.main.networkDown!.toString(dateFormat: "HH:mm  dd-MMM-yyyy") }
-        case 4:
+        case 5:
             if (GDoorModel.main.wifiSSID == nil) { cell?.value.text = "" }
             else { cell?.value.text = GDoorModel.main.wifiSSID }
-        case 5:
+        case 6:
             if (GDoorModel.main.wifiPassword == nil) { cell?.value.text = "" }
             else { cell?.value.text = GDoorModel.main.wifiPassword }
         default:
@@ -67,5 +78,19 @@ class SensorInfoVC: UIViewController, UITableViewDataSource {
         }
         
         return cell!
+    }
+    
+    @IBAction func updateRSSI(sender: UIButton) {
+        GDoorModel.main.updateRSSI()
+    }
+    
+    func sensorStateUpdated() {
+        DispatchQueue.main.async {
+            self.sensorInfoTable.reloadData()
+        }
+    }
+    
+    func sensorLanIPError() {
+        // Nothing to do here
     }
 }
