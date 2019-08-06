@@ -189,7 +189,31 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         wifiPassword = dataManager.string(forKey: "wifiPassword")
     }
     
-    // MARK: - Pubsub delegate handling -
+    // MARK: - Pubsub -
+    
+    func resetPubsub() -> Promise<Bool> {
+        return Promise<Bool> { seal in
+            
+            DispatchQueue.global(qos: .background).async {
+                print("GDOOR: Resetting MQTT connection on GDoor Model object")
+                self.pubsubClient = GDoorPubSub.initWithDelegate(newDelegate: self)
+                self.pubsubClient!.connectToDeviceGateway()
+                
+                for _ in 0...20 {
+                    let connectionStatus = self.pubsubClient?.getConnectionStatus()
+                    if (connectionStatus == .connected) {
+                        seal.fulfill(true)
+                        return
+                    }
+                    
+                    sleep(1)
+                }
+                
+                print("GDOOR: Failed to connected to MQTT in time")
+                seal.fulfill(false)
+            }
+        }
+    }
     
     func sensorDataUpdated() {
         if (sensorUID != nil) {

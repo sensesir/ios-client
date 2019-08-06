@@ -168,8 +168,19 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
         async {
             do {
                 try await(self.gdoorAPI.initializeSensor(sensorUID: GDoorModel.main.sensorUID!, userUID: GDoorUser.sharedInstance.userUID!))
-                try await(self.connectAWSIoT())
                 print("SENSOR INIT: Linked sensor and user account")
+                
+                // See if sensor already connected and linked accounts
+                try await(GDoorModel.main.updateModelPromise())
+                if (GDoorModel.main.networkState == "Sensor Online") {
+                    self.transitionForSensorInitComplete()
+                    return;
+                }
+                
+                // Sensor still connecting to server - connect to AWS IoT and wait for sensor conn
+                print("SENSOR INIT: Sensor not online yet, connecting to MQTT")
+                try await(self.connectAWSIoT())
+                
             }
             catch {
                 print("SENSOR INIT: Failed to link user and sensor account - fatal error")
@@ -304,11 +315,21 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     }
     
     func sensorDataUpdated() {
-        // The connection event should catch this]
-        print("SENSOR INIT: Sensor data updated via MQTT, checking online status")
-        if (GDoorModel.main.networkState == "Sensor Online") {
-            self.sensorLinkingComplete = true
-            self.transitionForSensorInitComplete()
+        async {
+            do {
+                print("SENSOR INIT: Sensor data updated via MQTT, checking online status")
+                try await(GDoorModel.main.updateModelPromise())
+                
+                if (GDoorModel.main.networkState == "Sensor Online") {
+                    self.transitionForSensorInitComplete()
+                } else {
+                    print("SENSOR INIT: Warning => Sensor still offline")
+                }
+                
+            } catch {
+                print("SENSOR INIT: Error checking sensor network state => \(error)")
+                Bugsnag.notifyError(error)
+            }
         }
     }
     
@@ -319,9 +340,19 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     // MARK: - Transitions -
     
     func transitionForSensorInitComplete() {
-        DispatchQueue.main.async {
-            self.performSegue(withIdentifier: "UnwindFromSensorAddStory", sender: self)
+        async {
+            // Release pubsub client on the VC, reconnect on the door model
+            self.pubsubClient?.disconnectDeviceGateway()
+            self.pubsubClient = nil
+            let reconnected = try await(GDoorModel.main.resetPubsub())
+            
+            if (!reconnected) {
+                // Could send info to homescreen here to tell user poor internet connection?
+            }
+            
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "UnwindFromSensorAddStory", sender: self)
+            }
         }
     }
-    
 }

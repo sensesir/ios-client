@@ -19,7 +19,7 @@ class LocalWiFiConnectVC: UIViewController {
     var connTimeoutTimer: Timer?
     var pingCounter: Int = 0
     var connectionModalVC: ConnectionModalVC?
-    var connectionFailureModal: StandardModalVC?
+    var connectionFailureModal: ModalWithConfirmVC?
     
     override func viewDidLoad() {
         GDoorModel.main.disconnectIoT()
@@ -39,8 +39,9 @@ class LocalWiFiConnectVC: UIViewController {
             return
         }
         
-        // Connected to correct network
-        showConnectionModal()
+        // Only perform once in recursive method
+        if(connectionModalVC == nil) { showConnectionModal() }
+        if(connTimeoutTimer == nil) { startConnTimeoutTimer() }
         
         do {
             print("WIFI CONNECT: Pinging sensor for ack #\(pingCounter + 1)")
@@ -65,7 +66,7 @@ class LocalWiFiConnectVC: UIViewController {
         }
         
         print("Temp: restarting delay timer")
-        startDelayTimer(delay: 0.85)
+        startDelayTimer(delay: 1.0)
     }
     
     @objc func correctSSID() -> Bool {
@@ -94,16 +95,23 @@ class LocalWiFiConnectVC: UIViewController {
     // MARK: - Timers -
     
     func startDelayTimer(delay: Float) {
-        delayTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay),
-                                         target: self,
-                                         selector: #selector(connectToSensor),
-                                         userInfo: nil,
-                                         repeats: false)
+        if (delayTimer != nil) {
+            delayTimer!.invalidate()
+            delayTimer = nil
+        }
+        
+        if (delayTimer == nil) {
+            delayTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay),
+                                              target: self,
+                                              selector: #selector(connectToSensor),
+                                              userInfo: nil,
+                                              repeats: false)
+        }
     }
     
     func startConnTimeoutTimer() {
         if (connTimeoutTimer == nil) {
-            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 20,
+            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 10,
                                                      target: self,
                                                      selector: #selector(connTimeout),
                                                      userInfo: nil,
@@ -112,22 +120,27 @@ class LocalWiFiConnectVC: UIViewController {
     }
     
     @objc func connTimeout() {
+        print("WIFI CONNECT: Conn timeout - failed to connect to sensor stably")
         delayTimer?.invalidate()
         connTimeoutTimer?.invalidate()
         connTimeoutTimer = nil
         
         DispatchQueue.main.async {
             self.connectionModalVC?.dismiss(animated: true, completion: {
+                self.connectionModalVC = nil
                 let connFailureImage = UIImage.init(named: "door-offline")
-                self.connectionFailureModal = StandardModalVC.initModal(title: "Failed to connect to sensor",
-                                                                        descText: "Could not communicate with your sensor, this is because your phone does not have a strong enough connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
-                                                                        image: connFailureImage!)
-                // Present the VC
-                self.present(self.connectionFailureModal!, animated: true, completion: nil)
+                self.connectionFailureModal = ModalWithConfirmVC.initModal(title: "Failed to connect to sensor",
+                                                                           descText: "Could not communicate with your sensor, this is because your phone does not have a strong enough connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
+                                                                           image: connFailureImage,
+                                                                           buttonTitle: "I've connected properly",
+                                                                           confirmAction:
+                    {
+                      // When user clicks affirmative action - code here
+                      self.connectToSensor()
+                    })
                 
-                // Log error with bugsnag
+                self.present(self.connectionFailureModal!, animated: true, completion: nil)
                 Bugsnag.notifyError(NSError(domain:"sensor-conn", code:005, userInfo:["message": "failed to connect to sensor AP"]))
-                self.connectToSensor()
             })
         }
     }
