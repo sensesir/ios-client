@@ -26,6 +26,9 @@ class GDoorUser: NSObject {
     let dataManager: UserDefaults!
     let profileKeys = dbProfileKeys()
     
+    // State
+    var addingSensor: Bool = false
+    
     // MARK: - Initialization -
     static let sharedInstance = GDoorUser()
     private override init() {

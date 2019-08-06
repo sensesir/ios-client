@@ -315,7 +315,7 @@
         <!--Connect to sensors wifi-->
         <scene sceneID="yBj-Tp-GHn">
             <objects>
-                <viewController storyboardIdentifier="LocalWiFiConnectVC" id="lU8-me-ACu" customClass="LocalWiFiConnectVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LocalWiFiConnectVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lU8-me-ACu" customClass="LocalWiFiConnectVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ziE-7d-AHD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -583,6 +583,105 @@
                 <exit id="yNy-EM-2eG" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2969.5652173913045" y="-244.41964285714283"/>
+        </scene>
+        <!--Connection ModalVC-->
+        <scene sceneID="LDJ-xL-KXi">
+            <objects>
+                <viewController storyboardIdentifier="ConnectionModal" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7zV-7N-fRt" customClass="ConnectionModalVC" customModule="garage_sensor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MHB-uf-ISJ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WTY-47-ySV">
+                                <rect key="frame" x="52" y="246.5" width="310.5" height="313.5"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cGd-na-BuQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="310.5" height="313.5"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hi4-R8-cn3">
+                                                <rect key="frame" x="0.0" y="0.0" width="310.5" height="78.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connecting to sensor" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="LHn-YZ-y8P">
+                                                        <rect key="frame" x="10" y="10" width="290.5" height="58.5"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="LHn-YZ-y8P" secondAttribute="trailing" constant="10" id="CN5-Un-g9g"/>
+                                                    <constraint firstItem="LHn-YZ-y8P" firstAttribute="leading" secondItem="Hi4-R8-cn3" secondAttribute="leading" constant="10" id="eq0-Sr-UqG"/>
+                                                    <constraint firstAttribute="bottom" secondItem="LHn-YZ-y8P" secondAttribute="bottom" constant="10" id="fIJ-6N-keC"/>
+                                                    <constraint firstItem="LHn-YZ-y8P" firstAttribute="top" secondItem="Hi4-R8-cn3" secondAttribute="top" constant="10" id="zgX-f6-hRk"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cii-Rr-4N2">
+                                                <rect key="frame" x="0.0" y="78.5" width="310.5" height="156.5"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="teach-wifi" translatesAutoresizingMaskIntoConstraints="NO" id="1gO-x0-67C">
+                                                        <rect key="frame" x="10" y="10" width="290.5" height="136.5"/>
+                                                    </imageView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="1gO-x0-67C" firstAttribute="top" secondItem="cii-Rr-4N2" secondAttribute="top" constant="10" id="31A-OS-MSW"/>
+                                                    <constraint firstAttribute="bottom" secondItem="1gO-x0-67C" secondAttribute="bottom" constant="10" id="GVA-gE-Qjv"/>
+                                                    <constraint firstItem="1gO-x0-67C" firstAttribute="leading" secondItem="cii-Rr-4N2" secondAttribute="leading" constant="10" id="Io0-yH-7zC"/>
+                                                    <constraint firstAttribute="trailing" secondItem="1gO-x0-67C" secondAttribute="trailing" constant="10" id="Obg-vj-2SL"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z49-wk-1mj">
+                                                <rect key="frame" x="0.0" y="235" width="310.5" height="78.5"/>
+                                                <subviews>
+                                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Ieh-Ag-Gxg">
+                                                        <rect key="frame" x="145" y="25.5" width="20" height="20"/>
+                                                    </activityIndicatorView>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="Ieh-Ag-Gxg" firstAttribute="centerX" secondItem="z49-wk-1mj" secondAttribute="centerX" id="6m7-M2-tJJ"/>
+                                                    <constraint firstItem="Ieh-Ag-Gxg" firstAttribute="centerY" secondItem="z49-wk-1mj" secondAttribute="centerY" multiplier="0.9" id="Txw-BR-pYh"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="z49-wk-1mj" firstAttribute="height" secondItem="Hi4-R8-cn3" secondAttribute="height" id="0mY-8s-cO0"/>
+                                            <constraint firstItem="cii-Rr-4N2" firstAttribute="height" secondItem="Hi4-R8-cn3" secondAttribute="height" multiplier="2" id="tXz-bA-9NR"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="cGd-na-BuQ" firstAttribute="top" secondItem="WTY-47-ySV" secondAttribute="top" id="8qL-eQ-4YZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="cGd-na-BuQ" secondAttribute="bottom" id="g5u-61-Pdt"/>
+                                    <constraint firstAttribute="trailing" secondItem="cGd-na-BuQ" secondAttribute="trailing" id="r09-rV-RHW"/>
+                                    <constraint firstItem="cGd-na-BuQ" firstAttribute="leading" secondItem="WTY-47-ySV" secondAttribute="leading" id="wZt-KW-ah9"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="18"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="WTY-47-ySV" firstAttribute="centerX" secondItem="MHB-uf-ISJ" secondAttribute="centerX" id="HLN-Ye-sfu"/>
+                            <constraint firstItem="WTY-47-ySV" firstAttribute="centerY" secondItem="MHB-uf-ISJ" secondAttribute="centerY" multiplier="0.9" id="UDa-Ky-P8y"/>
+                            <constraint firstItem="WTY-47-ySV" firstAttribute="width" secondItem="MHB-uf-ISJ" secondAttribute="width" multiplier="0.75" id="hDd-8Q-pzm"/>
+                            <constraint firstItem="WTY-47-ySV" firstAttribute="height" secondItem="MHB-uf-ISJ" secondAttribute="height" multiplier="0.35" id="ikK-J4-kvT"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZWC-eM-XKd"/>
+                    </view>
+                    <connections>
+                        <outlet property="loadSpinner" destination="Ieh-Ag-Gxg" id="dkz-Ay-IbA"/>
+                        <outlet property="modalView" destination="WTY-47-ySV" id="ejd-OD-xiX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P9N-hx-aVM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2969.5652173913045" y="503.57142857142856"/>
         </scene>
         <!--Provide details-->
         <scene sceneID="Cg9-Dt-CoH">

@@ -111,6 +111,10 @@ class GDoorPubSub: NSObject {
         }
     }
     
+    func disconnectDeviceGateway() {
+        dataManager?.disconnect()
+    }
+    
     func registerSubscriptions() {
         func messageReceived(payload: Data) {
             let payloadDictionary = GDUtilities.shared.jsonDataToDict(jsonData: payload)
@@ -139,6 +143,11 @@ class GDoorPubSub: NSObject {
             dataManager?.disconnect()
             connectToDeviceGateway()
         }
+    }
+    
+    func getConnectionStatus() -> AWSIoTMQTTStatus? {
+        let mqttStatus = dataManager?.getConnectionStatus()
+        return mqttStatus
     }
     
     // MARK: - Topic generators -

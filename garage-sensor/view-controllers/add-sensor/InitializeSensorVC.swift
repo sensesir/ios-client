@@ -46,7 +46,6 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         if ((textField == ssidEntry) && (ssidEntry.text?.count ?? 0 > 0)) {
-            
             enableEnterButton()
         } else {
             disableEnterButton()
@@ -72,7 +71,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     @IBAction func userSubmittedDetails() {
         print("INIT SENSOR VC: User submitted WiFi details")
         DispatchQueue.main.async { [weak self] in
-            self?.setLoadingUI()
+            self?.setLoadingUI()  // Change to something more informative
             self?.dissmissKeyboard()
         }
         
@@ -92,7 +91,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
                     }
                     
                     // Failure - increment count and delay retry
-                    Thread.sleep(forTimeInterval: 10)
+                    Thread.sleep(forTimeInterval: 2.5)
                     self.commRetries += 1
                 }
                     
@@ -117,9 +116,13 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
                 
                 try await(sensorApi.postWiFiCreds(ssid: ssid!, password: password))
                 print("INIT SENSOR VC: Sent Wifi creds")
+                
+                // May remove this in favour of the below
                 try await(sensorApi.postSensorUIDResConfirmation())
                 print("INIT SENSOR VC: Sent sensor UID reception confirmation")
                 
+                try await(sensorApi.postUserUID())
+                print("INIT SENSOR VC: Sent user UID to sensor")
                 return true
             }
                 

@@ -8,39 +8,136 @@
 
 import Foundation
 import UIKit
+import AwaitKit
+import Bugsnag
 
 class LocalWiFiConnectVC: UIViewController {
     let env = DevEnv()
-    var ssidTimer: Timer?
+    let sensorAPI = GDoorSensorApi()
     
-    override func viewWillAppear(_ animated: Bool) {
-        let correctNetwork = pollNetworkSSID()
-        if (!correctNetwork) {
-            ssidTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(pollNetworkSSID), userInfo: nil, repeats: true)
-        }
+    var delayTimer: Timer?
+    var connTimeoutTimer: Timer?
+    var pingCounter: Int = 0
+    var connectionModalVC: ConnectionModalVC?
+    var connectionFailureModal: StandardModalVC?
+    
+    override func viewDidLoad() {
+        GDoorModel.main.disconnectIoT()
+        GDoorUser.sharedInstance.addingSensor = true
+        connectToSensor()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        ssidTimer?.invalidate()
+        delayTimer?.invalidate()
+        connTimeoutTimer?.invalidate()
     }
     
-    @objc func pollNetworkSSID() -> Bool {
+  
+    @objc func connectToSensor() {
+        if (!correctSSID()) {
+            startDelayTimer(delay: 1.0);
+            return
+        }
+        
+        // Connected to correct network
+        showConnectionModal()
+        
+        do {
+            print("WIFI CONNECT: Pinging sensor for ack #\(pingCounter + 1)")
+            let result = try await(sensorAPI.pingSensor())
+            if (result) { pingCounter += 1 }
+                
+            if (pingCounter > 4) {
+                print("WIFI CONNECTION: Successfully connected to Sensor")
+                connTimeoutTimer?.invalidate()
+                delayTimer?.invalidate()
+                DispatchQueue.main.async {
+                    self.connectionModalVC?.dismiss(animated: false, completion: nil)
+                    self.transitionToSensorInitializatio()
+                }
+    
+                // End function - do not restart connect
+                return;
+            }
+        } catch {
+            print("WIFI CONNECT: Failed to ping sensor: \(error)")
+            // Reset ping to zero?
+        }
+        
+        print("Temp: restarting delay timer")
+        startDelayTimer(delay: 0.85)
+    }
+    
+    @objc func correctSSID() -> Bool {
         let updatedName = SSID.fetchSSIDInfo()
         
         // || For dev only
         if (updatedName == env.SENSOR_AP_SSID) {
-            print("WIFI CONNECT: User connected to correct network")
-            self.ssidTimer?.invalidate()
-            DispatchQueue.main.async { self.transitionToSensorInitializatio() }
+            print("WIFI CONNECT: User connected to correct network SSID")
             return true
         }
-                
+        
         return false
+    }
+    
+    func showConnectionModal() {
+        // Show IFF it isn't already showing
+        if (connectionModalVC == nil) {
+            let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
+            connectionModalVC = addSensorStory.instantiateViewController(withIdentifier: "ConnectionModal") as? ConnectionModalVC
+            connectionModalVC?.modalPresentationStyle = .overCurrentContext;
+            connectionModalVC?.modalTransitionStyle = .crossDissolve;
+            present(connectionModalVC!, animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - Timers -
+    
+    func startDelayTimer(delay: Float) {
+        delayTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay),
+                                         target: self,
+                                         selector: #selector(connectToSensor),
+                                         userInfo: nil,
+                                         repeats: false)
+    }
+    
+    func startConnTimeoutTimer() {
+        if (connTimeoutTimer == nil) {
+            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 20,
+                                                     target: self,
+                                                     selector: #selector(connTimeout),
+                                                     userInfo: nil,
+                                                     repeats: false)
+        }
+    }
+    
+    @objc func connTimeout() {
+        delayTimer?.invalidate()
+        connTimeoutTimer?.invalidate()
+        connTimeoutTimer = nil
+        
+        DispatchQueue.main.async {
+            self.connectionModalVC?.dismiss(animated: true, completion: {
+                let connFailureImage = UIImage.init(named: "door-offline")
+                self.connectionFailureModal = StandardModalVC.initModal(title: "Failed to connect to sensor",
+                                                                        descText: "Could not communicate with your sensor, this is because your phone does not have a strong enough connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
+                                                                        image: connFailureImage!)
+                // Present the VC
+                self.present(self.connectionFailureModal!, animated: true, completion: nil)
+                
+                // Log error with bugsnag
+                Bugsnag.notifyError(NSError(domain:"sensor-conn", code:005, userInfo:["message": "failed to connect to sensor AP"]))
+                self.connectToSensor()
+            })
+        }
     }
     
     // MARK: - Transitions -
     
     func transitionToSensorInitializatio() {
+        if (self.connectionFailureModal != nil) {
+            self.connectionFailureModal?.dismiss(animated: false, completion: nil)
+        }
         performSegue(withIdentifier: "InitializeSensorSegue", sender: nil)
     }
     

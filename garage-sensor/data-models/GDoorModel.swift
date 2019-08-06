@@ -122,6 +122,10 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         pubsubClient?.refreshRSSI(sensorUID: sensorUID!)
     }
     
+    func disconnectIoT() {
+        pubsubClient?.disconnectDeviceGateway()
+    }
+    
     // MARK: - Local data handling -
     
     func setSensorUID(newUID: String!) {

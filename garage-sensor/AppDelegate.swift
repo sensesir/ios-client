@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let userHasToken = GDoorUser.sharedInstance.userSignedIn()
         assessUILaunchTransition(accessToken: userHasToken)
         
+        initializeNetworkReachability()
         return true
     }
 
@@ -46,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         GDoorUser.sharedInstance.updateLastSeenTime()
-        if (GDoorModel.main.sensorUID != nil) {
+        if (GDoorModel.main.sensorUID != nil && !GDoorUser.sharedInstance.addingSensor) {
             GDoorModel.main.updateModel()
             GDoorModel.main.assessIoTConnection()
         }
@@ -78,7 +79,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = signupVC
         }
     }
-
-
+    
+    func topViewController() -> UIViewController? {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            return topController
+        }
+        
+        return nil
+    }
+    
+    func initializeNetworkReachability() {
+        do {
+            try Network.reachability = Reachability(hostname: "www.google.com")
+        }
+        catch {
+            switch error as? Network.Error {
+            case let .failedToCreateWith(hostname)?:
+                print("Network error:\nFailed to create reachability object With host named:", hostname)
+            case let .failedToInitializeWith(address)?:
+                print("Network error:\nFailed to initialize reachability object With address:", address)
+            case .failedToSetCallout?:
+                print("Network error:\nFailed to set callout")
+            case .failedToSetDispatchQueue?:
+                print("Network error:\nFailed to set DispatchQueue")
+            case .none:
+                print(error)
+            }
+        }
+    }
 }
 
