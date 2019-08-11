@@ -91,7 +91,7 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
                     }
                     
                     // Failure - increment count and delay retry
-                    Thread.sleep(forTimeInterval: 2.5)
+                    Thread.sleep(forTimeInterval: 1)
                     self.commRetries += 1
                 }
                     

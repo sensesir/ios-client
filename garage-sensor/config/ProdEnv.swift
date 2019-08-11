@@ -23,6 +23,7 @@ struct ProdEnv {
     let ENDPOINT_GET_SENSOR_STATE  = "/getSensorState"
     let ENDPOINT_GET_SENSOR_DATA   = "/getSensorData"
     let ENDPOINT_INITIALIZE_SENSOR = "/initializeSensor"
+    let ENDPOINT_SERVER_PING       = "/ping"
     
     let UID_LENGTH = 36
     
@@ -31,11 +32,15 @@ struct ProdEnv {
     let SENSOR_ROOT_URL = "http://10.10.10.1"
     let ENDPOINT_GET_SENSOR_UID = "/getSensorUID"
     let ENDPOINT_POST_WIFI_CREDS = "/postWifiCreds"
+    let ENDPOINT_POST_USER_UID = "/postUserUID"
     let ENDPOINT_SENSOR_UID_RES_CONFIRMATION = "/postSensorUIDConfirm"
     
-    let NETWORK_ERROR_GET_SENSOR_UID  = 000
-    let NETWORK_ERROR_POST_WIFI_CREDS = 001
-    let NETWORK_ERROR_POST_UID_CONF   = 002
+    let NETWORK_ERROR_GET_PING        = 000
+    let NETWORK_ERROR_GET_SENSOR_UID  = 001
+    let NETWORK_ERROR_POST_WIFI_CREDS = 002
+    let NETWORK_ERROR_POST_UID_CONF   = 003
+    let NETWORK_ERROR_POST_USER_UID   = 004
+    let NETWORK_ERROR_SERVER_PING     = 005
     let MAX_SENSOR_INIT_RETIES = 5
     
     // IoT
@@ -46,11 +51,15 @@ struct ProdEnv {
     let AWS_IOT_DATA_MANAGER_KEY = "AWSIotDataManager"
     
     // MQTT
-    let MQTT_TARGET = "mobileClient"
+    let MQTT_TARGET_MOBILE_CLIENT = "mobileClient"
+    let MQTT_TARGET_SENSOR = "gdoor"
     let MQTT_SUB_EVENT = "event"
+    let MQTT_PUB_COMMAND = "command"
     let MQTT_SUB_DOOR_STATE_CHANGE = "doorStateChange"
     let MQTT_SUB_CONNECTED = "connected"
     let MQTT_SUB_DISCONNECT = "disconnected"
+    let MQTT_SUB_RSSI = "rssi"
+    
     
     // Bug tracking
     let BUGSNAG_KEY = "acf29ef9a71b19f39c099ae38bf2988e"

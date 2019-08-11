@@ -21,6 +21,8 @@ class LocalWiFiConnectVC: UIViewController {
     var connectionModalVC: ConnectionModalVC?
     var connectionFailureModal: ModalWithConfirmVC?
     
+    // MARK: - Initialization -
+    
     override func viewDidLoad() {
         GDoorModel.main.disconnectIoT()
         GDoorUser.sharedInstance.addingSensor = true
@@ -130,7 +132,7 @@ class LocalWiFiConnectVC: UIViewController {
                 self.connectionModalVC = nil
                 let connFailureImage = UIImage.init(named: "door-offline")
                 self.connectionFailureModal = ModalWithConfirmVC.initModal(title: "Failed to connect to sensor",
-                                                                           descText: "Could not communicate with your sensor, this is because your phone does not have a strong enough connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
+                                                                           descText: "Could not communicate with your sensor, this is because your phone does not have a strong connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
                                                                            image: connFailureImage,
                                                                            buttonTitle: "I've connected properly",
                                                                            confirmAction:
