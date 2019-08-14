@@ -8,6 +8,7 @@
 
 import Foundation
 import PromiseKit
+import Bugsnag
 
 class GDoorAPI: NSObject {
     
@@ -38,11 +39,12 @@ class GDoorAPI: NSObject {
             
             if (!(200 ... 299).contains(statusCode)) {
                 print("CLIENT API: Request failed with code = \(String(describing: statusCode))")
-                let serverError = NSError(domain:"", code:statusCode, userInfo: body["message"] as! [String : String])
+                let serverError = NSError(domain:"new-user-create", code:statusCode, userInfo: body)
+                Bugsnag.notifyError(serverError)
                 completion(nil, serverError)
                 return
             }
-        
+            
             let newUserUID = body["userUID"] as! String
             completion(newUserUID, nil)
         }

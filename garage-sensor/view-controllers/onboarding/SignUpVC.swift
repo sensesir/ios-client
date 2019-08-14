@@ -541,17 +541,20 @@ class SignUpVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     func signupError() {
         // Show error label
         print("ENTRY VC: Failed to sign user up with email.")
+        loadView?.removeFromSuperview()
         let cell = getInfoCell()
+        cell.submitButton.isHidden = true
         cell.userInfo.text = "Signup error - please try again."
         cell.userInfo.isHidden = false
     }
     
     func loginError() {
         // Show error label
-        print("ENTRY VC: Failed to sign user up with email.")
-        
+        print("ENTRY VC: Failed to log user in with email.")
+         loadView?.removeFromSuperview()
         let indexPath = IndexPath.init(row: 4, section: 0)
         let cell = signupForm.cellForRow(at: indexPath) as? InfoTextCell
+        cell?.submitButton.isHidden = true
         cell?.userInfo.text = "Login error - please try again."
         cell?.userInfo.isHidden = false
     }
