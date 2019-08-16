@@ -24,16 +24,57 @@ class LocalWiFiConnectVC: UIViewController {
     // MARK: - Initialization -
     
     override func viewDidLoad() {
-        GDoorModel.main.disconnectIoT()
         GDoorUser.sharedInstance.addingSensor = true
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appEnteringForeground),
+                                               name: NSNotification.Name.UIApplicationWillEnterForeground,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appEnteringBackground),
+                                               name: NSNotification.Name.UIApplicationWillResignActive,
+                                               object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        GDoorModel.main.disconnectIoT()
         connectToSensor()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        print("WIFI CONNECT: Exiting wifi connect")
+        Bugsnag.leaveBreadcrumb(withMessage: "Exiting wifi connect")
         delayTimer?.invalidate()
+        delayTimer = nil
         connTimeoutTimer?.invalidate()
+        connTimeoutTimer = nil
     }
     
+    // MARK: - App minimization/re-selection -
+  
+    @objc func appEnteringForeground() {
+        // Start connect sensor process again
+        Bugsnag.leaveBreadcrumb(withMessage: "App entering forground - proprietary method called")
+        print("WIFI CONNECT: App entering forground - proprietary method called")
+        connectToSensor()
+    }
+    
+    @objc func appEnteringBackground() {
+        // Stop connect sensor process
+        Bugsnag.leaveBreadcrumb(withMessage: "App entering background - proprietary method called")
+        print("WIFI CONNECT: App entering background - proprietary method called")
+        delayTimer?.invalidate()
+        delayTimer = nil
+        connTimeoutTimer?.invalidate()
+        connTimeoutTimer = nil
+ 
+        connectionModalVC?.dismiss(animated: false, completion: {
+           self.connectionModalVC = nil
+        })
+        connectionFailureModal?.dismiss(animated: false, completion: {
+            self.connectionFailureModal = nil
+        })
+    }
   
     @objc func connectToSensor() {
         if (!correctSSID()) {
@@ -47,15 +88,19 @@ class LocalWiFiConnectVC: UIViewController {
         
         do {
             print("WIFI CONNECT: Pinging sensor for ack #\(pingCounter + 1)")
+            Bugsnag.leaveBreadcrumb(withMessage: "Pinging sensor")
             let result = try await(sensorAPI.pingSensor())
             if (result) { pingCounter += 1 }
                 
             if (pingCounter > 4) {
                 print("WIFI CONNECTION: Successfully connected to Sensor")
+                Bugsnag.leaveBreadcrumb(withMessage: "Successfully connected to sensor")
                 connTimeoutTimer?.invalidate()
                 delayTimer?.invalidate()
                 DispatchQueue.main.async {
-                    self.connectionModalVC?.dismiss(animated: false, completion: nil)
+                    self.connectionModalVC?.dismiss(animated: false, completion: {
+                        self.connectionModalVC = nil
+                    })
                     self.transitionToSensorInitializatio()
                 }
     
@@ -64,11 +109,11 @@ class LocalWiFiConnectVC: UIViewController {
             }
         } catch {
             print("WIFI CONNECT: Failed to ping sensor: \(error)")
+            Bugsnag.leaveBreadcrumb(withMessage: "Ping failure")
             // Reset ping to zero?
         }
         
-        print("Temp: restarting delay timer")
-        startDelayTimer(delay: 1.0)
+        startDelayTimer(delay: 1.0)  // Functions like a (delayed) recursive call
     }
     
     @objc func correctSSID() -> Bool {
@@ -134,11 +179,11 @@ class LocalWiFiConnectVC: UIViewController {
                 self.connectionFailureModal = ModalWithConfirmVC.initModal(title: "Failed to connect to sensor",
                                                                            descText: "Could not communicate with your sensor, this is because your phone does not have a strong connection to it. Please make sure the devices are close together, and there are no objects causing interference nearby (i.e. large pieces of metal).",
                                                                            image: connFailureImage,
-                                                                           buttonTitle: "I've connected properly",
+                                                                           buttonTitle: "I'll connected properly",
                                                                            confirmAction:
                     {
                       // When user clicks affirmative action - code here
-                      self.connectToSensor()
+                      self.connectionFailureModal = nil
                     })
                 
                 self.present(self.connectionFailureModal!, animated: true, completion: nil)
