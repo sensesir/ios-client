@@ -930,7 +930,7 @@
                         <outlet property="passwordEntry" destination="ukK-5h-Hy0" id="bxl-Gl-45A"/>
                         <outlet property="ssidEntry" destination="ldD-uV-WyW" id="cDj-1q-auu"/>
                         <segue destination="HgX-yS-iMX" kind="show" identifier="SensorInitializingSegue" id="f7R-bV-RfS"/>
-                        <segue destination="srn-ml-DrD" kind="unwind" identifier="WiFiCredFailSegue" unwindAction="unwindAfterWiFiCredPassFailFor:towardsViewController:" id="pUL-Qh-jyK"/>
+                        <segue destination="srn-ml-DrD" kind="unwind" identifier="WiFiCredFailSegue" unwindAction="unwindAfterWiFiCredPassFail:" id="WJn-xn-ZU4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vBp-Hr-ewi" userLabel="First Responder" sceneMemberID="firstResponder"/>

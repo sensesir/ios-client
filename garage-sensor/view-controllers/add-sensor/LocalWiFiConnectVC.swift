@@ -34,16 +34,18 @@ class LocalWiFiConnectVC: UIViewController {
                                                selector: #selector(appEnteringBackground),
                                                name: NSNotification.Name.UIApplicationWillResignActive,
                                                object: nil)
+        
+        connectToSensor()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         GDoorModel.main.disconnectIoT()
-        connectToSensor()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         print("WIFI CONNECT: Exiting wifi connect")
         Bugsnag.leaveBreadcrumb(withMessage: "Exiting wifi connect")
+        pingCounter = 0
         delayTimer?.invalidate()
         delayTimer = nil
         connTimeoutTimer?.invalidate()
@@ -205,7 +207,7 @@ class LocalWiFiConnectVC: UIViewController {
         print("WIFI CONNECT VC: Unwound from sensor initialization VC")
     }
     
-    @IBAction func unwindAfterWiFiCredPassFail(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+    @IBAction func unwindAfterWiFiCredPassFail(_ unwindSegue: UIStoryboardSegue) {
         print("WIFI CONNECT VC: Automatically unwound from sensor initialization VC after failure")
     }
 }

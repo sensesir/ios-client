@@ -147,13 +147,12 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
         
         let commsFailureImage = UIImage.init(named: "door-offline")
         fatalCommsFailureModal = ModalWithConfirmVC.initModal(title: "Fatal failure",
-                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network.",
+                                                         descText: "Could not communicate with your sensor. This is because your phone did not successfully connect to the sensor's wifi network.",
                                                          image: commsFailureImage,
                                                          buttonTitle: "Try reconnect",
                                                          confirmAction:
             {
                 DispatchQueue.main.async {
-                    self.fatalCommsFailureModal?.dismiss(animated: false, completion: nil)
                     self.performSegue(withIdentifier: "WiFiCredFailSegue", sender: nil)
                 }
             })
@@ -169,5 +168,4 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
         print("INIT SENSOR VC: Transitioning to sensor initializing VC")
         performSegue(withIdentifier: "SensorInitializingSegue", sender: self)
     }
-  
 }
