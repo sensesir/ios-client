@@ -127,7 +127,7 @@ class GDoorSensorApi: NSObject {
                 else {
                     let statusCode = ((response as? HTTPURLResponse)?.statusCode)!
                     let body = GDUtilities.shared.jsonDataToDict(jsonData: data!)
-                    print("SENSOR API: Res from posting user UID => Code: \(statusCode) Body:\(body)")
+                    print("SENSOR API: Res from posting user UID => Code: \(statusCode) Body: \(body)")
                     
                     if (!(200 ... 299).contains(statusCode)) {
                         print("SENSOR API: Request failed with code = \(String(describing: statusCode))")

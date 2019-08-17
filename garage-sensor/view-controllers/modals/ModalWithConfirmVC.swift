@@ -75,7 +75,8 @@ class ModalWithConfirmVC: UIViewController {
     }
     
     @IBAction func confirmPressed(sender: UIButton?) {
-        confirmActionHandler!()
-        dismissModalVC()
+        dismiss(animated: true) {
+            self.confirmActionHandler!()
+        }
     }
 }
