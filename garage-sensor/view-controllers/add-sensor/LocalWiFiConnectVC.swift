@@ -204,4 +204,8 @@ class LocalWiFiConnectVC: UIViewController {
     @IBAction func unwindFromInitSensor(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         print("WIFI CONNECT VC: Unwound from sensor initialization VC")
     }
+    
+    @IBAction func unwindAfterWiFiCredPassFail(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+        print("WIFI CONNECT VC: Automatically unwound from sensor initialization VC after failure")
+    }
 }

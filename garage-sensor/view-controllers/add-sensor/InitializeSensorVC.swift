@@ -22,10 +22,16 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
     var loadView: UIView?
     
     var commRetries: Int! = 0
+    var fatalCommsFailureModal: ModalWithConfirmVC?
     
     override func viewDidLoad() {
         styleUI()
         ssidEntry.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Reset state variables
+        commRetries = 0
     }
     
     func styleUI() {
@@ -140,14 +146,20 @@ class InitializeSensorVC: UIViewController, UITextFieldDelegate {
         clearLoadUI()
         
         let commsFailureImage = UIImage.init(named: "door-offline")
-        if let fatalCommsFailureModal = StandardModalVC.initModal(title: "Fatal failure",
-                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network. Please connect to it, wait for a successful connection and reopen this app",
-                                                         image: commsFailureImage!) {
-            // Present the VC
-            present(fatalCommsFailureModal, animated: true, completion: nil)
-        }
+        fatalCommsFailureModal = ModalWithConfirmVC.initModal(title: "Fatal failure",
+                                                         descText: "Could not communicate with your sensor, this is because your phone did not successfully connect to the sensor's wifi network.",
+                                                         image: commsFailureImage,
+                                                         buttonTitle: "Try reconnect",
+                                                         confirmAction:
+            {
+                DispatchQueue.main.async {
+                    self.fatalCommsFailureModal?.dismiss(animated: false, completion: nil)
+                    self.performSegue(withIdentifier: "WiFiCredFailSegue", sender: nil)
+                }
+            })
         
-        // Log error with bugsnag
+        // Present the VC
+        present(fatalCommsFailureModal!, animated: true, completion: nil)
         Bugsnag.notifyError(NSError(domain:"wifi-cred-pass", code:004, userInfo:nil))
     }
     
