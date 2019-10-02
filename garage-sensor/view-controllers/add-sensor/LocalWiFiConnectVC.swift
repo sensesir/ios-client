@@ -12,6 +12,8 @@ import AwaitKit
 import Bugsnag
 
 class LocalWiFiConnectVC: UIViewController {
+    @IBOutlet var connectButton: UIButton!
+    
     let env = DevEnv()
     let sensorAPI = GDoorSensorApi()
     
@@ -34,12 +36,14 @@ class LocalWiFiConnectVC: UIViewController {
                                                selector: #selector(appEnteringBackground),
                                                name: NSNotification.Name.UIApplicationWillResignActive,
                                                object: nil)
-        
-        connectToSensor()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         GDoorModel.main.disconnectIoT()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        connectButton.layer.cornerRadius = connectButton.frame.height/2
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,7 +62,6 @@ class LocalWiFiConnectVC: UIViewController {
         // Start connect sensor process again
         Bugsnag.leaveBreadcrumb(withMessage: "App entering forground - proprietary method called")
         print("WIFI CONNECT: App entering forground - proprietary method called")
-        connectToSensor()
     }
     
     @objc func appEnteringBackground() {
@@ -79,43 +82,39 @@ class LocalWiFiConnectVC: UIViewController {
     }
   
     @objc func connectToSensor() {
-        if (!correctSSID()) {
-            startDelayTimer(delay: 1.0);
-            return
-        }
-        
         // Only perform once in recursive method
         if(connectionModalVC == nil) { showConnectionModal() }
         if(connTimeoutTimer == nil) { startConnTimeoutTimer() }
         
-        do {
-            print("WIFI CONNECT: Pinging sensor for ack #\(pingCounter + 1)")
-            Bugsnag.leaveBreadcrumb(withMessage: "Pinging sensor")
-            let result = try await(sensorAPI.pingSensor())
-            if (result) { pingCounter += 1 }
+        // Need to dispatch on background thread (otherwise blocks UI thread)
+        DispatchQueue.global(qos: .background).async {
+            do {
+                print("WIFI CONNECT: Pinging sensor for ack #\(self.pingCounter + 1)")
+                Bugsnag.leaveBreadcrumb(withMessage: "Pinging sensor")
+                let result = try await(self.sensorAPI.pingSensor())
+                if (result) { self.pingCounter += 1 }
                 
-            if (pingCounter > 4) {
-                print("WIFI CONNECTION: Successfully connected to Sensor")
-                Bugsnag.leaveBreadcrumb(withMessage: "Successfully connected to sensor")
-                connTimeoutTimer?.invalidate()
-                delayTimer?.invalidate()
-                DispatchQueue.main.async {
-                    self.connectionModalVC?.dismiss(animated: false, completion: {
-                        self.connectionModalVC = nil
-                    })
-                    self.transitionToSensorInitializatio()
+                if (self.pingCounter > 4) {
+                    print("WIFI CONNECTION: Successfully connected to Sensor")
+                    Bugsnag.leaveBreadcrumb(withMessage: "Successfully connected to sensor")
+                    self.connTimeoutTimer?.invalidate()
+                    self.delayTimer?.invalidate()
+                    DispatchQueue.main.async {
+                        self.connectionModalVC?.dismiss(animated: false, completion: {
+                            self.connectionModalVC = nil
+                        })
+                        self.transitionToSensorInitializatio()
+                    }
+                    
+                    // End function - do not restart connect
+                    return;
                 }
-    
-                // End function - do not restart connect
-                return;
+            } catch {
+                print("WIFI CONNECT: Failed to ping sensor: \(error)")
+                Bugsnag.leaveBreadcrumb(withMessage: "Ping failure")
+                // Reset ping to zero?
             }
-        } catch {
-            print("WIFI CONNECT: Failed to ping sensor: \(error)")
-            Bugsnag.leaveBreadcrumb(withMessage: "Ping failure")
-            // Reset ping to zero?
         }
-        
-        startDelayTimer(delay: 1.0)  // Functions like a (delayed) recursive call
     }
     
     @objc func correctSSID() -> Bool {
@@ -133,12 +132,22 @@ class LocalWiFiConnectVC: UIViewController {
     func showConnectionModal() {
         // Show IFF it isn't already showing
         if (connectionModalVC == nil) {
-            let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
-            connectionModalVC = addSensorStory.instantiateViewController(withIdentifier: "ConnectionModal") as? ConnectionModalVC
-            connectionModalVC?.modalPresentationStyle = .overCurrentContext;
-            connectionModalVC?.modalTransitionStyle = .crossDissolve;
-            present(connectionModalVC!, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                let addSensorStory = UIStoryboard(name: "AddSensor", bundle: nil)
+                self.connectionModalVC = addSensorStory.instantiateViewController(withIdentifier: "ConnectionModal") as? ConnectionModalVC
+                self.connectionModalVC?.modalPresentationStyle = .overCurrentContext;
+                self.connectionModalVC?.modalTransitionStyle = .crossDissolve;
+                self.present(self.connectionModalVC!, animated: true, completion: nil)
+            }
         }
+    }
+    
+    // MARK: - Actions -
+    
+    @IBAction func connectToSensorWiFi() {
+        print("WIFI CONNECT: User manually connectin to sensor")
+        Bugsnag.leaveBreadcrumb(withMessage: "User manually connectin to sensor")
+        connectToSensor()
     }
     
     // MARK: - Timers -
@@ -160,7 +169,7 @@ class LocalWiFiConnectVC: UIViewController {
     
     func startConnTimeoutTimer() {
         if (connTimeoutTimer == nil) {
-            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 10,
+            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 15,
                                                      target: self,
                                                      selector: #selector(connTimeout),
                                                      userInfo: nil,

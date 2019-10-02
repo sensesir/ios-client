@@ -87,8 +87,9 @@ class GDoorAPI: NSObject {
     func updateLastSeen(userUID: String!,
                         completion: ((_ response: [String:Any]?, _ error: Error?) -> Void)? ) {
         
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
         let endpoint = env.CLIENT_API_ROOT_URL + env.ENDPOINT_UPDATE_LAST_SEEN
-        let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID])
+        let request = jsonPostReq(endpoint: endpoint, payload: ["userUID": userUID, "appVersion": appVersion ?? "None"])
         
         let postTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if (error != nil) {
