@@ -86,35 +86,40 @@ class LocalWiFiConnectVC: UIViewController {
         if(connectionModalVC == nil) { showConnectionModal() }
         if(connTimeoutTimer == nil) { startConnTimeoutTimer() }
         
-        // Need to dispatch on background thread (otherwise blocks UI thread)
-        DispatchQueue.global(qos: .background).async {
-            do {
-                print("WIFI CONNECT: Pinging sensor for ack #\(self.pingCounter + 1)")
-                Bugsnag.leaveBreadcrumb(withMessage: "Pinging sensor")
-                let result = try await(self.sensorAPI.pingSensor())
-                if (result) { self.pingCounter += 1 }
+        do {
+            print("WIFI CONNECT: Pinging sensor for ack #\(self.pingCounter + 1)")
+            Bugsnag.leaveBreadcrumb(withMessage: "Pinging sensor")
+            let result = try await(sensorAPI.pingSensor())
+            if (result) { pingCounter += 1 }
+            
+            if (self.pingCounter > 4) {
+                print("WIFI CONNECTION: Successfully connected to Sensor")
+                Bugsnag.leaveBreadcrumb(withMessage: "Successfully connected to sensor")
+                connTimeoutTimer?.invalidate()
+                delayTimer?.invalidate()
                 
-                if (self.pingCounter > 4) {
-                    print("WIFI CONNECTION: Successfully connected to Sensor")
-                    Bugsnag.leaveBreadcrumb(withMessage: "Successfully connected to sensor")
-                    self.connTimeoutTimer?.invalidate()
-                    self.delayTimer?.invalidate()
-                    DispatchQueue.main.async {
-                        self.connectionModalVC?.dismiss(animated: false, completion: {
-                            self.connectionModalVC = nil
-                        })
-                        self.transitionToSensorInitializatio()
-                    }
-                    
-                    // End function - do not restart connect
-                    return;
+                DispatchQueue.main.async {
+                    self.connectionModalVC?.dismiss(animated: false, completion: {
+                        self.connectionModalVC = nil
+                    })
+                    self.transitionToSensorInitializatio()
                 }
-            } catch {
-                print("WIFI CONNECT: Failed to ping sensor: \(error)")
-                Bugsnag.leaveBreadcrumb(withMessage: "Ping failure")
-                // Reset ping to zero?
+                
+                // End function - do not restart connect
+                return;
             }
+            
+            // [delayed] Recursive call
+            // startDelayTimer(delay: 1.0)
         }
+        
+        catch {
+            print("WIFI CONNECT: Failed to ping sensor: \(error)")
+            Bugsnag.leaveBreadcrumb(withMessage: "Ping failure")
+            pingCounter = 0
+        }
+        
+        startDelayTimer(delay: 0.5)
     }
     
     @objc func correctSSID() -> Bool {
@@ -147,33 +152,41 @@ class LocalWiFiConnectVC: UIViewController {
     @IBAction func connectToSensorWiFi() {
         print("WIFI CONNECT: User manually connectin to sensor")
         Bugsnag.leaveBreadcrumb(withMessage: "User manually connectin to sensor")
-        connectToSensor()
+        
+        // Need to dispatch on background thread (otherwise blocks UI thread)
+        DispatchQueue.global(qos: .background).async {
+            self.connectToSensor()
+        }
     }
     
     // MARK: - Timers -
     
     func startDelayTimer(delay: Float) {
-        if (delayTimer != nil) {
-            delayTimer!.invalidate()
-            delayTimer = nil
-        }
-        
-        if (delayTimer == nil) {
-            delayTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay),
-                                              target: self,
-                                              selector: #selector(connectToSensor),
-                                              userInfo: nil,
-                                              repeats: false)
+        DispatchQueue.main.async {
+            if (self.delayTimer != nil) {
+                self.delayTimer!.invalidate()
+                self.delayTimer = nil
+            }
+            
+            if (self.delayTimer == nil) {
+                self.delayTimer = Timer.scheduledTimer(timeInterval: TimeInterval(delay),
+                                                  target: self,
+                                                  selector: #selector(self.connectToSensor),
+                                                  userInfo: nil,
+                                                  repeats: false)
+            }
         }
     }
     
     func startConnTimeoutTimer() {
-        if (connTimeoutTimer == nil) {
-            connTimeoutTimer = Timer.scheduledTimer(timeInterval: 15,
-                                                     target: self,
-                                                     selector: #selector(connTimeout),
-                                                     userInfo: nil,
-                                                     repeats: false)
+        DispatchQueue.main.async {
+            if (self.connTimeoutTimer == nil) {
+                self.connTimeoutTimer = Timer.scheduledTimer(timeInterval: 15,
+                                                        target: self,
+                                                        selector: #selector(self.connTimeout),
+                                                        userInfo: nil,
+                                                        repeats: false)
+            }
         }
     }
     
