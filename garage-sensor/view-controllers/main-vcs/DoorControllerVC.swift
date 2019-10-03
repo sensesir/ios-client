@@ -86,12 +86,14 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     func updateSensorUIElements() {
         if (GDoorModel.main.sensorUID == "None") {
             // Special case of no sensor linked to account
+            print("DOOR CONTROLLER: Updateing UI for no linked sensor")
             doorActuator.isHidden = true
             doorConnStateButton.isHidden = true
             doorConnStateIcon.isHidden = true
         }
         
         else {
+            print("DOOR CONTROLLER: Updateing UI for linked sensor")
             doorActuator.isHidden = false
             doorConnStateButton.isHidden = false
             doorConnStateIcon.isHidden = false
@@ -232,7 +234,7 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     }
     
     func sensorStateUpdated() {
-        // Update UI
+        // Update UI (Not called on static state VC?)
         DispatchQueue.main.async { self.updateSensorUIElements() }
     }
     
@@ -270,7 +272,10 @@ class DoorControllerVC: UIViewController, SensorStateProtocol, DoorStateProtocol
     @IBAction func unwindFromAddSensorStory(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         print("DOOR CONTROLLER: Unwound after completing sensor setup")
         GDoorUser.sharedInstance.addingSensor = false
-        sensorStateUpdated()
+        DispatchQueue.main.async {
+            self.updateSensorUIElements()
+            self.staticStateVC?.updateDoorStateUIItems()
+        }
     }
     
     @IBAction func unwindFromSensorInfo(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {

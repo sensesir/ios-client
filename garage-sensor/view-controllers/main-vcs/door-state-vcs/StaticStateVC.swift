@@ -84,7 +84,7 @@ class StaticStateVC: UIViewController {
     // MARK: - Transition handling -
     
     @objc func transitionToAddSensorStory() {
-        let parentView = (self.parent as! UIViewController).parent as! DoorControllerVC
+        let parentView = (self.parent!).parent as! DoorControllerVC
         parentView.transitionToAddSensorStory()
     }
 }

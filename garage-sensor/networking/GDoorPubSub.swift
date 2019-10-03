@@ -13,7 +13,7 @@ import PromiseKit
 
 protocol GDoorPubSubDelegate {
     func connectionStateUpdate(newState: AWSIoTMQTTStatus)
-    func sensorDataUpdated()
+    func sensorDataUpdated(event: String)
     func sensorRSSIUpdated(rssi: Float)
 }
 
@@ -247,7 +247,7 @@ class GDoorPubSub: NSObject {
             event == env.MQTT_SUB_CONNECTED ||
             event == env.MQTT_SUB_DISCONNECT) {
             print("PUBSUB: Received message of event => \(event)")
-            delegate?.sensorDataUpdated()
+            delegate?.sensorDataUpdated(event: event)
         } else if (event == env.MQTT_SUB_RSSI) {
             // Different kind of delegate update [different view controller]
             let rssi = getRSSIValue(payload: payload)

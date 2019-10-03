@@ -181,7 +181,7 @@ class LocalWiFiConnectVC: UIViewController {
     func startConnTimeoutTimer() {
         DispatchQueue.main.async {
             if (self.connTimeoutTimer == nil) {
-                self.connTimeoutTimer = Timer.scheduledTimer(timeInterval: 15,
+                self.connTimeoutTimer = Timer.scheduledTimer(timeInterval: 10,
                                                         target: self,
                                                         selector: #selector(self.connTimeout),
                                                         userInfo: nil,

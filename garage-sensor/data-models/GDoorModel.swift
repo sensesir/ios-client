@@ -215,7 +215,7 @@ class GDoorModel: NSObject, GDoorPubSubDelegate {
         }
     }
     
-    func sensorDataUpdated() {
+    func sensorDataUpdated(event: String) {
         if (sensorUID != nil) {
             print("GDOOR: Sensor model updated, checking database")
             updateModel()

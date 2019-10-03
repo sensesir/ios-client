@@ -47,7 +47,13 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     // MARK: - App state handling -
     
     override func viewWillAppear(_ animated: Bool) {
-        startNetworkPollTimer(delay: 5)
+        if (sensorInitState == .awaitingNetworkConnection) {
+            // Should only be in this state when this method is invoked
+            startNetworkPollTimer(delay: 5)
+        }
+        else { /* Error state? */ }
+        
+        // Maybe ensure GDoor PubSub client is disconnected ??
     }
     
     @objc func appEnteringForeground() {
@@ -79,7 +85,8 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
         stopFlashingWhiteLED()
         networkPollingTimer?.invalidate()
         
-        // Disconnect and release pubsub var --> need t check timing on this
+        // Disconnect and release pubsub var --> need to check timing on this
+        // Interesting note above, seems to give issues
         pubsubClient?.disconnectDeviceGateway()
         pubsubClient = nil
     }
@@ -134,16 +141,6 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     }
     
     // MARK: - Logic -
-    
-    func startNetworkConnPolling() {
-        networkPollingTimer?.invalidate()
-        networkPollingTimer = Timer.scheduledTimer(timeInterval: 5,
-                                                   target: self,
-                                                   selector: #selector(pollNetworkConnState),
-                                                   userInfo: nil,
-                                                   repeats: true)
-    }
-    
     // What happens if minimize and re-open the app?
     
     @objc func pollNetworkConnState() {
@@ -180,7 +177,6 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
                 // Sensor still connecting to server - connect to AWS IoT and wait for sensor conn
                 print("SENSOR INIT: Sensor not online yet, connecting to MQTT")
                 try await(self.connectAWSIoT())
-                
             }
             catch {
                 print("SENSOR INIT: Failed to link user and sensor account - fatal error")
@@ -233,6 +229,7 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     // MARK: - Timers -
     
     func startNetworkPollTimer(delay: TimeInterval) {
+        networkPollingTimer?.invalidate()
         networkPollingTimer = Timer.scheduledTimer(timeInterval: delay,
                                                    target: self,
                                                    selector: #selector(pollNetworkConnState),
@@ -293,6 +290,7 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
     
     func connectionStateUpdate(newState: AWSIoTMQTTStatus) {
         switch newState {
+            case .connecting: print("SENSOR INIT: Connecting AWS IoT")
             case .connected:
                 print("SENSOR INIT: Checking sensor state after MQTT connection")
                 self.connectedToAWSIoT = true
@@ -305,16 +303,22 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
             
             // What to do with error states? --> report to user ?
             // A failure here could no internet ? or server down?
-            case .connectionError: print("PUBSUB: AWS IoT connection error")
-            case .connectionRefused: print("PUBSB: AWS IoT connection refused")
-            case .protocolError: print("PUBSUB: AWS IoT protocol error")
-            case .disconnected: print("PUBSUB: AWS IoT disconnected")
-            case .unknown: print("PUBSUB: AWS IoT unknown state")
-            default: print("PUBSUB: Error - unknown MQTT state")
+            case .connectionError: print("SENSOR INIT: AWS IoT connection error")
+            case .connectionRefused: print("SENSOR INIT: AWS IoT connection refused")
+            case .protocolError: print("SENSOR INIT: AWS IoT protocol error")
+            case .disconnected: print("SENSOR INIT: AWS IoT disconnected")
+            case .unknown: print("SENSOR INIT: AWS IoT unknown state")
+            default: print("SENSOR INIT: Error - unknown MQTT state")
         }
     }
     
-    func sensorDataUpdated() {
+    func sensorDataUpdated(event: String) {
+        if (event != env.MQTT_SUB_CONNECTED) {
+            // Only want to react to connected events
+            print("SENSOR INIT: Caught event in init VC => \(event)")
+            return
+        }
+        
         async {
             do {
                 print("SENSOR INIT: Sensor data updated via MQTT, checking online status")
@@ -346,11 +350,17 @@ class SensorInitializingVC: UIViewController, GDoorPubSubDelegate {
             self.pubsubClient = nil
             let reconnected = try await(GDoorModel.main.resetPubsub())
             
+            // Temp
+            
+            
             if (!reconnected) {
                 // Could send info to homescreen here to tell user poor internet connection?
+                print("SENSOR INIT: Failed to reconnect to MQTT")
+                Bugsnag.notifyError(NSError(domain:"MQTT-reconnect-error", code:006, userInfo:nil))
             }
             
             DispatchQueue.main.async {
+                print("SENSOR INIT: Unwinding back to home screen");
                 self.performSegue(withIdentifier: "UnwindFromSensorAddStory", sender: self)
             }
         }
